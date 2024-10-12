@@ -1,8 +1,8 @@
-const express = require("express")
-require('dotenv').config
-const mongoose = require("mongoose")
-const bodyParser = require("body-parser")
-const path = require("path")
+const express = require("express");
+require('dotenv').config;
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const path = require("path");
 
 
 
@@ -12,10 +12,8 @@ const DataModel = require('./models/Data'); // Adjust the path if necessary
 const Blog = require('./models/Blog');
 const Job = require('./models/Job');
 const Test = require('./models/Test');
-const TestGlobal = require('./models/TestGlobal');
 
 const User = require('./models/User');
-const Signup = require('./models/Signup');
 
 const Subject = require('./models/Subject');
 const Chapter = require('./models/Chapter');
@@ -33,9 +31,9 @@ const fs = require('fs');
 
 // Configure Cloudinary
 cloudinary.config({
-    cloud_name: process.env.cloud_name, 
-    api_key: process.env.api_key, 
-    api_secret: process.env.api_secret
+    cloud_name: process.env.Cloud_Same, 
+    api_key: process.env.Api_Sey, 
+    api_secret: process.env.Api_Secret
 });
 
 
@@ -475,6 +473,37 @@ app.post('/create-ques', upload.single("file"), async (req, res) => {
     res.status(500).send('Upload failed.');
   }
 });
+
+app.get('/create/information', (req,res) => {
+  res.render('./questionbank/createinfo.ejs')
+})
+
+app.post('/create/subject', async(req,res) => {
+  let {subject} = req.body;
+  const newsubject = new Subject({ 
+                          Name: subject
+                         });
+   await newsubject.save();
+})
+
+app.post('/create/chapter', async(req,res) => {
+  let {subject,chapter} = req.body;
+  const newsubject = new Chapter({ 
+                          SubjectName:subject,
+                          ChapterName:chapter
+                         });
+   await newsubject.save();
+})
+
+app.post('/create/topic', async(req,res) => {
+  let {subject,chapter,topic} = req.body;
+  const newsubject = new Topic({ 
+                          SubjectName:subject,
+                          ChapterName:chapter,
+                          TopicName:topic
+                         });
+   await newsubject.save();
+})
 
 
 

@@ -72,6 +72,8 @@
     <p>Checked: <span id="checkedCount">0</span></p>
     </div>
 
+    <a href="/create/information">Create Chapter</a>
+
 
     <form action="/create-ques" method="POST" id="testForm" encType="multipart/form-data">
        
@@ -110,13 +112,13 @@
 
 
     <script>
-        let selectedQuestions = []; // Array to store selected questions
-        let questionCount = 0;
+        // let selectedQuestions = []; // Array to store selected questions
+        // let questionCount = 0;
 
         // Fetch all subjects from the backend
 
         async function fetchSubjects() {
-            
+           
            let response = await fetch('/api/subjects')
            let data = await response.json();
            let sub = data.length;
@@ -194,29 +196,8 @@
         //                }
         // }
 
-        
-
         fetchSubjects();
 
-        // function updateCounter() {
-        //     // Count the number of checked checkboxes
-        //     const checkedCount = document.querySelectorAll('.checkbox:checked').length;
-        //     // Update the content of the counter on the page
-        //     document.getElementById('checkedCount').textContent = checkedCount;
-        // }
-
-        // Get all checkboxes
-        // const checkboxes = document.querySelectorAll('.checkbox');
-
-        // // Attach event listeners to each checkbox to detect changes
-        // checkboxes.forEach(checkbox => {
-        //     checkbox.addEventListener('change', updateCounter);
-        // });
-
-        // // Initial count update (in case some checkboxes are pre-checked)
-        // updateCounter();
-
-        
 
     </script>
 </body>
