@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+
+    <style>
+        body{
+            text-align: center;
+        }
+
+        #event-txt{
+            width: 80vw;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+   
+    <main>
+        <div>
+
+            <h2>It's all about my day ( <b style = "color:red;"><%=allBlogs.date.getDate()%> / <%=allBlogs.date.getMonth()%> / <%=allBlogs.date.getYear() - 100%></b>)</h2>
+
+            <h2><%=allBlogs.title %></h2>
+
+                <div id="event-txt">
+                    <p>
+                        <%=allBlogs.event%>
+                    </p>
+                </div>
+               
+        </div>
+
+    </main>
+</body>
+</html>

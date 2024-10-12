@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Tests</title>
+</head>
+<body>
+  <h1>Available Tests</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Test Title</th>
+        <th>Number of Questions</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tests.forEach(test => { %>
+        <tr>
+          <td><%= test.title %></td>
+          <td><%= test.questions.length %></td>
+          <td><a href="/student/test/<%= test._id %>">Attempt Test</a></td> <!-- Link for students to attempt the test -->
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

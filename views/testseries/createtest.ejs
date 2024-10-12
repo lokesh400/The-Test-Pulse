@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .question-block {
+            margin-bottom: 20px;
+        }
+
+        #questions-preview {
+            margin-top: 30px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Create a New Test</h1>
+
+    <form action="/admin/create" method="POST" id="testForm" enctype="multipart/form-data">
+        <label for="title">Test Title:</label>
+        <input type="text" name="title" required><br><br>
+
+        <label for="time">Time (in minutes):</label>
+        <input type="number" name="time" required><br><br>
+
+        <div id="questions-container">
+            <div class="question-block">
+
+            </div>
+        </div>
+
+        <button type="button" id="addQuestionButton" onclick="addQuestion()">Add Another Question</button><br><br>
+        <button type="submit">Create Test</button>
+    </form>
+
+    <script>
+
+let questionCount = 1; // Start with 1 since the first question is created by default
+
+function addQuestion() {
+    const container = document.getElementById('questions-container');
+    const questionBlock = document.createElement('div');
+    questionBlock.className = 'question-block';
+    questionBlock.innerHTML = `
+        <h3>Question ${questionCount ++ }</h3>
+        <input type="file" name="questions[${questionCount}][questionText]" placeholder="Enter question text" ><br>
+        <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 1" required ">
+        <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 2" required >
+        <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 3" required >
+        <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 4" required ><br>
+        <label>Correct Option (0-3):</label>
+        <input type="number" name="questions[${questionCount}][correctAnswer]" min="0" max="3" required ><br><br>
+    `;
+    container.appendChild(questionBlock);
+    
+    // Update the preview for the newly added question
+    updatePreview(questionCount);
+
+    // Increment the question count for the next question
+    questionCount++;
+}
+       
+
+    </script>
+</body>
+</html>

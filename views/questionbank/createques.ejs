@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .question-block {
+            margin-bottom: 20px;
+        }
+
+        #questions-preview {
+            margin-top: 30px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .question-checkbox {
+            margin-right: 10px;
+        }
+        #quest-div{
+            background-color: aqua;
+        }
+        #questions-container{
+            width: 90%;
+            margin: auto;
+            margin-top: 20px;
+            /* background-color: cyan; */
+            padding: 10px;
+        }
+        #info{
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        select{
+            border: solid aqua;
+            border-top: none;
+            border-left: none;
+            padding: 10px;
+            border-bottom-right-radius: 5px ;
+            /* background-color: antiquewhite; */
+            
+        }
+
+        #header{
+            margin-top: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 100px;
+        };
+
+        #heading {
+            width: 95%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="header">
+
+    <h2 id="heading">Create a New Test</h2>
+    <p>Checked: <span id="checkedCount">0</span></p>
+    </div>
+
+
+    <form action="/create-ques" method="POST" id="testForm" encType="multipart/form-data">
+       
+         <div id="info">
+        <label for="subject">Subject:</label>
+        <select id="subject" name="subject" onchange="fetchChapters()" required>
+            <option value="">Select Subject</option>
+            Subjects will be dynamically loaded
+        </select><br><br>
+
+        
+        <label for="chapter">Chapter:</label>
+        <select id="chapter" name="chapter" onchange="fetchTopics()" required>
+            <option value="">Select Chapter</option>
+            Chapters will be dynamically loaded
+        </select><br><br>
+
+        <label for="topic">Topic:</label>
+        <select id="topic" name="topic" onchange="fetchQuestions()" required>
+            <option value="">Select Topic</option>
+            Topics will be dynamically loaded
+        </select><br><br>
+
+        <label for="Question">Question Image</label>
+        <input type="file" name="file"/>
+
+        <label for="option">Right Option</label>
+        <input type="number" name="correct">
+
+        <button type="submit">Create Test</button>
+        </div>
+
+    </form>
+
+
+
+
+    <script>
+        let selectedQuestions = []; // Array to store selected questions
+        let questionCount = 0;
+
+        // Fetch all subjects from the backend
+
+        async function fetchSubjects() {
+            
+           let response = await fetch('/api/subjects')
+           let data = await response.json();
+           let sub = data.length;
+
+           const subject = document.getElementById("subject");
+           subject.innerHTML = '<option value="">Select Subject</option>'
+           for(let i=0; i<sub ; i++){
+            const option = document.createElement('option');
+                           option.value = data[i].Name;
+                           option.textContent = data[i].Name;
+                           subject.appendChild(option);     
+           }
+           
+        }
+
+       
+        // Fetch chapters for the selected subject
+          async  function fetchChapters() {
+
+            const subjectName = document.getElementById('subject').value;
+
+             let response = await fetch(`/api/chapters/${subjectName}`);
+             let data = await response.json();
+
+             const chapter = document.getElementById("chapter");
+             chapter.innerHTML = '<option value="">Select Chapter</option>';
+             for(let i=0; i<data.length ; i++){
+                const option = document.createElement('option');
+                               option.value = data[i].ChapterName;
+                               option.textContent = data[i].ChapterName;
+                               chapter.appendChild(option); 
+                    
+           }
+        }
+
+        // Fetch topics for the selected chapter
+        async function fetchTopics() {
+
+            const chapterName = document.getElementById('chapter').value;
+            let response = await fetch(`/api/topics/${chapterName}`)
+            let data = await response.json();
+
+                    const topicDropdown = document.getElementById('topic');
+                    topicDropdown.innerHTML = '<option value="">Select Topic</option>';
+                    for(let i=0; i<data.length ; i++){
+                        const option = document.createElement('option');
+                               option.value = data[i].TopicName;
+                               option.textContent = data[i].TopicName;
+                               topicDropdown.appendChild(option); 
+                    
+                       }
+        }
+
+
+        // Fetch questions for the selected topic
+        // async function fetchQuestions() {
+
+        //     const topic = document.getElementById('topic').value;
+
+        //     let response = await fetch(`/api/questions/${topic}`)
+        //     let data = await response.json();
+
+                
+        //             const container = document.getElementById('questions-container');
+        //             container.innerHTML = ''; 
+
+        //             for(let i=0; i<data.length ; i++){
+
+        //                 const questionBlock = document.createElement('div');
+        //                 questionBlock.className = 'question-block';
+        //                 questionBlock.innerHTML = `
+        //                        <label><input type="checkbox" name="options[]" value="${data[i]._id}" class="checkbox"> Q${i+1} &nbsp ${data[i].Question} </label><br>`;
+        //                 container.appendChild(questionBlock);
+        //                 questionBlock.querySelector('.checkbox').addEventListener('change', updateCounter);
+        //                }
+        // }
+
+        
+
+        fetchSubjects();
+
+        // function updateCounter() {
+        //     // Count the number of checked checkboxes
+        //     const checkedCount = document.querySelectorAll('.checkbox:checked').length;
+        //     // Update the content of the counter on the page
+        //     document.getElementById('checkedCount').textContent = checkedCount;
+        // }
+
+        // Get all checkboxes
+        // const checkboxes = document.querySelectorAll('.checkbox');
+
+        // // Attach event listeners to each checkbox to detect changes
+        // checkboxes.forEach(checkbox => {
+        //     checkbox.addEventListener('change', updateCounter);
+        // });
+
+        // // Initial count update (in case some checkboxes are pre-checked)
+        // updateCounter();
+
+        
+
+    </script>
+</body>
+</html>

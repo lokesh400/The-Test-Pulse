@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Test List</title>
+</head>
+<body>
+  <h1>All Tests</h1>
+  <ul>
+    <% tests.forEach(test => { %>
+      <li><%= test.title %> - <a href="/admin/edit/<%= test._id %>">Edit</a></li>
+    <% }) %>
+  </ul>
+  <a href="/admin/create">Create New Test</a>
+</body>
+</html>

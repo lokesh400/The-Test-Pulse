@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .question-block {
+            margin-bottom: 20px;
+        }
+
+        #questions-Container {
+            /* margin-top: 30px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px; */
+            display: block;
+            width: 90%;
+        }
+        #show{
+            width: 90%;
+            border: none;
+        }
+
+        #option-container{
+            display: flex;
+            border: none;  
+        }
+
+        #options{
+            width: 25%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Create a New Test</h1>
+
+    <form action="/admin/create" method="POST" id="testForm">
+        <label for="title">Test Title:</label>
+        <input type="text" name="title" required><br><br>
+
+        <label for="time">Time (in minutes):</label>
+        <input type="number" name="time" required><br><br>
+
+        <div id="questions-container">
+            <% for(let i = 0; i < data.length ; i++) { %>
+                <div class="question-block">
+                    <h3>Question <%= i + 1 %></h3>
+                    <input id="show" type="text" name="questions[<%= i %>][questionText]" value="<%= data[i].Question %>" readonly required><br>
+                <div id="option-container">
+                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option1 %>" readonly required>
+                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option2 %>" readonly required>
+                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option3 %>" readonly required>
+                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option4 %>" readonly required><br>
+                </div>
+                    <label>Correct Option (0-3):</label>
+                    <input id="correct-ans" type="number" name="questions[<%= i %>][correctAnswer]" value="<%= data[i].CorrectOption%>" readonly required><br><br>
+                </div>
+            <% } %>
+        </div>
+
+        <button type="submit">Create Test</button>
+    </form>
+
+</body>
+</html>
