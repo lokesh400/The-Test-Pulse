@@ -37,9 +37,10 @@ cloudinary.config({
     api_key: process.env.api_key, 
     api_secret: process.env.api_secret
 });
-;
+
+
 // Connect to MongoDB
-mongoose.connect( "mongodb://localhost:27017/testseriesuserdata");
+mongoose.connect( "mongodb+srv://lokeshbadgujjar401:GefjBryDHuCWq7fk@cluster0.siebv.mongodb.net/");
 
 // Middleware
 app.use(bodyParser.json());
