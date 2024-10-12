@@ -1,8 +1,10 @@
-
 const express = require("express")
+require('dotenv').config
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const path = require("path")
+
+
 
 const dataModule = require('./public/js/data.js');
 // const currentaffair = require('./models/currentaffair')
@@ -35,10 +37,9 @@ cloudinary.config({
     api_key: process.env.api_key, 
     api_secret: process.env.api_secret
 });
-
- 
+;
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect( "mongodb://localhost:27017/testseriesuserdata");
 
 // Middleware
 app.use(bodyParser.json());
