@@ -4,27 +4,32 @@
     <meta charset="UTF-8">
     <title>Create Test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        #bdy{
+            display: flex;
+        }
+        #header{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .question-block {
-            margin-bottom: 20px;
-        }
-
-        #questions-preview {
-            margin-top: 30px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
+        #form-div{
+            padding: 20px;
         }
     </style>
+    <link rel="stylesheet" href="/styles/testseriesheader.css">
 </head>
 <body>
-    
-    <h1>Create a New Test</h1>
 
-    <form action="/admin/create" method="POST" id="testForm" enctype="multipart/form-data">
+    <div id="bdy">
+
+
+        <div id="header">
+                <%- include('../components/testseriesheader.ejs') %>
+        </div>
+
+    <div id="form-div">
+    <form action="/admin/create" method="POST" id="testForm">
         <label for="title">Test Title:</label>
         <input type="text" name="title" required><br><br>
 
@@ -40,6 +45,8 @@
         <button type="button" id="addQuestionButton" onclick="addQuestion()">Add Another Question</button><br><br>
         <button type="submit">Create Test</button>
     </form>
+</div>
+</div>
 
     <script>
 
@@ -51,7 +58,7 @@ function addQuestion() {
     questionBlock.className = 'question-block';
     questionBlock.innerHTML = `
         <h3>Question ${questionCount ++ }</h3>
-        <input type="file" name="questions[${questionCount}][questionText]" placeholder="Enter question text" ><br>
+        <input type="text" name="questions[${questionCount}][questionText]" placeholder="Enter question text" ><br>
         <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 1" required ">
         <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 2" required >
         <input type="text" name="questions[${questionCount}][options][]" placeholder="Option 3" required >

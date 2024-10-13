@@ -307,7 +307,7 @@ app.get('/testportal', (req, res) => {
 
 // Admin Route - Render test creation page
 app.get('/admin/create', (req, res) => {
-  res.render('./testseries/createtest4.ejs');
+  res.render('./testseries/createtest.ejs');
 });
 
 // Handle form submission for creating a test
@@ -320,14 +320,12 @@ app.post('/admin/create', async (req, res) => {
   }));
   const newTest = new Test({ title, questions: formattedQuestions ,time});
   await newTest.save();
-  // console.log(questions)
   const tests = await Test.find({});
   res.render('./testseries/admin-test', { tests });
 });
 
 
 // Student Route - Render test attempt page
-
 app.get('/student/tests', async (req, res) => {
   const tests = await Test.find(); // Fetch all tests from the database
   res.render('./testseries/student-tests.ejs', { tests });
@@ -339,7 +337,6 @@ app.get('/student/test/:id', async (req, res) => {
 });
 
 // Handle test submission and calculate the score
-// Example route for handling test submissions
 app.post('/student/test/:testId', async (req, res) => {
   const testId = req.params.testId;
   const answers = req.body.answers || {}; // Use an empty object as default if answers are undefined
@@ -360,8 +357,6 @@ app.post('/student/test/:testId', async (req, res) => {
           } else{
             score -= 1;
           }
-      
-      
       }
       
   });
@@ -384,7 +379,7 @@ app.get('/admin/tests', async (req, res) => {
 
 
 app.get('/tests', async (req, res) => {
-  res.render('./testseries/createtest2.ejs');
+  res.render('./testseries/TestFromQuestionBank.ejs');
 });
 
 app.get('/api/subjects', async (req,res) => {
@@ -419,14 +414,15 @@ app.post('/process', async (req, res) => {
      let ques = await Question.findById(selectedOptions[i]); 
      let data2 = data.push(ques)
   }
-   res.render('./testseries/createtest3.ejs',{data});
+   res.render('./testseries/TestFromQuestionBank2.ejs',{data});
 });
+
+
+// QUESTION BANK
 
 app.get('/create/question/bank', async(req,res) =>{
   res.render('./questionbank/createques.ejs')
 })
-
-// QUESTION BANK
 
 const Upload = {
   uploadFile: async (filePath) => {
