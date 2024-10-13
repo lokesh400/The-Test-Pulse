@@ -3,27 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <title>Available Tests</title>
+  <link rel="stylesheet" href="/styles/testcard.css">
 </head>
 <body>
   <h1>Available Tests</h1>
 
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Test Title</th>
-        <th>Number of Questions</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
       <% tests.forEach(test => { %>
-        <tr>
-          <td><%= test.title %></td>
-          <td><%= test.questions.length %></td>
-          <td><a href="/student/test/<%= test._id %>">Attempt Test</a></td> <!-- Link for students to attempt the test -->
-        </tr>
+        
+       <div class="cookieCard">
+             <h4 class="cookieHeading"><%= test.title %></h4>
+             <div>
+             <span class="cookieDescription">Questions<%= test.questions.length %></span><span class="cookieDescription"> &nbsp| Marks:<%= test.questions.length*4 %></span>
+             <button class="acceptButton" ><a href="/student/test/<%= test._id %>">Attempt</a></button>
+             </div>
+             <button id="deleteButton" data-id="<%= test._id %>">Delete</button>
+        </div>
       <% }) %>
-    </tbody>
-  </table>
+
+      
+
+      <div id="customConfirm" class="confirm-box">
+        <p>Are you sure you want to delete?</p>
+        <button id="confirmYes">Yes</button>
+        <button id="confirmNo">No</button>
+    </div>
+
+    <div id="toast" class="toast">
+      <span id="toastMessage">Item successfully deleted!</span>
+      <div class="toast-loader">
+          <div class="loader-progress"></div> <!-- Progress bar inside the loader -->
+      </div>
+  </div>
+  
+  <script>
+           // script.js
+           document.getElementById('deleteButton').addEventListener('click', function() {
+        const itemId = this.getAttribute('data-id');
+        sendDeleteRequest(itemId);
+    });
+    
+    function sendDeleteRequest(itemId) {
+        fetch(`http://localhost:8000/admin/delete/test/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to delete item.');
+            }
+        })
+        .then(data => {
+            showToast(data.message, 'success'); // Call with success type
+            // Redirect after a delay to allow the toast to be displayed
+            setTimeout(() => {
+                window.location.href = window.location.href; // Reloads the same page
+            }, 3000); // Adjust the delay as needed (3000ms = 3 seconds)
+        })
+        .catch(error => {
+            showToast('Error: ' + error.message, 'error'); // Call with error type
+        });
+    }
+    
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const loaderProgress = document.querySelector('.loader-progress');
+    
+        toastMessage.innerText = message;
+    
+        // Set the background color based on the type
+        if (type === 'success') {
+            toast.style.backgroundColor = '#00b3ff99';
+        } else if (type === 'error') {
+            toast.style.backgroundColor = 'red';
+        }
+    
+        loaderProgress.style.width = '100%';
+        toast.classList.add('show');
+    
+        setTimeout(() => {
+            loaderProgress.style.width = '0%'; // Shrink loader
+        }, 10);
+    
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+    
+    
+    
+  </script>
+
 </body>
 </html>

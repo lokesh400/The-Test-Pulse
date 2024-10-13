@@ -61,7 +61,7 @@
     color: var(--navbar-light-primary);
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     overflow: hidden;
-    user-select: none;
+    /* user-select: none; */
   }
   #nav-bar hr {
     margin: 0;

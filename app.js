@@ -324,6 +324,22 @@ app.post('/admin/create', async (req, res) => {
   res.render('./testseries/admin-test', { tests });
 });
 
+//Test DELETE Route
+
+app.delete('/admin/delete/test/:id', async (req, res) => {
+  const itemId = req.params.id;
+    try {
+        const result = await Test.findByIdAndDelete(itemId);
+        if (result) {
+            return res.status(200).json({ message: 'Item deleted successfully!' });
+        } else {
+            return res.status(404).json({ error: 'Item not found.' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: 'Error deleting item.' });
+    }
+});
+
 
 // Student Route - Render test attempt page
 app.get('/student/tests', async (req, res) => {
