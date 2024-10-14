@@ -106,7 +106,7 @@
 </head>
 <body>
 
-  
+  <button id="clickToStart">Click here to start the test in fullscreen</button>
 
   <!-- Content to show the current question -->
   <div class="content">
@@ -118,10 +118,10 @@
        
         <div id="heading"><h3><%= test.title %></h3></div>
         
-        <button type="button" class="btn sub-btn" onclick="Submit()">Submit</button>
+        <button type="button" onclick="Submit()">Submit</button>
     </div>
 
-    <form id="testForm" action="/student/test/<%= test._id %>" method="POST">
+    <form id="testForm" style="display:none;" action="/student/test/<%= test._id %>" method="POST">
 
       <% test.questions.forEach((question, index) => { %>
         <div class="question-block" id="question-<%= index %>">
@@ -273,6 +273,75 @@ function resetQuestionStates() {
     function Submit () {
         document.getElementById('testForm').submit();
     }
+
+
+
+// let initialWidth = window.innerWidth;
+// let initialHeight = window.innerHeight;
+
+// window.addEventListener('resize', function() {
+//     // Check if the window size has changed by any amount
+//     if (window.innerWidth !== initialWidth || window.innerHeight !== initialHeight) {
+//         document.getElementById("testForm").submit();
+//     }
+// });
+
+let isFullscreen = false;  // Track if in fullscreen mode
+        let initialWidth, initialHeight; // Store initial dimensions
+        let resizeListenerAdded = false; // Flag to manage resize listener
+
+        // Function to enter fullscreen
+        function enterFullscreen() {
+            let docElement = document.documentElement;
+
+            // Request fullscreen based on the browser
+            if (docElement.requestFullscreen) {
+                docElement.requestFullscreen();
+            } else if (docElement.mozRequestFullScreen) { // Firefox
+                docElement.mozRequestFullScreen();
+            } else if (docElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                docElement.webkitRequestFullscreen();
+            } else if (docElement.msRequestFullscreen) { // IE/Edge
+                docElement.msRequestFullscreen();
+            }
+        }
+
+        // Button click to enter fullscreen
+        document.getElementById("clickToStart").addEventListener("click", function() {
+            enterFullscreen();
+        });
+
+        // Detect when fullscreen mode changes
+        document.addEventListener("fullscreenchange", function() {
+            if (document.fullscreenElement) {
+                // Entered fullscreen
+                isFullscreen = true;
+                resizeListenerAdded = false; // Reset the resize listener flag
+                document.getElementById("clickToStart").style.display = "none";
+                document.getElementById("testForm").style.display = "block";
+                
+                // Record initial size after entering fullscreen
+                initialWidth = window.innerWidth;
+                initialHeight = window.innerHeight;
+
+                // Add resize event listener to detect subsequent resizes
+                window.addEventListener('resize', handleResize);
+            } else {
+                // Exited fullscreen
+                isFullscreen = false;
+                window.removeEventListener('resize', handleResize); // Remove listener on exit
+            }
+        });
+
+        // Handle the window resize event
+        function handleResize() {
+            // Submit the form if the window is resized after entering fullscreen
+            if (isFullscreen) {
+                if (window.innerWidth !== initialWidth || window.innerHeight !== initialHeight) {
+                    document.getElementById("testForm").submit();
+                }
+            }
+        }
 
   </script>
 

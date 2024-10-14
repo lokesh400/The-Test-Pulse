@@ -4,12 +4,28 @@
   <meta charset="UTF-8">
   <title>Available Tests</title>
   <link rel="stylesheet" href="/styles/testcard.css">
+  <link rel="stylesheet" href="/styles/sidebar.css">
+  <style>
+    #right-div{
+        position: fixed;
+        margin-left: 10px;
+    }
+
+    #test-cont{
+        width: 80vw;
+        margin-left: 20vw;
+    }
+  </style>
 </head>
 <body>
-  <h1>Available Tests</h1>
+  
+    <header id="right-div">
+        <%- include("../components/sidebar.ejs")%>
+    </header>
 
+
+    <div id="test-cont">
       <% tests.forEach(test => { %>
-        
        <div class="cookieCard">
              <h4 class="cookieHeading"><%= test.title %></h4>
              <div>
@@ -19,6 +35,7 @@
              <button id="deleteButton" data-id="<%= test._id %>">Delete</button>
         </div>
       <% }) %>
+    </div>  
 
       
 
