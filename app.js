@@ -520,26 +520,6 @@ app.post('/create/topic', async(req,res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // server.js
 const OpenAI = require('openai'); // Updated import for v4.x
 require('dotenv').config();
@@ -583,6 +563,10 @@ app.post('/chat', async (req, res) => {
 app.get('/ai', async (req, res) => {
   res.render('apenai.ejs');
 });
+
+
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
 
 

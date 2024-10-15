@@ -5,26 +5,17 @@
   <title>Available Tests</title>
   <link rel="stylesheet" href="/styles/testcard.css">
   <link rel="stylesheet" href="/styles/sidebar.css">
-  <style>
-    #right-div{
-        position: fixed;
-        margin-left: 10px;
-    }
-
-    #test-cont{
-        width: 80vw;
-        margin-left: 20vw;
-    }
-  </style>
 </head>
 <body>
   
-    <header id="right-div">
+
+<div id="main">
+    <div id="header">
         <%- include("../components/sidebar.ejs")%>
-    </header>
+    </div>
 
-
-    <div id="test-cont">
+    <div id="content">
+    <div>
       <% tests.forEach(test => { %>
        <div class="cookieCard">
              <h4 class="cookieHeading"><%= test.title %></h4>
@@ -37,21 +28,23 @@
       <% }) %>
     </div>  
 
-      
-
-      <div id="customConfirm" class="confirm-box">
-        <p>Are you sure you want to delete?</p>
-        <button id="confirmYes">Yes</button>
-        <button id="confirmNo">No</button>
-    </div>
-
-    <div id="toast" class="toast">
-      <span id="toastMessage">Item successfully deleted!</span>
-      <div class="toast-loader">
-          <div class="loader-progress"></div> <!-- Progress bar inside the loader -->
-      </div>
   </div>
-  
+</div>
+
+<div id="customConfirm" class="confirm-box">
+    <p>Are you sure you want to delete?</p>
+    <button id="confirmYes">Yes</button>
+    <button id="confirmNo">No</button>
+</div>
+
+<div id="toast" class="toast">
+  <span id="toastMessage">Item successfully deleted!</span>
+  <div class="toast-loader">
+      <div class="loader-progress"></div> <!-- Progress bar inside the loader -->
+  </div>
+</div>
+
+
   <script>
            // script.js
            document.getElementById('deleteButton').addEventListener('click', function() {

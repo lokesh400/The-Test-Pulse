@@ -1,13 +1,7 @@
 .cookieCard {
     width: 400px;
-    /* height: 200px; */
     background: linear-gradient(to right,rgba(137, 104, 255, 0.759),rgba(174, 152, 255, 0.775));
     margin: auto;
-    /* display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center; */
-    /* gap: 20px; */
     padding: 10px;
     position: relative;
     overflow: hidden;
@@ -103,8 +97,9 @@
     padding: 16px;
     position: fixed;
     z-index: 1;
-    right: -300px; /* Start off-screen */
+    left: -300px; /* Start off-screen */
     top: 30px;
+    width: 300px;
     font-size: 17px;
     display: flex;
     flex-direction: column;
@@ -136,14 +131,14 @@
 /* Show the toast with sliding from the right */
 .toast.show {
     visibility: visible;
-    right: 30px; /* Slide to this position */
+    left: 30px; /* Slide to this position */
 }
 
 .toast.hide {
-    right: -300px; /* Slide out to hide */
+    left: -300px; /* Slide out to hide */
 }
 
-#foot-info{
+/* #foot-info{
   height: 25vh;
   background-color:#18283b;
   width: 72.5vw;
@@ -168,6 +163,11 @@
 #login-btn{
   margin-top: 10px;
   position: fixed;
+} */
+
+#content{
+  margin: auto;
+  width: calc(100vw - 250px);
 }
 
 @media (width <= 700px){
