@@ -10,11 +10,9 @@
   
 
 <div id="main">
-    <div id="header">
-        <%- include("../components/sidebar.ejs")%>
-    </div>
+    
 
-    <div id="content">
+    <div id="content-div">
     <div>
       <% tests.forEach(test => { %>
        <div class="cookieCard">
@@ -27,8 +25,12 @@
         </div>
       <% }) %>
     </div>  
-
   </div>
+
+  <div id="header-div-cpm">
+    <%- include("../components/sidebar.ejs")%>
+  </div>
+
 </div>
 
 <div id="customConfirm" class="confirm-box">

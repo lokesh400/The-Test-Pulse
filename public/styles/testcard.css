@@ -165,34 +165,25 @@
   position: fixed;
 } */
 
-#content{
-  margin: auto;
-  width: calc(100vw - 250px);
-}
+
 
 @media (width <= 700px){
   .cookieCard {
     width: 90%;
     margin: auto;
-    /* height: 200px; */
     background: linear-gradient(to right,rgba(137, 104, 255, 0.759),rgba(174, 152, 255, 0.775));
-    /* display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center; */
-    /* gap: 20px; */
     padding: 10px;
     position: relative;
     overflow: hidden;
     margin-bottom: 10px;
   } 
 
-  #right-div{
+  /* #right-div{
     display: none;
     visibility: none;
   }
 
    #test-cont{
     margin-left:0px;
-  }
+  } */
 }

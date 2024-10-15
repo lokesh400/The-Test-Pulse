@@ -97,7 +97,7 @@ app.get("/listings/:id" , async (req, res) => {
 })
 
 app.get('/blogs/new', (req,res) => {
-  res.render('listings/blogs/createblogs');
+  res.render('./listings/blogs/createblogs.ejs');
 });
 
 app.post('/blogs/new', async (req, res) => {

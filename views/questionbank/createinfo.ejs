@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Details</title>
+    <link rel="stylesheet" href="/styles/sidebar.css">
 </head>
 <body>
 
+
+    <div id="main">
+
+
+        <div id="content-div">
     <div id="subject ">
         <form action="/create/subject" method="POST">
             <label for="subject">Enter Subject Name</label>
@@ -42,6 +48,14 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    
+</div>
+
+    <div id="header-div-cpm">
+        <%- include('../components/sidebar.ejs') %>
+    </div>
+
+</div>
     
 </body>
 </html>

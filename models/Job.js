@@ -4,7 +4,8 @@ const JobSchema = new mongoose.Schema({
     startingdate:Date,
     closingdate:Date,
     title:String,
-    link:String
+    link:String,
+    Qualification:String,
 });
 
 const Job = mongoose.model('Job', JobSchema);

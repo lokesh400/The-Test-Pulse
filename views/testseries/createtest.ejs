@@ -17,17 +17,16 @@
             padding: 20px;
         }
     </style>
-    <link rel="stylesheet" href="/styles/testseriesheader.css">
+    <link rel="stylesheet" href="/styles/sidebar.css">
 </head>
 <body>
 
-    <div id="bdy">
+    <div id="main">
 
 
-        <div id="header">
-                <%- include('../components/testseriesheader.ejs') %>
-        </div>
+       
 
+        <div id="content-div">
     <div id="form-div">
     <form action="/admin/create" method="POST" id="testForm">
         <label for="title">Test Title:</label>
@@ -46,6 +45,12 @@
         <button type="submit">Create Test</button>
     </form>
 </div>
+       </div>
+
+<div id="header-div-cpm">
+    <%- include('../components/sidebar.ejs') %>
+</div>
+
 </div>
 
     <script>

@@ -33,21 +33,21 @@
         #options{
             width: 25%;
         }
-
-
     </style>
+    <link rel="stylesheet" href="/styles/sidebar.css">
 </head>
 <body>
 
-    <h1>Create a New Test</h1>
+    
+    <div id="main">
 
+        <div id="content-div">
+    <h1>Create a New Test</h1>
     <form action="/admin/create" method="POST" id="testForm">
         <label for="title">Test Title:</label>
         <input type="text" name="title" required><br><br>
-
         <label for="time">Time (in minutes):</label>
         <input type="number" name="time" required><br><br>
-
         <div id="questions-container">
             <% for(let i = 0; i < data.length ; i++) { %>
                 <div class="question-block">
@@ -64,9 +64,14 @@
                 </div>
             <% } %>
         </div>
-
         <button type="submit">Create Test</button>
     </form>
+    </div>
 
+    <div id="header-div-cpm">
+        <%- include('../components/sidebar.ejs') %>
+    </div>
+
+</div>
 </body>
 </html>

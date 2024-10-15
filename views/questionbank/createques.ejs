@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Test</title>
+    <link rel="stylesheet" href="/styles/sidebar.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,8 +67,10 @@
 </head>
 <body>
 
-    <div id="header">
+    <div id="main">
 
+        <div id="content-div">
+    <div id="header">
     <h2 id="heading">Create a New Test</h2>
     <p>Checked: <span id="checkedCount">0</span></p>
     </div>
@@ -105,11 +108,14 @@
 
         <button type="submit">Create Test</button>
         </div>
-
     </form>
+</div>
 
+    <div id="header-div-cpm">
+        <%- include('../components/sidebar.ejs') %>
+    </div>
 
-
+</div>
 
     <script>
         // let selectedQuestions = []; // Array to store selected questions
