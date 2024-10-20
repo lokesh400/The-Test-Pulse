@@ -10,7 +10,9 @@
       overflow: hidden;
     }
     .sidebar {
-      width: 15%;
+      width: 24%;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr); 
       background-color: #f4f4f4;
       padding: 20px;
       height: 100vh;
@@ -22,6 +24,7 @@
       color: white;
       border: none;
       border-radius: 5px;
+      /* margin-top: 2px; */
       cursor: pointer;
       transition: background-color 0.3s;
     }
@@ -29,7 +32,7 @@
       background-color: #0056b3;
     }
     .content {
-      width: 85%;
+      width: 75%;
       margin-right: 1%;
     }
     .question-block {
@@ -80,17 +83,20 @@
     #ques-img {
       width: 30vw;
     }
+
+    #option-div{
+      height: 100px;
+    }
   </style>
 </head>
 <body>
-
-  <button id="clickToStart">Click here to start the test in fullscreen</button>
-
   <div class="content">
     <div class="title">
       <div class="timer" id="timer"><span>Time Left:</span><span id="timeRemaining"><%= test.duration %></span></div>
       <div id="heading"><h3><%= test.title %></h3></div>
       <button type="button" onclick="Submit()">Submit</button>
+      <button id="clickToStart">Click here to start the test in fullscreen</button>
+
     </div>
 
     <form id="testForm" style="display:none;" action="/student/test/<%= test._id %>" method="POST">
@@ -101,7 +107,7 @@
           <div>
             <% question.options.forEach((option, optionIndex) => { %>
               <label>
-                <input type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>"> <%= option %>
+                <input id="option-div" type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>"> <%= option %>
               </label><br>
             <% }) %>
           </div>

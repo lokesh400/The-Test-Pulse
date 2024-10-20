@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
@@ -33,6 +34,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const { error } = require("console");
 
 // Configure Cloudinary
 cloudinary.config({
@@ -52,8 +54,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.use(express.json());
 
+const store = MongoStore.create({
+  mongoUrl:process.env.mongo_url,
+  crypto:{
+    secret: process.env.secret,
+  },
+  touchAfter: 24*3600
+})
+
+store.on("error", ()=>{
+  console.log("error in connecting mongo session store",error)
+})
+
 const sessionOptions = {
-  secret: "bjhbsjhbjhbfdj",
+  store,
+  secret: process.env.secret,
   resave:false,
   saveUninitialized:true,
   cookie:{
@@ -62,6 +77,7 @@ const sessionOptions = {
     httpOnly: true,
   }
 }
+
 app.use(session(sessionOptions));
 app.use(flash());
 
