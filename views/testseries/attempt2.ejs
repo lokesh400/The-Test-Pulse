@@ -1,0 +1,227 @@
+_lokesh_jat, [16-10-2024 08:56]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attempt Test</title>
+  <style>
+    body {
+      display: flex;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 15%;
+      background-color: #f4f4f4;
+      padding: 20px;
+      height: 100vh;
+      border-right: 1px solid #ccc;
+    }
+    .sidebar button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .sidebar button:hover {
+      background-color: #0056b3;
+    }
+    .content {
+      width: 85%;
+      margin-right: 1%;
+    }
+    .question-block {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .timer {
+      color: red;
+      width: 5%;
+      margin-top: 10px;
+    }
+    .answered {
+      background-color: green !important;
+    }
+    .skipped {
+      background-color: rgba(255, 77, 0, 0.497) !important;
+    }
+    .title {
+      justify-content: center;
+      display: flex;
+      border-bottom: 2px solid black;
+      border-top: 2px solid black;
+    }
+    #heading {
+      width: 90%;
+      text-align: center;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: right;
+    }
+    span {
+      font-size: xx-small;
+    }
+    #ques-img {
+      width: 30vw;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="clickToStart">Click here to start the test in fullscreen</button>
+
+  <div class="content">
+    <div class="title">
+      <div class="timer" id="timer"><span>Time Left:</span><span id="timeRemaining"><%= test.duration %></span></div>
+      <div id="heading"><h3><%= test.title %></h3></div>
+      <button type="button" onclick="Submit()">Submit</button>
+    </div>
+
+    <form id="testForm" style="display:none;" action="/student/test/<%= test._id %>" method="POST">
+      <% test.questions.forEach((question, index) => { %>
+        <div class="question-block" id="question-<%= index %>">
+          <h3>Question <%= index + 1 %>:</h3> <img id="ques-img" src="<%= question.questionText %>" alt="">
+          <div>
+            <% question.options.forEach((option, optionIndex) => { %>
+              <label>
+                <input type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>"> <%= option %>
+              </label><br>
+            <% }) %>
+          </div>
+          <div class="btn-container">
+            <button type="button" class="btn" onclick="saveAndNext(<%= index %>)">Save & Next</button>
+            <button type="button" class="btn" onclick="skipQuestion(<%= index %>)">Skip</button>
+            <button type="button" class="btn" onclick="clearSelection(<%= index %>)">Clear Selection</button>
+          </div>
+        </div>
+      <% }) %>
+      <input type="hidden" name="currentQuestionIndex" id="currentQuestionIndex" value="0">
+    </form>
+  </div>
+
+  <div class="sidebar">
+    <h3>Questions</h3>
+    <% test.questions.forEach((question, index) => { %>
+      <button type="button" id="sidebar-button-<%= index %>" onclick="showQuestion(<%= index %>)"><%= index + 1 %></button>
+    <% }) %>
+  </div>
+
+  <script>
+    let totalTime = <%= test.time %> * 60;
+    let timerInterval;
+    let attemptedQuestions = { Physics: 0, Chemistry: 0, Mathematics: 0 };
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (totalTime <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('testForm').submit();
+          alert('Time is up! Your test has been submitted.');
+
+_lokesh_jat, [16-10-2024 08:56]
+} else {
+          totalTime--;
+          const minutes = Math.floor(totalTime / 60);
+          const seconds = totalTime % 60;
+          document.getElementById('timeRemaining').textContent = ${minutes}:${seconds < 10 ? '0' : ''}${seconds};
+        }
+      }, 1000);
+    }
+
+    function showQuestion(index) {
+      hideAllQuestions();
+      document.getElementById(question-${index}).classList.add('active');
+    }
+
+    function hideAllQuestions() {
+      const allQuestions = document.querySelectorAll('.question-block');
+      allQuestions.forEach(question => question.classList.remove('active'));
+    }
+
+    function saveAndNext(index) {
+      const selectedOption = document.querySelector(input[name="answers[${index}]"]:checked);
+      if (selectedOption) {
+        const subjectIndex = Math.floor(index / 30); // Determine subject: 0 = Physics, 1 = Chemistry, 2 = Mathematics
+        const subject = ['Physics', 'Chemistry', 'Mathematics'][subjectIndex];
+        
+        if (index >= subjectIndex * 30 + 20) { // Last 10 questions check
+          attemptedQuestions[subject]++;
+          if (attemptedQuestions[subject] > 5) {
+            alert(You can only attempt 5 questions from the last 10 in ${subject}.);
+            return; // Prevent moving to the next question
+          }
+        }
+
+        const sidebarButton = document.getElementById(sidebar-button-${index});
+        sidebarButton.classList.remove('skipped');
+        sidebarButton.classList.add('answered');
+
+        if (index + 1 < <%= test.questions.length %>) {
+          showQuestion(index + 1);
+        } else {
+          alert('This was the last question!');
+          clearInterval(timerInterval);
+        }
+      } else {
+        alert('Please select an option before saving.');
+      }
+    }
+
+    function skipQuestion(index) {
+      const sidebarButton = document.getElementById(sidebar-button-${index});
+      sidebarButton.classList.remove('answered');
+      sidebarButton.classList.add('skipped');
+
+      if (index + 1 < <%= test.questions.length %>) {
+        showQuestion(index + 1);
+      } else {
+        alert('This was the last question!');
+        clearInterval(timerInterval);
+      }
+    }
+
+    function clearSelection(index) {
+      const radioButtons = document.querySelectorAll(input[name="answers[${index}]"]);
+      radioButtons.forEach(radio => {
+        radio.checked = false;
+      });
+
+      const sidebarButton = document.getElementById(sidebar-button-${index});
+      sidebarButton.classList.remove('answered');
+      sidebarButton.classList.remove('skipped');
+    }
+
+    function Submit() {
+      document.getElementById('testForm').submit();
+    }
+
+    startTimer();
+    showQuestion(0);
+
+    document.getElementById("clickToStart").addEventListener("click", function() {
+      document.documentElement.requestFullscreen();
+      document.getElementById("clickToStart").style.display = "none";
+      document.getElementById("testForm").style.display = "block";
+    });
+  </script>
+
+</body>
+</html>

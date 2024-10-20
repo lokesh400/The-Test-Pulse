@@ -1,16 +1,19 @@
 const express = require("express");
-require('dotenv').config;
+require('dotenv').config();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
 
 
 
 const dataModule = require('./public/js/data.js');
-// const currentaffair = require('./models/currentaffair')
 const DataModel = require('./models/Data'); // Adjust the path if necessary
-const Blog = require('./models/Blog');
-const Job = require('./models/Job');
+
+
 const Test = require('./models/Test');
 
 const User = require('./models/User');
@@ -19,6 +22,11 @@ const Subject = require('./models/Subject');
 const Chapter = require('./models/Chapter');
 const Topic = require('./models/Topic');
 const Question = require('./models/Question');
+
+
+const blogsrouter = require("./routes/blogs.js");
+const jobsrouter = require("./routes/jobs.js");
+const userrouter = require("./routes/user.js");
 
 const app = express();
 const port = 8000;
@@ -31,14 +39,14 @@ const fs = require('fs');
 
 // Configure Cloudinary
 cloudinary.config({
-    cloud_name: process.env.Cloud_Same, 
-    api_key: process.env.Api_Sey, 
-    api_secret: process.env.Api_Secret
+    cloud_name:process.env.cloud_name, 
+    api_key:process.env.api_key, 
+    api_secret:process.env.api_Secret
 });
 
 
 // Connect to MongoDB
-mongoose.connect( "mongodb+srv://lokeshbadgujjar401:GefjBryDHuCWq7fk@cluster0.siebv.mongodb.net/");
+mongoose.connect(process.env.mongo_url);
 
 // Middleware
 app.use(bodyParser.json());
@@ -46,38 +54,35 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
+const sessionOptions = {
+  secret: "bjhbsjhbjhbfdj",
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    expires: Date.now() + 3*24*60*60*1000,
+    maxAge: 3*24*60*60*1000,
+    httpOnly: true,
+  }
+}
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 // app.use(fileUpload())
 // app.use(express.json());
 
-const { ObjectId } = mongoose.Types; 
+// const { ObjectId } = mongoose.Types; 
 // Routes
 
 app.get('/', (req, res) => {
-  res.render('index');
+    res.render('index');
 });
-
-app.get('/login' ,(req,res)=>{
-  res.render('listings/login')
-})
-
-app.post('/signup' , async (req,res)=>{
-  const {Email,Name,Password} = req.body;
-  const existingUser = await User.findOne({Email});
-  if(existingUser){
-    res.send("User Already Exits")
-  }
-  else {
-
-    const newUser = new User({ 
-      Name:Name,
-      Email:Email,
-      Password:Password
-  });
-  await newUser.save();
-    res.send("Signup Confirmed");
-  }
-  // res.render('listings/login')
-})
 
 // app.get('/currentaffairs', async (req, res) => {
 
@@ -86,47 +91,17 @@ app.post('/signup' , async (req,res)=>{
 
 // });
 
+app.use("/blogs",blogsrouter);
+app.use("/jobs",jobsrouter);
+app.use("/user",userrouter);
 
+// app.get("/listings/:id" , async (req, res) => {
 
-app.get("/listings/:id" , async (req, res) => {
+//   let {id} = req.params;
+//   const allListing = await currentaffair.findById(id);
+//   res.render("listings/show.ejs",{allListing})
 
-  let {id} = req.params;
-  const allListing = await currentaffair.findById(id);
-  res.render("listings/show.ejs",{allListing})
-
-})
-
-app.get('/blogs/new', (req,res) => {
-  res.render('./listings/blogs/createblogs.ejs');
-});
-
-app.post('/blogs/new', async (req, res) => {
-  const { date,title,event } = req.body;
-        const title2 = title.toString();
-        const event2 = event.toString();
-        const newBlog = new Blog({ 
-          date:date,
-          title:title2,
-          event:event2
-      });
-      await newBlog.save();
-      res.send("Data Saved");
-});
-
-app.get('/blogs/show', async (req, res) => {
-  const allBlogs = await Blog.find({});
-  res.render('./listings/blogs/showallblogs',{allBlogs});
-});
-
-app.get('/blogs/show/all/:id', async (req, res) => {
-  const {id} = req.params;
-  const allBlogs = await Blog.findById(id);
-  res.render("./listings/blogs/showblog.ejs",{allBlogs});
-});
-
-
-
-      
+// })
 
 // app.post("/listings", async (req,res) => {
    
@@ -261,48 +236,17 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
   res.render('./listings/show',{allListing});
 });
 
-
-
-
-// JOB ROUTES
-
-app.get('/jobs/newopenings', async (req, res) => {
-  res.render('./listings/job/new');
-});
-
-app.post('/job/new', async (req, res) => {
-  const {opdate,endate,title,qual,link} = req.body
-  const end = endate.toString();
-  const qu = qual.toString();
-
-  try {
-    const newJob = new Job({ 
-      startingdate:opdate,
-      closingdate:end,
-      title:title,
-      link:link,
-      Qualification:qu,
-    });
-    await newJob.save();
-    res.send('data saved');
-  } catch (error) {
-    res.status(500).send('Error saving data');
-  }
-});
-
-
-app.get('/jobs/allopenings', async (req, res) => {
-  const JobData = await Job.find({});
-  res.render('./listings/job/all',{JobData});
-});
-
-
-
 // TEST SERIES
 
 
 app.get('/testportal', (req, res) => {
-  res.render('./testseries/indexx.ejs');
+    if(!req.isAuthenticated()){
+      res.send("login first")
+    }
+    else{
+      console.log(req.user)
+      res.render('./testseries/indexx.ejs');
+    }
 });
 
 // Admin Route - Render test creation page
@@ -352,6 +296,11 @@ app.get('/student/test/:id', async (req, res) => {
   res.render('./testseries/attempt-test.ejs', { test });
 });
 
+// app.get('/student/test/:id', async (req, res) => {
+//   const test = await Test.findById(req.params.id);
+//   res.render('./testseries/attempt2.ejs', { test });
+// });
+
 // Handle test submission and calculate the score
 app.post('/student/test/:testId', async (req, res) => {
   const testId = req.params.testId;
@@ -393,6 +342,10 @@ app.get('/admin/tests', async (req, res) => {
 
 
 
+
+// app.get('/tests', async (req, res) => {
+//   res.render('./testseries/TestFromQuestionBank.ejs');
+// });
 
 app.get('/tests', async (req, res) => {
   res.render('./testseries/TestFromQuestionBank.ejs');
@@ -565,8 +518,7 @@ app.get('/ai', async (req, res) => {
 });
 
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+// console.log(process.env.cloud_name)
 
 
 
