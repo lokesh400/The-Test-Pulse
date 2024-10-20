@@ -344,27 +344,6 @@ function saveAndNext(index) {
     // Determine which section this question belongs to
     const section = sectionInfo[index];
 
-    // Check if this is one of the last 10 questions of the section
-    if (index >= 20 && index <= 29 && section === 'physics' && physicsAttempts >= last10QuestionsLimit) {
-      alert('You have already attempted 5 questions in the last 10 of Physics section.');
-      return;
-    } else if (index >= 50 && index <= 59 && section === 'chemistry' && chemistryAttempts >= last10QuestionsLimit) {
-      alert('You have already attempted 5 questions in the last 10 of Chemistry section.');
-      return;
-    } else if (index >= 80 && index <= 89 && section === 'maths' && mathsAttempts >= last10QuestionsLimit) {
-      alert('You have already attempted 5 questions in the last 10 of Maths section.');
-      return;
-    }
-
-    // Increment attempt counters for the section if it's a valid question
-    if (section === 'physics' && index >= 20 && index <= 29) {
-      physicsAttempts++;
-    } else if (section === 'chemistry' && index >= 50 && index <= 59) {
-      chemistryAttempts++;
-    } else if (section === 'maths' && index >= 80 && index <= 89) {
-      mathsAttempts++;
-    }
-
     // Change the sidebar button color for the answered question
     const sidebarButton = document.getElementById(`sidebar-button-${index}`);
     sidebarButton.classList.remove('skipped'); // Remove skipped class if it was previously set

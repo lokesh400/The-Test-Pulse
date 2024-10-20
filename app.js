@@ -13,20 +13,17 @@ const localStrategy = require("passport-local");
 const dataModule = require('./public/js/data.js');
 const DataModel = require('./models/Data'); // Adjust the path if necessary
 
-
 const Test = require('./models/Test');
-
 const User = require('./models/User');
 
-const Subject = require('./models/Subject');
-const Chapter = require('./models/Chapter');
-const Topic = require('./models/Topic');
-const Question = require('./models/Question');
+
+
 
 
 const blogsrouter = require("./routes/blogs.js");
 const jobsrouter = require("./routes/jobs.js");
 const userrouter = require("./routes/user.js");
+const testrouter = require("./routes/testseries.js");
 
 const app = express();
 const port = 8000;
@@ -53,6 +50,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+app.use(express.json());
 
 const sessionOptions = {
   secret: "bjhbsjhbjhbfdj",
@@ -73,6 +71,11 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 // app.use(fileUpload())
 // app.use(express.json());
@@ -94,101 +97,7 @@ app.get('/', (req, res) => {
 app.use("/blogs",blogsrouter);
 app.use("/jobs",jobsrouter);
 app.use("/user",userrouter);
-
-// app.get("/listings/:id" , async (req, res) => {
-
-//   let {id} = req.params;
-//   const allListing = await currentaffair.findById(id);
-//   res.render("listings/show.ejs",{allListing})
-
-// })
-
-// app.post("/listings", async (req,res) => {
-   
-//     let sampleListing = new currentaffair({
-//                  Info:current,
-//              });
-
-//          await sampleListing.save();
-//          console.log(current);
-//     let current = [];
-//     console.log(current)
-    
-//           res.redirect("/listings/create");
-//           res.send("done");
-// })
-
-// app.get('/testpulse/apply', (req, res) => {
-//   res.render('index');
-// });
-
-// app.post('/submit', async (req, res) => {
-//   const role = req.body.role;
-//   const {name,mail,number,college} = req.body
-
-//   try {
-//     const newRole = new Role({ 
-//         Role : role,
-//         Name : name,
-//         Number : number,
-//         Email : mail,
-//         College: college,
-//     });
-//     await newRole.save();
-//     res.render('success', { role });
-//   } catch (error) {
-//     res.status(500).send('Error saving data');
-//   }
-// });
-
-// app.get('/users', async (req, res) => {
-//       const roles = await Role.find({});
-//       res.render('userdata', { roles });
-//   });
-
-  // TEST PORTAL
-
-// app.get('/testportal', async (req, res) => {
-//       const chnames = await Chapter.find({});
-//       res.render('testportal', { chnames });
-  // const {name} = req.body;
-  // const {name,mail,number,college} = req.body
-
-  // try {
-  //   const newRole = new Role({ 
-  //       Role : role,
-  //       Name : name,
-  //       Number : number,
-  //       Email : mail,
-  //       College: college,
-  //   });
-  //   await newRole.save();
-  //   res.render('success', { role });
-  // } catch (error) {
-  //   res.status(500).send('Error saving data');
-  // }
-  // res.render('testportal');
-// });  
-
-// app.post('/testportal/:ch', (req,res)=>{
-//   const {ch} = req.params;
-//   console.log(ch);
-//   res.send("done");
-// })
-
-
-
-
-
-
-
-
-
-
-
- // Adjust the path if necessary
-
-
+app.use("/test",testrouter);
 
 
 
@@ -241,32 +150,14 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 
 app.get('/testportal', (req, res) => {
     if(!req.isAuthenticated()){
-      res.send("login first")
+      req.flash('error_msg', 'You must log in to view that page.');
+      res.redirect('/user/login');
     }
     else{
-      console.log(req.user)
       res.render('./testseries/indexx.ejs');
     }
 });
 
-// Admin Route - Render test creation page
-app.get('/admin/create', (req, res) => {
-  res.render('./testseries/createtest.ejs');
-});
-
-// Handle form submission for creating a test
-app.post('/admin/create', async (req, res) => {
-  const { title, questions,time } = req.body;
-  const formattedQuestions = questions.map(q => ({
-    questionText: q.questionText,
-    options: q.options,
-    correctAnswer: q.correctAnswer,
-  }));
-  const newTest = new Test({ title, questions: formattedQuestions ,time});
-  await newTest.save();
-  const tests = await Test.find({});
-  res.render('./testseries/admin-test', { tests });
-});
 
 //Test DELETE Route
 
@@ -293,7 +184,7 @@ app.get('/student/tests', async (req, res) => {
 
 app.get('/student/test/:id', async (req, res) => {
   const test = await Test.findById(req.params.id);
-  res.render('./testseries/attempt-test.ejs', { test });
+  res.render('./studenttestinterface/attempt-test.ejs', { test });
 });
 
 // app.get('/student/test/:id', async (req, res) => {
@@ -347,44 +238,6 @@ app.get('/admin/tests', async (req, res) => {
 //   res.render('./testseries/TestFromQuestionBank.ejs');
 // });
 
-app.get('/tests', async (req, res) => {
-  res.render('./testseries/TestFromQuestionBank.ejs');
-});
-
-app.get('/api/subjects', async (req,res) => {
-  const subjects = await Subject.find({})
-  res.json(subjects);
-})
-
-app.get('/api/chapters/:name', async (req,res) => {
-  const {name} = req.params;
-  const chapter = await Chapter.find({SubjectName : name})
-  res.json(chapter);
-})
-
-app.get('/api/topics/:name', async (req,res) => {
-  const {name} = req.params;
-  const chapter = await Topic.find({ChapterName : name})
-  res.json(chapter);
-})
-
-app.get('/api/questions/:name', async (req,res) => {
-  const {name} = req.params;
-  const chapter = await Question.find({TopicName : name})
-  res.json(chapter);
-})
-
-
-app.post('/process', async (req, res) => {
-  const selectedOptions = req.body.options; // options will be an array
-  let data =[];
-  
-  for(let i=0;i<selectedOptions.length;i++){
-     let ques = await Question.findById(selectedOptions[i]); 
-     let data2 = data.push(ques)
-  }
-   res.render('./testseries/TestFromQuestionBank2.ejs',{data});
-});
 
 
 // QUESTION BANK
@@ -473,53 +326,10 @@ app.post('/create/topic', async(req,res) => {
 
 
 
-// server.js
-const OpenAI = require('openai'); // Updated import for v4.x
-require('dotenv').config();
+
 
 
 // Middleware to parse JSON
-app.use(express.json());
-
-// Initialize OpenAI API with your key
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Endpoint to handle ChatGPT API requests
-app.post('/chat', async (req, res) => {
-  const { message } = req.body;
-
-  if (!message) {
-    return res.status(400).json({ error: 'No message provided' });
-  }
-
-  console.log('Received message:', message); // Log the incoming message
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: message }],
-    });
-
-    const chatResponse = response.choices[0].message.content;
-    console.log('ChatGPT response:', chatResponse); // Log the ChatGPT response
-
-    res.json({ response: chatResponse });
-  } catch (error) {
-    console.error('Error with OpenAI API:', error);
-    res.status(500).json({ error: 'Error generating response' });
-  }
-});
-
-
-app.get('/ai', async (req, res) => {
-  res.render('apenai.ejs');
-});
-
-
-// console.log(process.env.cloud_name)
-
 
 
 

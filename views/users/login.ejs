@@ -6,6 +6,11 @@
     <title>Document</title>
 </head>
 <body>
+    <% if (error_msg.length > 0) { %>
+        <div id="toast">
+            <%= error_msg %>
+        </div>
+    <% } %> 
     <h1>Hello</h1>
 
     <form action="/user/login" method="POST">

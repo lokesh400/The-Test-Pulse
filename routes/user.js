@@ -26,7 +26,7 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
-    res.render("./users/login.ejs");
+    res.render("./users/login.ejs", { error_msg: req.flash('error_msg') });
 });
 
 router.post("/login",
