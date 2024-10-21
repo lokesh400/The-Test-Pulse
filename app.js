@@ -110,7 +110,6 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
     res.render('index');
-    console.log(res.locals.currUser);
 });
 
 // app.get('/currentaffairs', async (req, res) => {
