@@ -9,9 +9,10 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const { username, email, password } = req.body;
-    const newUser = new User({ email, username });
-
+    const { username, email, password ,confirmpassword} = req.body;
+    
+    if(password==confirmpassword){
+        const newUser = new User({ email, username });
     try {
         // Attempt to register the new user
         const registeredUser = await User.register(newUser, password);
@@ -20,13 +21,17 @@ router.post('/signup', async (req, res) => {
     } catch (error) {
         console.error(error);
         // Render signup page with an error message
-        res.render("./users/signup.ejs", { error: "Registration failed. Please try again." });
+        res.render("./users/signup.ejs", {error : error.message});
     }
+    }
+    else{
+        res.render("./users/signup.ejs", {error : "password do not match"});
+    } 
 });
 
 // Login route
 router.get("/login", (req, res) => {
-    res.render("./users/login.ejs", { error_msg: req.flash('error_msg') });
+    res.render("./users/login.ejs");
 });
 
 router.post("/login",

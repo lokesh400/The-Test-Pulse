@@ -3,149 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <title>Attempt Test</title>
-  <style>
-    body {
-      display: flex;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-
-    .sidebar {
-      width: 15%;
-      background-color: #f4f4f4;
-      padding: 20px;
-      height: 100vh;
-      border-right: 1px solid #ccc;
-
-    }
-
-    .sidebar button {
-      /* width: 100%; */
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .sidebar button:hover {
-      background-color: #0056b3;
-    }
-
-    .content {
-      width: 85%;
-      /* padding: 20px; */
-      margin-right: 1%;
-    }
-
-    .question-block {
-      display: none;
-    }
-
-    .active {
-      display: block;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin: 10px;
-      transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-      background-color: #0056b3;
-    }
-
-    .timer {
-      /* font-size: 24px; */
-      color: red;
-      width: 5%;
-      margin-top: px;
-
-    }
-
-    .answered {
-      background-color: green !important; /* Color for answered questions */
-    }
-
-    .skipped {
-      background-color: rgba(255, 77, 0, 0.497) !important; /* Color for skipped questions */
-    }
-
-    .title{
-        justify-content: center;
-        display: flex;
-        border-bottom: 2px solid black;
-        border-top: 2px solid black;
-    }
-
-    #heading{
-        width: 90%;
-        text-align: center;
-    }
- 
-    .btn-container{
-        display: flex;
-        justify-content: right;
-    }
-
-    span{
-        font-size: xx-small;
-    }
-    #ques-img{
-        width: 30vw;
-    }
-
-  </style>
+  <link rel="stylesheet" href="/styles/studenttest.css">
 </head>
 <body>
 
   <button id="clickToStart">Click here to start the test in fullscreen</button>
 
-  <!-- Content to show the current question -->
   <div class="content">
-
     <div class="title">
-
         <div class="timer" id="timer"><span>Time Left:</span><span id="timeRemaining"><%= test.duration %></span></div>
-
-       
         <div id="heading"><h3><%= test.title %></h3></div>
-        
         <button type="button" onclick="Submit()">Submit</button>
     </div>
 
     <form id="testForm" style="display:none;" action="/student/test/<%= test._id %>" method="POST">
-
       <% test.questions.forEach((question, index) => { %>
         <div class="question-block" id="question-<%= index %>">
             
           <h3>Question <%= index + 1 %>:</h3> <img id="ques-img" src="<%= question.questionText %>" alt="">
           <div>
           <% question.options.forEach((option, optionIndex) => { %>
-            <label>
-              <input type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>"> <%= option %>
-            </label><br>
+
+            <div class="radio-input">
+              <label class="label">
+                <input
+                type="radio"
+                name="answers[<%= index %>]" 
+                value="<%= optionIndex %>"
+                />
+                <p class="text"><%= option %></p>
+              </label>
+            </div>
+           <br>
           <% }) %>
         </div>
           <!-- Buttons for Save & Next, Skip, and Clear Selection -->
-
-          <div class="btn-container">
-
+        <footer class="footer">
             <button type="button" class="btn" onclick="saveAndNext(<%= index %>)">Save & Next</button>
             <button type="button" class="btn" onclick="skipQuestion(<%= index %>)">Skip</button>
             <button type="button" class="btn" onclick="clearSelection(<%= index %>)">Clear Selection</button>
-
-          </div>
-          
-          
-          
+        </footer>
+            
+                  
         </div>
       <% }) %>
       <!-- Hidden field to track last saved question index -->
@@ -155,18 +54,13 @@
 
   <!-- Sidebar to list all questions -->
   <div class="sidebar">
-    
-    
-
-    <h3>Questions</h3>
     <!-- <div id="questionList"> -->
       <% test.questions.forEach((question, index) => { %>
-        
           <button type="button" id="sidebar-button-<%= index %>" onclick="showQuestion(<%= index %>)"><%= index + 1 %></button>
-        
       <% }) %>
     <!-- </div> -->
   </div>
+
 
   <script>
     let totalTime = <%= test.time %> * 60; // Convert duration in minutes to seconds
@@ -174,195 +68,152 @@
 
     // Function to start the countdown timer
     function startTimer() {
-      timerInterval = setInterval(() => {
-        if (totalTime <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('testForm').submit(); // Auto-submit the form
-          alert('Time is up! Your test has been submitted.');
-        } else {
-          totalTime--;
-          const minutes = Math.floor(totalTime / 60);
-          const seconds = totalTime % 60;
-          document.getElementById('timeRemaining').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-      }, 1000);
+        timerInterval = setInterval(() => {
+            if (totalTime <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('testForm').submit(); // Auto-submit the form
+                alert('Time is up! Your test has been submitted.');
+            } else {
+                totalTime--;
+                const minutes = Math.floor(totalTime / 60);
+                const seconds = totalTime % 60;
+                document.getElementById('timeRemaining').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }
+        }, 1000);
     }
 
     // Function to show a specific question by index
     function showQuestion(index) {
-      hideAllQuestions();
-      document.getElementById(`question-${index}`).classList.add('active');
+        hideAllQuestions();
+        document.getElementById(`question-${index}`).classList.add('active');
     }
 
     // Function to hide all questions
     function hideAllQuestions() {
-      const allQuestions = document.querySelectorAll('.question-block');
-      allQuestions.forEach(question => question.classList.remove('active'));
+        const allQuestions = document.querySelectorAll('.question-block');
+        allQuestions.forEach(question => question.classList.remove('active'));
     }
 
     // Function to save the answer and move to the next question
     function saveAndNext(index) {
-  const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
-  if (selectedOption) {
-    // Change the sidebar button color for the answered question
-    const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-    sidebarButton.classList.remove('skipped'); // Remove skipped class if it was previously set
-    sidebarButton.classList.add('answered'); // Add answered class
+        const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
+        if (selectedOption) {
+            const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+            sidebarButton.classList.remove('skipped');
+            sidebarButton.classList.add('answered');
 
-    // Moving to the next question
-    if (index + 1 < <%= test.questions.length %>) {
-      showQuestion(index + 1);
-    } else {
-      alert('This was the last question!');
-      clearInterval(timerInterval); // Stop the timer
-      //   document.getElementById('testForm').submit(); // Submit the test when the last question is reached
+            if (index + 1 < <%= test.questions.length %>) {
+                showQuestion(index + 1);
+            } else {
+                alert('This was the last question!');
+                clearInterval(timerInterval); // Stop the timer
+            }
+        } else {
+            alert('Please select an option before saving.');
+        }
     }
-  } else {
-    alert('Please select an option before saving.');
-  }
-}
 
     // Function to skip the current question and move to the next one
-   
     function skipQuestion(index) {
-  // Change the sidebar button color for the skipped question
-  const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-  sidebarButton.classList.remove('answered'); // Remove answered class if it was previously set
-  sidebarButton.classList.add('skipped'); // Add skipped class
+        const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+        sidebarButton.classList.remove('answered');
+        sidebarButton.classList.add('skipped');
 
-  if (index + 1 < <%= test.questions.length %>) {
-    showQuestion(index + 1);
-  } else {
-    alert('This was the last question!');
-    clearInterval(timerInterval); // Stop the timer
-  }
-}
+        if (index + 1 < <%= test.questions.length %>) {
+            showQuestion(index + 1);
+        } else {
+            alert('This was the last question!');
+            clearInterval(timerInterval); // Stop the timer
+        }
+    }
 
-// Function to clear the selected option for a specific question
-function clearSelection(index) {
-  // Deselect all radio buttons for the given question
-  const radioButtons = document.querySelectorAll(`input[name="answers[${index}]"]`);
-  radioButtons.forEach(radio => {
-    radio.checked = false; // Clear the selection
-  });
+    // Function to clear the selected option for a specific question
+    function clearSelection(index) {
+        const radioButtons = document.querySelectorAll(`input[name="answers[${index}]"]`);
+        radioButtons.forEach(radio => {
+            radio.checked = false; // Clear the selection
+        });
 
-  // Update the sidebar button class if needed
-  const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-  sidebarButton.classList.remove('answered'); // Remove the answered class if exists
-  sidebarButton.classList.remove('skipped'); // Remove the skipped class if exists
-}
+        const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+        sidebarButton.classList.remove('answered');
+        sidebarButton.classList.remove('skipped');
+    }
 
-
-// Add a function to reset the sidebar button states when reattempting questions
-function resetQuestionStates() {
-  const sidebarButtons = document.querySelectorAll('.sidebar ul li button');
-  sidebarButtons.forEach(button => {
-    button.classList.remove('answered', 'skipped'); // Remove all classes
-  });
-}    
-   // Initially show the first question
-    showQuestion(0);
-
-    function Submit () {
+    // Function to submit the form
+    function Submit() {
         document.getElementById('testForm').submit();
     }
 
-let isFullscreen = false;  // Track if in fullscreen mode
-        let initialWidth, initialHeight; // Store initial dimensions
-        let resizeListenerAdded = false; // Flag to manage resize listener
+    // Initially show the first question
+    showQuestion(0);
 
-        // Function to enter fullscreen
-        function enterFullscreen() {
-            let docElement = document.documentElement;
+    // Fullscreen and timer setup
+    document.getElementById("clickToStart").addEventListener("click", function() {
+        enterFullscreen();
+        startTimer();
+    });
 
-            // Request fullscreen based on the browser
-            if (docElement.requestFullscreen) {
-                docElement.requestFullscreen();
-            } else if (docElement.mozRequestFullScreen) { // Firefox
-                docElement.mozRequestFullScreen();
-            } else if (docElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                docElement.webkitRequestFullscreen();
-            } else if (docElement.msRequestFullscreen) { // IE/Edge
-                docElement.msRequestFullscreen();
-            }
-        }
 
-        // Button click to enter fullscreen
-        document.getElementById("clickToStart").addEventListener("click", function() {
-            enterFullscreen();
-            startTimer();
-        });
-
-        // Detect when fullscreen mode changes
-        document.addEventListener("fullscreenchange", function() {
-            if (document.fullscreenElement) {
-                // Entered fullscreen
-                isFullscreen = true;
-                resizeListenerAdded = false; // Reset the resize listener flag
-                document.getElementById("clickToStart").style.display = "none";
-                document.getElementById("testForm").style.display = "block";
-                
-                // Record initial size after entering fullscreen
-                initialWidth = window.innerWidth;
-                initialHeight = window.innerHeight;
-
-                // Add resize event listener to detect subsequent resizes
-                window.addEventListener('resize', handleResize);
-            } else {
-                // Exited fullscreen
-                isFullscreen = false;
-                window.removeEventListener('resize', handleResize); // Remove listener on exit
-            }
-        });
-
-        // Handle the window resize event
-        function handleResize() {
-            // Submit the form if the window is resized after entering fullscreen
-            if (isFullscreen) {
-                if (window.innerWidth !== initialWidth || window.innerHeight !== initialHeight) {
-                    document.getElementById("testForm").submit();
+    let isFullscreen = false;  // Track if in fullscreen mode
+            let initialWidth, initialHeight; // Store initial dimensions
+            let resizeListenerAdded = false; // Flag to manage resize listener
+    
+            // Function to enter fullscreen
+            function enterFullscreen() {
+                let docElement = document.documentElement;
+    
+                // Request fullscreen based on the browser
+                if (docElement.requestFullscreen) {
+                    docElement.requestFullscreen();
+                } else if (docElement.mozRequestFullScreen) { // Firefox
+                    docElement.mozRequestFullScreen();
+                } else if (docElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                    docElement.webkitRequestFullscreen();
+                } else if (docElement.msRequestFullscreen) { // IE/Edge
+                    docElement.msRequestFullscreen();
                 }
             }
-        }
+    
+            // Button click to enter fullscreen
+            document.getElementById("clickToStart").addEventListener("click", function() {
+                enterFullscreen();
+                startTimer();
+            });
+    
+            // Detect when fullscreen mode changes
+            document.addEventListener("fullscreenchange", function() {
+                if (document.fullscreenElement) {
+                    // Entered fullscreen
+                    isFullscreen = true;
+                    resizeListenerAdded = false; // Reset the resize listener flag
+                    document.getElementById("clickToStart").style.display = "none";
+                    document.getElementById("testForm").style.display = "block";
+                    
+                    // Record initial size after entering fullscreen
+                    initialWidth = window.innerWidth;
+                    initialHeight = window.innerHeight;
+    
+                    // Add resize event listener to detect subsequent resizes
+                    window.addEventListener('resize', handleResize);
+                } else {
+                    // Exited fullscreen
+                    isFullscreen = false;
+                    window.removeEventListener('resize', handleResize); // Remove listener on exit
+                }
+            });
+    
+            // Handle the window resize event
+            function handleResize() {
+                // Submit the form if the window is resized after entering fullscreen
+                if (isFullscreen) {
+                    if (window.innerWidth !== initialWidth || window.innerHeight !== initialHeight) {
+                        document.getElementById("testForm").submit();
+                    }
+                }
+            }
+    
 
-        const last10QuestionsLimit = 5;
-let physicsAttempts = 0;
-let chemistryAttempts = 0;
-let mathsAttempts = 0;
-
-// Array to track the section each question belongs to. (This would typically come from the backend)
-const sectionInfo = [
-  // Assuming first 30 are Physics, next 30 Chemistry, last 30 Maths
-  ...Array(30).fill('physics'), 
-  ...Array(30).fill('chemistry'), 
-  ...Array(30).fill('maths')
-];
-
-function saveAndNext(index) {
-  const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
-  if (selectedOption) {
-    // Determine which section this question belongs to
-    const section = sectionInfo[index];
-
-    // Change the sidebar button color for the answered question
-    const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-    sidebarButton.classList.remove('skipped'); // Remove skipped class if it was previously set
-    sidebarButton.classList.add('answered'); // Add answered class
-
-    // Move to the next question
-    if (index + 1 < <%= test.questions.length %>) {
-      showQuestion(index + 1);
-    } else {
-      alert('This was the last question!');
-      clearInterval(timerInterval); // Stop the timer
-    }
-  } else {
-    alert('Please select an option before saving.');
-  }
-}
-
-
-  </script>
+</script>
 
 </body>
 </html>

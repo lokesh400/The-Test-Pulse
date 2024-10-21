@@ -1,212 +1,122 @@
-:root {
-    --theme-back-primary: #0e1217;
-    --theme-back-secondary: #1c1f26;
-    --theme-back-tertiary: #17191f;
-    --theme-front-primary: #fff;
-    --theme-front-secondary: #cfd6e6;
-    --theme-front-tertiary: #a8b3cf;
-    --theme-color-primary: #ce3df3;
-    --theme-color-secondary: #7147ed;
-    --theme-status-error: #e04337;
-    --theme-status-warning: #ff8e3b;
-    --theme-status-success: #39e58c;
-    --theme-status-info: #ffe923;
-  }
-  
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    border-radius: 99px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: var(--theme-back-tertiary);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    border-radius: 99px;
-    background: var(--theme-color-primary);
-  }
-  
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--theme-back-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  #form-container {
-    width: 320px;
-    height: 80%;
-    border-radius: 8px;
-    background: var(--theme-back-secondary);
-    --shadow-color: 206 61 243;
-    box-shadow: 6.7px 6.7px 5.3px rgb(var(--shadow-color) / 0.04),
-      22.3px 22.3px 17.9px rgb(var(--shadow-color) / 0.06),
-      100px 100px 80px rgb(var(--shadow-color) / 0.1);
-    padding: 8px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  form {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-  }
-  
-  #form-logo {
-    margin-top: 32px;
-    align-self: center;
-    text-decoration: none;
-    user-select: none;
-  }
-  
-  #form-logo svg {
-    width: 6rem;
-  }
-  
-  #form-title {
-    display: flex;
-  }
-  
-  #form-back {
-    margin-left: auto;
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-  
-  #form-back svg {
-    width: 1.5rem;
-    vertical-align: middle;
-  }
-  
-  form h1 {
-    color: var(--theme-front-primary);
-    display: inline-block;
-    vertical-align: middle;
-    user-select: none;
-  }
-  
-  form label {
-    margin-top: 8px;
-    color: var(--theme-front-secondary);
-    font-weight: bold;
-    user-select: none;
-  }
-  
-  form input {
-    margin: 8px;
-    padding: 0.8rem;
-    border-radius: 5px;
-    border: solid 2px var(--theme-front-secondary);
-    outline-offset: 3px;
-    background: none;
-    color: var(--theme-front-primary);
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-  
-  form input:not(:focus) {
-    user-select: none;
-  }
-  
-  form input:not(:focus):not(:placeholder-shown):invalid {
-    border-color: var(--theme-status-error);
-    animation: shake 0.5s ease-in-out;
-  }
-  
-  form input:focus:invalid {
-    border-color: var(--theme-status-warning);
-  }
-  
-  form input:valid {
-    border-color: var(--theme-status-success);
-  }
-  
-  form input[type="submit"] {
-    margin-top: 32px;
-    margin-bottom: 0;
-    border-radius: 16px;
-    border: none;
-    background: var(--theme-color-primary);
-    color: var(--theme-back-primary);
-    font-weight: bold;
-  }
-  
-  #form-login {
-    align-self: center;
-    color: var(--theme-front-secondary);
-    font-weight: bold;
-  }
-  
-  #form-login a {
-    color: var(--theme-color-primary);
-    text-decoration: none;
-  }
-  
-  @keyframes shake {
-    0%,
-    100% {
-      transform: translateX(0);
-    }
-    25%,
-    75% {
-      transform: translateX(-10px);
-    }
-    50% {
-      transform: translateX(10px);
-    }
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --theme-back-primary: #0e1217;
-      --theme-back-secondary: #1c1f26;
-      --theme-back-tertiary: #17191f;
-      --theme-front-primary: #fff;
-      --theme-front-secondary: #cfd6e6;
-      --theme-front-tertiary: #a8b3cf;
-      --theme-color-primary: #ce3df3;
-      --theme-color-secondary: #7147ed;
-      --theme-status-error: #e04337;
-      --theme-status-warning: #ff8e3b;
-      --theme-status-success: #39e58c;
-      --theme-status-info: #ffe923;
-    }
-  }
-  
-  @media (prefers-color-scheme: light) {
-    :root {
-      --theme-back-primary: #fff;
-      --theme-back-secondary: #f2f3f8;
-      --theme-back-tertiary: #cad2e2;
-      --theme-front-primary: #0e1217;
-      --theme-front-secondary: #1c1f26;
-      --theme-front-tertiary: #17191f;
-      --theme-color-primary: #c30ff0;
-      --theme-color-secondary: #4b17e8;
-      --theme-status-error: #c72a1f;
-      --theme-status-warning: #ff700a;
-      --theme-status-success: #1bd072;
-      --theme-status-info: #f0d800;
-    }
-  }
-  
-  @media (prefers-reduced-motion) {
-    form input {
-      transition: none;
-    }
-    form input:not(:focus):not(:placeholder-shown):invalid {
-      animation: none;
-    }
-  }
-  
+#form-main-div{
+  margin: auto;
+  width: 450px;
+}
+
+h3{
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #ffffff;
+  padding: 30px;
+  /* width: 450px; */
+  border-radius: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+::placeholder {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.form button {
+  align-self: flex-end;
+}
+
+.flex-column > label {
+  color: #151717;
+  font-weight: 600;
+}
+
+.inputForm {
+  border: 1.5px solid #ecedec;
+  border-radius: 10px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  transition: 0.2s ease-in-out;
+}
+
+.input {
+  margin-left: 10px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.inputForm:focus-within {
+  border: 1.5px solid #2d79f3;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.flex-row > div > label {
+  font-size: 14px;
+  color: black;
+  font-weight: 400;
+}
+
+.span {
+  font-size: 14px;
+  margin-left: 5px;
+  color: #2d79f3;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.button-submit {
+  margin: 20px 0 10px 0;
+  background-color: #151717;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.p {
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.btn {
+  margin-top: 10px;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  gap: 10px;
+  border: 1px solid #ededef;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.btn:hover {
+  border: 1px solid #2d79f3;
+  ;
+}

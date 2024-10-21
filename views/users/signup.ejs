@@ -4,22 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/styles/signup.css">
 </head>
 <body>
-    <h1>Hello</h1>
+    
+    <% { %>
+        <div id="toast" class="toast"><%=error%></div>
+    <% } %>
+    
+    
+<div id="form-main-div">
+    
+<form id="form" action="/user/signup" method="POST">
+    <p class="title">Register </p>
+    <p class="message">Signup now and get full access to our content. </p>
 
-    <form action="/user/signup" method="POST">
-        <label for="username">@UserName</label>
-        <input type="text" name="username" required>
+    
+    <label>
+        <input required placeholder=""  class="input" name="username">
+        <span>Username</span>
+    </label>
 
-        <label for="username">@Email</label>
-        <input type="text" name="email" required>
-
-        <label for="username">@Password</label>
-        <input type="text" name="password" required>
+    <label>
+        <input required placeholder="" type="email" class="input" name="email">
+        <span>Email</span>
+    </label> 
         
-        <button>Submit</button>
-    </form>
+    <label>
+        <input required placeholder="" type="password" class="input" name="password">
+        <span>Password</span>
+    </label>
+    <label>
+        <input required placeholder="" type="password" class="input" name="confirmpassword">
+        <span>Confirm password</span>
+    </label>
+    <button class="submit">Submit</button>
+    <p class="signin">Already have an acount ? <a href="/user/login">Signin</a> </p>
+</form>
+    </div>
+
+    <script>
+        function showToast() {
+            const toast = document.getElementById('toast');
+            // Fade out and hide after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                    toast.style.opacity = '1'; // Reset opacity for next toast
+                }, 500); // Match this timeout with the CSS transition duration
+            }, 3000);
+        }
+
+        showToast();
+
+    </script>
+    
 
 </body>
 </html>
