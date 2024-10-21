@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Available Tests</title>
-  <link rel="stylesheet" href="/styles/testcard.css">
-  <link rel="stylesheet" href="/styles/sidebar.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" /> 
+  <link rel="stylesheet" href="/styles/mobileindex.css"> 
+  <link rel="stylesheet" href="/styles/testcard.css">  
+  <link rel="stylesheet" href="/styles/navbar2.css"> 
 </head>
 <body>
   
@@ -27,8 +29,8 @@
     </div>  
   </div>
 
-  <div id="header-div-cpm">
-    <%- include("../components/sidebar.ejs")%>
+  <div id="right-div">
+    <%- include('.././components/sidebar2.ejs') %>
   </div>
 
 </div>
@@ -105,9 +107,6 @@
             toast.classList.remove('show');
         }, 3000);
     }
-    
-    
-    
   </script>
 
 </body>

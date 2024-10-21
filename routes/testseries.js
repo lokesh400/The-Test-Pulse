@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router =  express.Router();
 const Subject = require('../models/Subject');
 const Chapter = require('../models/Chapter');
 const Topic = require('../models/Topic');
