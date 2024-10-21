@@ -120,3 +120,10 @@ h3{
   border: 1px solid #2d79f3;
   ;
 }
+
+@media (max-width:450px){
+  #form-main-div{
+    margin: auto;
+    width: 95vw;
+  }
+}
