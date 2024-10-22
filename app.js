@@ -21,11 +21,13 @@ const User = require('./models/User');
 
 
 
+
 const blogsrouter = require("./routes/blogs.js");
 const jobsrouter = require("./routes/jobs.js");
 const userrouter = require("./routes/user.js");
 const testrouter = require("./routes/testseries.js");
 const questionbankrouter = require("./routes/questionbank.js");
+const batchrouter = require("./routes/batch.js");
 
 const app = express();
 const port = 8000;
@@ -108,9 +110,9 @@ app.use((req, res, next) => {
 });
 // app.use(fileUpload())
 
-app.get('/', (req, res) => {
-    res.render('index');
-});
+app.get('/', (req,res)=>{
+  res.render("./index.ejs")
+})
 
 // app.get('/currentaffairs', async (req, res) => {
 
@@ -124,6 +126,9 @@ app.use("/jobs",jobsrouter);
 app.use("/user",userrouter);
 app.use("/test",testrouter);
 app.use("/",questionbankrouter);
+app.use("/",batchrouter);
+
+
 
 
 
@@ -176,7 +181,6 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 
 app.get('/testportal', (req, res) => {
     if(!req.isAuthenticated()){
-      req.flash('error_msg', 'You must log in to view that page.');
       res.redirect('/user/login');
     }
     else{

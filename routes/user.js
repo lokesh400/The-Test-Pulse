@@ -6,6 +6,7 @@ const passport = require("passport");
 // Signup route
 router.get('/signup', (req, res) => {
     res.render("./users/signup.ejs");
+    console.log(req.user)
 });
 
 router.post('/signup', async (req, res) => {

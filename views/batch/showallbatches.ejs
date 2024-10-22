@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Batches</title>
+    <style>
+.card {
+  background: rgb(255, 255, 255);
+  padding: 20px;
+}
+
+.card__img {
+  position: relative;
+  background: #FFFFFF;
+  background: linear-gradient(315deg, #68aeff, #0032a6);
+  width: 100%;
+  height: 200px;
+}
+
+.card__span {
+  cursor: pointer;
+  font-size: 11px;
+  position: absolute;
+  background-color: white;
+  top: 10px;
+  left: 10px;
+  padding: 3px 7px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease-in;
+  user-select: none;
+}
+
+.card__span:hover {
+  transform: translateX(5px);
+}
+
+.card-int {
+  padding: 20px 0 0 0;
+}
+
+.card-int__title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 10px;
+}
+
+.card-int__button {
+  cursor: pointer;
+  margin: 20px 0 0 0;
+  padding: 7px 20px;
+  width: 100%;
+  background-color: rgb(238, 246, 255);
+  border: none;
+  color: black;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0);
+  transition: box-shadow 0.1s ease-in;
+  user-select: none;
+}
+
+
+.card-int__button:hover::before {
+  transform: translateX(0%);
+}
+
+.excerpt {
+  font-size: 14px;
+}
+
+.outer-div{
+    width: 500px;
+    margin: auto;
+}
+
+img{
+    height: 100%;
+    width: 100%;
+
+}
+
+@media (max-width:450px){
+    .outer-div{
+    width: 90%;
+    margin: auto;
+}
+}
+
+    </style>
+</head>
+<body>
+    
+    <div class="outer-div">
+        <% allBatches.forEach(batch => { %>
+            <div class="card">
+                <div class="card__corner"></div>
+                <div class="card__img">
+                       <img src="<%=batch.thumbnail%>" alt="">
+                </div>
+                <div class="card-int">
+                         <span class="card-int__title"><%=batch.title%> |</span>
+                         <span class="card-int__title">Class:<%=batch.class%></span>
+                        <a href="/showbatch/<%=batch._id%>"><button class="card-int__button">Show</button></a>
+                </div>
+            </div>
+        <% }) %>
+      </div>  
+
+</body>
+</html>

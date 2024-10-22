@@ -3,12 +3,12 @@ const router = express.Router();
 const Blog = require('../models/Blog');
 
 
-app.get('/currentaffairs/create/new', (req,res) => {
+router.get('/currentaffairs/create/new', (req,res) => {
     res.render('listings/create');
   })
   
   // Route to handle submitted data
-  app.post('/submit-data', async (req, res) => {
+router.post('/submit-data', async (req, res) => {
       const { data } = req.body;
       if (Array.isArray(data)) {
           try {
@@ -36,12 +36,13 @@ app.get('/currentaffairs/create/new', (req,res) => {
       console.log(data)
   });
   
-  app.get('/currentaffairs', async (req, res) => {
+router.get('/currentaffairs', async (req, res) => {
     const allListing = await DataModel.find({});
     res.render('./listings/showall',{allListing});
+    console.log(req.user)
   });
   
-  app.post('/get/currentaffair/by/month', async (req, res) => {
+router.post('/get/currentaffair/by/month', async (req, res) => {
     var selectedOption = req.body.selectedOption;
     const allListing = await DataModel.find({month : selectedOption});
     res.render('./listings/show',{allListing});
