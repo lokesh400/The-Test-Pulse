@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 });
 // app.use(fileUpload())
 
-app.get('/', (req,res)=>{
+app.get("/", (req,res)=>{
   res.render("./index.ejs")
 })
 
