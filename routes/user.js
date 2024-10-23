@@ -2,17 +2,20 @@ const express = require("express");
 const router = express.Router();
 const User = require('../models/User');
 const passport = require("passport");
+const Otp = require('../models/Otp');
+
 
 // Signup route
 router.get('/signup', (req, res) => {
     res.render("./users/signup.ejs");
-    console.log(req.user)
+    // console.log(req.user)
 });
 
 router.post('/signup', async (req, res) => {
-    const { username, email, password ,confirmpassword} = req.body;
-    
-    if(password==confirmpassword){
+    const {email, password ,confirmpassword,otp} = req.body;
+    const username = email;
+    let user = await Otp.findOne({ email });
+    if(password==confirmpassword&&otp==user.otp){
         const newUser = new User({ email, username });
     try {
         // Attempt to register the new user
@@ -56,3 +59,6 @@ router.get("/logout", (req, res, next) => {
 });
 
 module.exports = router;
+
+
+

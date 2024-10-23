@@ -28,6 +28,7 @@ const userrouter = require("./routes/user.js");
 const testrouter = require("./routes/testseries.js");
 const questionbankrouter = require("./routes/questionbank.js");
 const batchrouter = require("./routes/batch.js");
+const otprouter = require("./routes/otp.js");
 
 const app = express();
 const port = 8000;
@@ -124,6 +125,7 @@ app.get("/", (req,res)=>{
 app.use("/blogs",blogsrouter);
 app.use("/jobs",jobsrouter);
 app.use("/user",userrouter);
+app.use("/user",otprouter);
 app.use("/test",testrouter);
 app.use("/",questionbankrouter);
 app.use("/",batchrouter);
