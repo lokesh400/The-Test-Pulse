@@ -70,26 +70,75 @@
             display: none; /* Hidden by default */
             z-index: 999; /* Just below the form */
         }
+        #announcements {
+            display: none; /* Initially hidden */
+        }
+        #tests {
+            display: block; /* Initially visible */
+        }
+        #announcement-list {
+           list-style-type: none; /* Remove default bullet points */
+           padding: 0; /* Remove padding */
+           margin: 0; /* Remove margin */
+        }
+
+#announcement-list li {
+    background-color: #f9f9f9; /* Light background for each list item */
+    border: 1px solid #ddd; /* Border around each item */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Spacing inside each item */
+    margin: 5px auto;
+    width: 500px;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+#announcement-list li:hover {
+    background-color: #e1f5fe; /* Change background on hover */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
         @media (max-width: 450px) {
             .form {
                 width: 90%;
             }
         }
+
     </style>
 </head>
 <body>
     <div id="outer-div">
         <div id="layer1">
             <a href="/update-batch/<%=thisBatch._id%>">createbatch</a>
+            <button id="toggleButton">Show Form</button>
         </div>
+       
         <div id="layer2">
             <button id="announcements-button">Show Announcements</button>
-            <div id="announcements" style="display:none;">
+            <button id="tests-button">Show Tests</button>
+
+            <div id="announcements">
                 <h2>Announcements</h2>
                 <ul id="announcement-list"></ul>
             </div>
 
-            <button id="toggleButton">Show Form</button>
+            <div id="tests">
+                <h2>Tests</h2>
+                <div class="form">
+                    <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
+                        <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
+                        <p><%= thisBatch.title %></p>
+                        <div class="card-button">
+                            <a href="/student/test/<%= thisBatch.tests[i] %>">
+                                <button class="btn">Attempt Test <%= thisBatch.tests[i] %></button>
+                            </a>   
+                        </div>
+                        <% } %>
+                    <% } else { %>
+                        <p>No tests available.</p>
+                    <% } %>
+                </div>
+            </div>
+
             <div id="overlay"></div>
             <div id="myForm">
                 <h2>Create New Announcement</h2>
@@ -103,23 +152,6 @@
                     <button type="submit" class="button-submit">Create Announcement</button>
                 </form>
             </div>
-
-            <div id="outer-div">
-                <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
-                    <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
-                    <div class="form">
-                        <p><%= thisBatch.title %></p>
-                        <div class="card-button">
-                            <a href="/student/test/<%= thisBatch.tests[i] %>">
-                                <button class="btn">Attempt</button>
-                            </a>   
-                        </div>
-                    </div>
-                    <% } %>
-                <% } else { %>
-                    <p>No tests available.</p>
-                <% } %>
-            </div>  
         </div>
     </div>
 
@@ -127,6 +159,8 @@
         const batchId = '<%= thisBatch ? thisBatch._id : "defaultBatchId" %>'; // Ensure thisBatch is defined
     
         document.getElementById('announcements-button').addEventListener('click', async () => {
+            document.getElementById('tests').style.display = 'none';
+            document.getElementById('announcements').style.display = 'block';
             console.log(batchId); // Check if batchId is being set correctly
     
             try {
@@ -152,11 +186,14 @@
                         announcementList.appendChild(li);
                     });
                 }
-    
-                document.getElementById('announcements').style.display = 'block';
             } catch (error) {
                 console.error('Error fetching announcements:', error);
             }
+        });
+
+        document.getElementById('tests-button').addEventListener('click', () => {
+            document.getElementById('announcements').style.display = 'none';
+            document.getElementById('tests').style.display = 'block';
         });
 
         const toggleButton = document.getElementById('toggleButton');
