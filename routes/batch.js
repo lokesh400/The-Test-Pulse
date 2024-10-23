@@ -29,7 +29,7 @@ router.get('/admin/createnewbatch', async (req, res) => {
 // Post request of above route
 router.post('/admin/create/batch', upload.single("file"), async (req, res) => {
     try {
-     const {name,grade} = req.body;
+     const {name,grade,tag,description} = req.body;
      const result = await Upload.uploadFile(req.file.path);
      const imageUrl = result.secure_url
      fs.unlink(req.file.path, (err) => {
@@ -43,7 +43,10 @@ router.post('/admin/create/batch', upload.single("file"), async (req, res) => {
        title:name,
        thumbnail : imageUrl,
        class:grade,
-       tests:[]
+       tests:[],
+       announcements:[],
+       tag:tag,
+       description:description
      });
      await newBatch.save();
    } catch (error) {
@@ -61,7 +64,6 @@ router.get('/showallbatches', async (req, res) => {
 // show a particular requested batch
 router.get('/showbatch/:id', async (req, res) => {
     const {id} = req.params;
-    console.log(id)
     const thisBatch = await Batch.findById(id);
     res.render('./batch/particularbatchhome.ejs',{thisBatch});
    });
@@ -89,5 +91,48 @@ router.post('/create/:id/:testId', async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   });
-  
+
+//ROUTE TO FETCH ANNOUNCEMENTS
+router.get('/batch/:id/announcements', async (req, res) => {
+  try {
+      const id = req.params.id; // Access the ID directly
+      console.log("Batch id is", id);
+      const batch = await Batch.findById(id);
+
+      if (!batch) {
+          return res.status(404).send('Batch not found');
+      }
+
+      res.json(batch.announcements);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+  }
+});
+
+// ROUTE TO ADD ANNOUNCEMENTS
+
+router.post('/create/new/announcement/:testId', async (req, res) => {
+  try {
+    const { testId } = req.params; // Extracting testId from params
+    const {text} = req.body; // Extract the announcement data from the request body
+    console.log(testId,text)
+    // Find the batch by testId
+    const batch = await Batch.findById(testId); 
+    if (!batch) {
+      return res.status(404).json({ message: 'Batch not found' }); // Handle case where batch is not found
+    }
+    
+    // Push the new announcement into the announcements array
+    batch.announcements.push(text); 
+    await batch.save(); // Save the updated batch
+
+    res.redirect('/showallbatches'); // Redirect after successful creation
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(400).json({ error: error.message }); // Return error response
+  }
+});
+
+
 module.exports = router;
