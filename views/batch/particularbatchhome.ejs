@@ -7,21 +7,19 @@
     <link rel="stylesheet" href="/styles/login.css">
     <style>
         body {
+            margin: 0;
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        #layer1 {
-            height: 20vh;
-            width: 100vw;
-            background-color: bisque;
-        }
         #layer2 {
-            height: 80vh;
-            width: 100vw;
+            height: 80%;
+            width: 100%;
             background-color: aqua;
         }
         .form {
             display: flex;
             flex-direction: column;
+            border: 2px solid whitesmoke;
             width: 500px;
             background-color: #ffffff;
             border-radius: 5px;
@@ -82,47 +80,93 @@
            margin: 0; /* Remove margin */
         }
 
-#announcement-list li {
-    background-color: #f9f9f9; /* Light background for each list item */
-    border: 1px solid #ddd; /* Border around each item */
-    border-radius: 4px; /* Rounded corners */
-    padding: 10px; /* Spacing inside each item */
-    margin: 5px auto;
-    width: 500px;
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
+        #announcement-list li {
+            background-color: #f9f9f9; /* Light background for each list item */
+            border: 1px solid #ddd; /* Border around each item */
+            border-radius: 4px; /* Rounded corners */
+            padding: 10px; /* Spacing inside each item */
+            margin: 5px auto;
+            width: 500px;
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
 
-#announcement-list li:hover {
-    background-color: #e1f5fe; /* Change background on hover */
-    cursor: pointer; /* Change cursor to pointer */
-}
+        #announcement-list li:hover {
+            background-color: #e1f5fe; /* Change background on hover */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        
+        .button {
+            padding: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border: none;
+            background-color: #151717;
+            color: #ffffff;
+        }
+        #heading{
+            display: flex;
+            margin-top: 0px;
+            height: 100px;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(55, 0, 255, 0.695);
+        }
+
+        #buttons{
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            height: 10p;
+        }  
+        
+        a{
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        h2{
+            text-align: center;
+        }
 
         @media (max-width: 450px) {
             .form {
                 width: 90%;
             }
+
+            
+        #announcement-list li {
+             margin: 5px auto;
+            width: 90%;
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+            }  
+
         }
 
     </style>
 </head>
 <body>
+
+    <div id="heading">
+        <h2><%=thisBatch.title%></h2>
+    </div>
+
+    <div id="buttons">
+        <button id="announcements-button" class="button">Announcements</button>
+        <button id="tests-button" class="button">Show Tests</button>
+        <button class="button"><a href="/update-batch/<%=thisBatch._id%>">Update</a></button>
+        
+        <button id="toggleButton" class="button">Add Announcement</button>
+    </div>
+
+    <div id="announcements">
+        <h2>Announcements</h2>
+        <ul id="announcement-list"></ul>
+    </div>
+
     <div id="outer-div">
-        <div id="layer1">
-            <a href="/update-batch/<%=thisBatch._id%>">createbatch</a>
-            <button id="toggleButton">Show Form</button>
-        </div>
-       
-        <div id="layer2">
-            <button id="announcements-button">Show Announcements</button>
-            <button id="tests-button">Show Tests</button>
-
-            <div id="announcements">
-                <h2>Announcements</h2>
-                <ul id="announcement-list"></ul>
-            </div>
-
+        
             <div id="tests">
-                <h2>Tests</h2>
+                <h2>All Tests</h2>
                 <div class="form">
                     <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
                         <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
@@ -136,7 +180,6 @@
                     <% } else { %>
                         <p>No tests available.</p>
                     <% } %>
-                </div>
             </div>
 
             <div id="overlay"></div>
