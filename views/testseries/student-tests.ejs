@@ -12,9 +12,15 @@
   
 
 <div id="main">
+
+   
+   
+    
     
 
     <div id="content-div">
+        <h1>Welcome, <%= currUser.name %>!</h1>
+
     <div>
       <% tests.forEach(test => { %>
        <div class="cookieCard">
@@ -23,7 +29,9 @@
              <span class="cookieDescription">Questions<%= test.questions.length %></span><span class="cookieDescription"> &nbsp| Marks:<%= test.questions.length*4 %></span>
              <button class="acceptButton" ><a href="/student/test/<%= test._id %>">Attempt</a></button>
              </div>
-             <button id="deleteButton" data-id="<%= test._id %>">Delete</button>
+             <% if (currUser.role === 'admin') { %>
+                <button id="deleteButton" data-id="<%= test._id %>">Delete</button>
+            <% } %>
         </div>
       <% }) %>
     </div>  

@@ -65,10 +65,7 @@
                 <!-- Selected questions will be shown here -->
             </div>
 
-            <div id="hidden-questions"></div> <!-- Hidden inputs for form submission -->
-
-            <button type="button" id="addQuestionsBtn">Add Questions</button>
-            <button type="submit">Submit Test</button>
+            <button type="submit">Create Test</button>
         </form>
     </div>
 
@@ -128,15 +125,15 @@
             const container = document.getElementById('questions-container');
             container.innerHTML = ''; // Clear previous questions
 
-            data.forEach((question) => {
+            data.forEach((question, index) => {
                 const questionBlock = document.createElement('div');
                 questionBlock.className = 'question-block';
                 const isChecked = selectedQuestions[question._id] ? 'checked' : ''; // Check if question is already selected
                 questionBlock.innerHTML = `
                     <img src="${question.Question}" alt="Question Image">
                     <label>
-                        <input type="checkbox" name="questionIds" value="${question._id}" data-question="${question.QuestionImage}" ${isChecked}>
-                        Select Question
+                        <input type="checkbox" name="options[]" value="${question._id}" data-question="${question.QuestionImage}" ${isChecked}>
+                        Select Question ${index + 1}
                     </label>
                 `;
                 container.appendChild(questionBlock);
@@ -150,10 +147,11 @@
         function handleQuestionSelect(event) {
             const checkbox = event.target;
             const questionId = checkbox.value;
+            const questionImage = checkbox.getAttribute('data-question');
 
             if (checkbox.checked) {
                 // Add the question to selectedQuestions if checked
-                selectedQuestions[questionId] = true; // Use true as value to simplify existence check
+                selectedQuestions[questionId] = questionImage;
             } else {
                 // Remove the question from selectedQuestions if unchecked
                 delete selectedQuestions[questionId];
@@ -170,26 +168,12 @@
             Object.keys(selectedQuestions).forEach((questionId, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.innerHTML = `
-                    <p>Selected Question ${index + 1}: ${questionId}</p>
+                    <img src="${selectedQuestions[questionId]}" alt="Selected Question Image">
+                    <p>Selected Question ${index + 1}</p>
                 `;
                 selectedContainer.appendChild(questionDiv);
             });
         }
-
-        // Store selected questions in hidden inputs when "Add Questions" button is clicked
-        document.getElementById('addQuestionsBtn').addEventListener('click', () => {
-            const hiddenQuestionsContainer = document.getElementById('hidden-questions');
-            hiddenQuestionsContainer.innerHTML = ''; // Clear previous hidden inputs
-
-            // Iterate over selected questions to ensure they are only added once
-            Object.keys(selectedQuestions).forEach(questionId => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'options[]'; // Make sure the name matches the backend
-                input.value = questionId;
-                hiddenQuestionsContainer.appendChild(input);
-            });
-        });
 
         // Fetch the subjects on page load
         fetchSubjects();

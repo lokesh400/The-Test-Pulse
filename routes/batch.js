@@ -19,10 +19,17 @@ const Upload = {
     },
   };
 
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/user/login');
+  }
+
 
   
   //ADMIN ROUTE TO CREATE NEW BATCH
-router.get('/admin/createnewbatch', async (req, res) => {
+router.get('/admin/createnewbatch', ensureAuthenticated,async (req, res) => {
       res.render('./batch/createbatchindex.ejs');
   });
 
@@ -56,20 +63,20 @@ router.post('/admin/create/batch', upload.single("file"), async (req, res) => {
   });  
   
   //All Batches
-router.get('/showallbatches', async (req, res) => {
+router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
    const allBatches = await Batch.find({});
     res.render('./batch/showallbatches.ejs',{allBatches});
   });
   
 // show a particular requested batch
-router.get('/showbatch/:id', async (req, res) => {
+router.get('/showbatch/:id',ensureAuthenticated, async (req, res) => {
     const {id} = req.params;
     const thisBatch = await Batch.findById(id);
     res.render('./batch/particularbatchhome.ejs',{thisBatch});
    });
   
 // Route to include tests in a batch
-router.get('/update-batch/:id', async (req, res) => {
+router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
     const {id} = req.params;
     const tests = await Test.find();
     res.render('./batch/createbatch.ejs',{ tests,id });
@@ -93,7 +100,7 @@ router.post('/create/:id/:testId', async (req, res) => {
   });
 
 //ROUTE TO FETCH ANNOUNCEMENTS
-router.get('/batch/:id/announcements', async (req, res) => {
+router.get('/batch/:id/announcements',ensureAuthenticated, async (req, res) => {
   try {
       const id = req.params.id; // Access the ID directly
       console.log("Batch id is", id);

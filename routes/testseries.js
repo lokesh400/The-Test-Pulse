@@ -7,32 +7,47 @@ const Question = require('../models/Question');
 const Test = require('../models/Test');
 
 
-router.get('/admin/create', (req, res) => {
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/user/login');
+}
+
+function isAdmin(req, res, next) {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
+    return next();
+  }
+  res.render("./error/accessdenied.ejs");
+}
+
+router.get('/admin/create',ensureAuthenticated,isAdmin,(req, res) => {
+  console.log(req.user.role)
   res.render('./testseries/createtest.ejs');
 });
 
-router.get('/create', async (req, res) => {
+router.get('/create', ensureAuthenticated,isAdmin, async (req, res) => {
     res.render('./testseries/TestFromQuestionBank.ejs');
   });
   
-router.get('/api/subjects', async (req,res) => {
+router.get('/api/subjects',ensureAuthenticated,isAdmin, async (req,res) => {
     const subjects = await Subject.find({})
     res.json(subjects);
   })
   
-router.get('/api/chapters/:name', async (req,res) => {
+router.get('/api/chapters/:name',ensureAuthenticated,isAdmin, async (req,res) => {
     const {name} = req.params;
     const chapter = await Chapter.find({SubjectName : name})
     res.json(chapter);
   })
   
-router.get('/api/topics/:name', async (req,res) => {
+router.get('/api/topics/:name',ensureAuthenticated,isAdmin, async (req,res) => {
     const {name} = req.params;
     const chapter = await Topic.find({ChapterName : name})
     res.json(chapter);
   })
   
-router.get('/api/questions/:name', async (req,res) => {
+router.get('/api/questions/:name',ensureAuthenticated,isAdmin, async (req,res) => {
     const {name} = req.params;
     const chapter = await Question.find({TopicName : name})
     res.json(chapter);
@@ -51,7 +66,7 @@ router.post('/secondlastfinalsubmit', async (req, res) => {
 });
 
 // Handle form submission for creating a test
-router.post('/final-submit', async (req, res) => {
+router.post('/final', async (req, res) => {
   const { title, questions,time } = req.body;
   const formattedQuestions = questions.map(q => ({
     questionText: q.questionText,

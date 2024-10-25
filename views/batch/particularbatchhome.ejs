@@ -239,21 +239,24 @@
             document.getElementById('tests').style.display = 'block';
         });
 
+        
         const toggleButton = document.getElementById('toggleButton');
-        const myForm = document.getElementById('myForm');
-        const overlay = document.getElementById('overlay');
+    const myForm = document.getElementById('myForm');
+    const overlay = document.getElementById('overlay');
 
-        toggleButton.addEventListener('click', () => {
-            if (myForm.style.display === 'none' || myForm.style.display === '') {
-                myForm.style.display = 'block';
-                overlay.style.display = 'block';
-                toggleButton.textContent = 'Hide Form';
-            } else {
-                myForm.style.display = 'none';
-                overlay.style.display = 'none';
-                toggleButton.textContent = 'Show Form';
-            }
-        });
+    toggleButton.addEventListener('click', () => {
+        console.log('Toggle button clicked'); // Debugging log
+        if (myForm.style.display === 'none' || myForm.style.display === '') {
+            myForm.style.display = 'block';
+            overlay.style.display = 'block';
+            toggleButton.textContent = 'Hide Form';
+        } else {
+            myForm.style.display = 'none';
+            overlay.style.display = 'none';
+            toggleButton.textContent = 'Show Form';
+        }
+    });
+
     </script>
 </body>
 </html>

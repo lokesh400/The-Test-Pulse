@@ -2,24 +2,55 @@ const express = require("express");
 const router = express.Router();
 const User = require('../models/User');
 const passport = require("passport");
+const nodemailer = require('nodemailer');
 const Otp = require('../models/Otp');
 
 
 // Signup route
 router.get('/signup', (req, res) => {
     res.render("./users/signup.ejs");
-    // console.log(req.user)
 });
 
 router.post('/signup', async (req, res) => {
-    const {email, password ,confirmpassword,otp} = req.body;
+    const {name,email, password ,confirmpassword,otp} = req.body;
+    const role = "student";
     const username = email;
     let user = await Otp.findOne({ email });
     if(password==confirmpassword&&otp==user.otp){
-        const newUser = new User({ email, username });
+        const newUser = new User({name,role, email, username });
     try {
         // Attempt to register the new user
         const registeredUser = await User.register(newUser, password);
+        //sendimg greeting mail
+
+        const transporter = nodemailer.createTransport({
+            service:'gmail',
+            host:'smtp.gmail.com',
+            secure:false,
+            port:587,
+            auth:{
+             user:"lokeshbadgujjar401@gmail.com",
+             pass:process.env.mailpass
+            }
+           });
+        
+           
+              const mailOptions = await transporter.sendMail({
+                from:"lokeshbadgujjar401@gmail.com",
+                to: `${email}`,
+                subject: 'Welcome to TheTestPulseFamily',
+                text: `Dear ${name} welcome to TheTestPulse Family.`,
+            });
+        
+            transporter.sendMail(mailOptions,(error,info)=>{
+                if(error){
+                    console.log(error)
+                }
+                else{
+                    console.log(info+response);
+                }
+            })
+
         // Redirect to login page after successful registration
         res.redirect('/user/login');
     } catch (error) {

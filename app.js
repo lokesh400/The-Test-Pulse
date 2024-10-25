@@ -109,11 +109,16 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user;
   next();
 });
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/user/login');
+}
 // app.use(fileUpload())
 
-app.get("/", (req,res)=>{
-  res.render("./index.ejs")
-})
+
 
 // app.get('/currentaffairs', async (req, res) => {
 
@@ -130,6 +135,14 @@ app.use("/test",testrouter);
 app.use("/",questionbankrouter);
 app.use("/",batchrouter);
 
+app.get("/", (req,res)=>{
+  res.render("./index.ejs")
+})
+
+
+// app.get('/some-route',ensureAuthenticated, (req, res) => {
+//     console.log(currUser);
+// });
 
 
 
@@ -181,13 +194,9 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 // TEST SERIES
 
 
-app.get('/testportal', (req, res) => {
-    if(!req.isAuthenticated()){
-      res.redirect('/user/login');
-    }
-    else{
+app.get('/testportal', ensureAuthenticated,(req, res) => {
       res.render('./testseries/indexx.ejs');
-    }
+   
 });
 
 
@@ -209,7 +218,7 @@ app.delete('/admin/delete/test/:id', async (req, res) => {
 
 
 // Student Route - Render test attempt page
-app.get('/student/tests', async (req, res) => {
+app.get('/student/tests',ensureAuthenticated, async (req, res) => {
   const tests = await Test.find(); // Fetch all tests from the database
   res.render('./testseries/student-tests.ejs', { tests });
 });

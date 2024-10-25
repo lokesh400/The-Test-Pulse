@@ -32,12 +32,44 @@ const Upload = {
     },
   };
 
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/user/login');
+  }  
 
-router.get('/create/question/bank', async(req,res) =>{
+
+router.get('/create/question/bank',ensureAuthenticated, async(req,res) =>{
     res.render('./questionbank/createques.ejs')
   })
 
-
+  router.get('/create',ensureAuthenticated, async (req, res) => {
+    res.render('./testseries/TestFromQuestionBank.ejs');
+  });
+  
+router.get('/api/subjects',ensureAuthenticated, async (req,res) => {
+    const subjects = await Subject.find({})
+    res.json(subjects);
+  })
+  
+router.get('/api/chapters/:name',ensureAuthenticated, async (req,res) => {
+    const {name} = req.params;
+    const chapter = await Chapter.find({SubjectName : name})
+    res.json(chapter);
+  })
+  
+router.get('/api/topics/:name',ensureAuthenticated, async (req,res) => {
+    const {name} = req.params;
+    const chapter = await Topic.find({ChapterName : name})
+    res.json(chapter);
+  })
+  
+router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
+    const {name} = req.params;
+    const chapter = await Question.find({TopicName : name})
+    res.json(chapter);
+  })  
   
   // Define the route
 router.post('/create-ques', upload.single("file"), async (req, res) => {
@@ -74,7 +106,7 @@ router.post('/create-ques', upload.single("file"), async (req, res) => {
     }
   });
   
-router.get('/create/information', (req,res) => {
+router.get('/create/information',ensureAuthenticated, (req,res) => {
     res.render('./questionbank/createinfo.ejs')
   })
   
