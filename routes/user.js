@@ -5,7 +5,6 @@ const passport = require("passport");
 const nodemailer = require('nodemailer');
 const Otp = require('../models/Otp');
 
-
 // Signup route
 router.get('/signup', (req, res) => {
     res.render("./users/signup.ejs");
@@ -34,14 +33,14 @@ router.post('/signup', async (req, res) => {
             }
            });
         
-           
+           try{
               const mailOptions = await transporter.sendMail({
                 from:"lokeshbadgujjar401@gmail.com",
                 to: `${email}`,
                 subject: 'Welcome to TheTestPulseFamily',
                 text: `Dear ${name} welcome to TheTestPulse Family.`,
             });
-        
+        } catch(error){
             transporter.sendMail(mailOptions,(error,info)=>{
                 if(error){
                     console.log(error)
@@ -50,6 +49,7 @@ router.post('/signup', async (req, res) => {
                     console.log(info+response);
                 }
             })
+        }
 
         // Redirect to login page after successful registration
         res.redirect('/user/login');
@@ -66,6 +66,7 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
+    
     res.render("./users/login.ejs");
 });
 
@@ -73,9 +74,34 @@ router.post("/login",
     passport.authenticate("local", {
         failureRedirect: "/user/login",
     }), 
-    (req, res) => {
+    async (req, res) => {
         // Successful login redirects to index page
+
         res.redirect("/"); // Redirect to the homepage after successful login
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            secure: false,
+            port: 587,
+            auth: {
+                user: "lokeshbadgujjar401@gmail.com",
+                pass: process.env.mailpass
+            }
+        });
+        
+        try {
+            const info = await transporter.sendMail({
+                from: "lokeshbadgujjar401@gmail.com",
+                to: `${req.user.email}`,
+                subject: 'Recent Login Activity Noticed',
+                text: `Dear ${req.user.email}, a recent login has been made from your account on TheTestPulse Platform. If this wasn't you, please change your password.`,
+            });
+            console.log("Email sent: ", info.response);
+        } catch (error) {
+            console.error("Error sending email: ", error);
+        }
+        
+
     }
 );
 
@@ -88,6 +114,7 @@ router.get("/logout", (req, res, next) => {
         res.redirect("/"); // Redirect to homepage after logout
     });
 });
+
 
 module.exports = router;
 

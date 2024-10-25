@@ -116,6 +116,13 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect('/user/login');
 }
+
+function isAdmin(req, res, next) {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
+    return next();
+  }
+  res.render("./error/accessdenied.ejs");
+}
 // app.use(fileUpload())
 
 
@@ -137,6 +144,10 @@ app.use("/",batchrouter);
 
 app.get("/", (req,res)=>{
   res.render("./index.ejs")
+})
+
+app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
+  res.render("./admin/admin-index.ejs")
 })
 
 
@@ -192,12 +203,6 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 });
 
 // TEST SERIES
-
-
-app.get('/testportal', ensureAuthenticated,(req, res) => {
-      res.render('./testseries/indexx.ejs');
-   
-});
 
 
 //Test DELETE Route
@@ -269,20 +274,14 @@ app.get('/admin/tests', async (req, res) => {
 });
 
 
+app.get("/user/complaint",(req,res)=>{
+  res.render("./complaints/student-window.ejs")
+})
 
-
-
-
-// QUESTION BANK
-
-
-
-
-
-
-
-// Middleware to parse JSON
-
+//Student-Complaint
+app.post("/user/complaint",(req,res)=>{
+  res.send("hello")
+})
 
 
 // Start server

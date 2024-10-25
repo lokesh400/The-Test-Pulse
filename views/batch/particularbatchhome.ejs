@@ -26,7 +26,7 @@
             margin: auto;
             padding: 20px;
             position: relative;
-            z-index: 1001; /* Ensure it appears above the overlay */
+            z-index: 100; /* Lower z-index for sections */
         }
         p {
             text-align: center;
@@ -47,7 +47,7 @@
             cursor: pointer;
         }
         #myForm {
-            display: none; /* Initially hidden */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -56,7 +56,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            z-index: 1000; /* Ensure it appears above the overlay */
+            z-index: 2000; /* Ensure it appears above other elements */
         }
         #overlay {
             position: fixed;
@@ -64,35 +64,35 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-            display: none; /* Hidden by default */
-            z-index: 999; /* Just below the form */
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1500; /* Ensure it appears just below the form */
         }
         #announcements {
-            display: none; /* Initially hidden */
+            display: none;
         }
         #tests {
-            display: block; /* Initially visible */
+            display: block;
         }
         #announcement-list {
-           list-style-type: none; /* Remove default bullet points */
-           padding: 0; /* Remove padding */
-           margin: 0; /* Remove margin */
+           list-style-type: none;
+           padding: 0;
+           margin: 0;
         }
 
         #announcement-list li {
-            background-color: #f9f9f9; /* Light background for each list item */
-            border: 1px solid #ddd; /* Border around each item */
-            border-radius: 4px; /* Rounded corners */
-            padding: 10px; /* Spacing inside each item */
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
             margin: 5px auto;
             width: 500px;
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
+            transition: background-color 0.3s;
         }
 
         #announcement-list li:hover {
-            background-color: #e1f5fe; /* Change background on hover */
-            cursor: pointer; /* Change cursor to pointer */
+            background-color: #e1f5fe;
+            cursor: pointer;
         }
         
         .button {
@@ -103,7 +103,7 @@
             background-color: #151717;
             color: #ffffff;
         }
-        #heading{
+        #heading {
             display: flex;
             margin-top: 0px;
             height: 100px;
@@ -112,19 +112,19 @@
             background-color: rgba(55, 0, 255, 0.695);
         }
 
-        #buttons{
+        #buttons {
             display: flex;
             justify-content: center;
             gap: 2px;
             height: 10p;
         }  
         
-        a{
+        a {
             color: #ffffff;
             text-decoration: none;
         }
 
-        h2{
+        h2 {
             text-align: center;
         }
 
@@ -132,16 +132,12 @@
             .form {
                 width: 90%;
             }
-
-            
-        #announcement-list li {
-             margin: 5px auto;
-            width: 90%;
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
-            }  
-
+            #announcement-list li {
+                margin: 5px auto;
+                width: 90%;
+                transition: background-color 0.3s;
+            }
         }
-
     </style>
 </head>
 <body>
@@ -164,62 +160,54 @@
     </div>
 
     <div id="outer-div">
-        
-            <div id="tests">
-                <h2>All Tests</h2>
-                <div class="form">
-                    <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
-                        <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
-                        <p><%= thisBatch.title %></p>
-                        <div class="card-button">
-                            <a href="/student/test/<%= thisBatch.tests[i] %>">
-                                <button class="btn">Attempt Test <%= thisBatch.tests[i] %></button>
-                            </a>   
-                        </div>
-                        <% } %>
-                    <% } else { %>
-                        <p>No tests available.</p>
+        <div id="tests">
+            <h2>All Tests</h2>
+            <div class="form">
+                <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
+                    <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
+                    <p><%= thisBatch.title %></p>
+                    <div class="card-button">
+                        <a href="/student/test/<%= thisBatch.tests[i] %>">
+                            <button class="btn">Attempt Test <%= thisBatch.tests[i] %></button>
+                        </a>   
+                    </div>
                     <% } %>
+                <% } else { %>
+                    <p>No tests available.</p>
+                <% } %>
             </div>
-
-            <div id="overlay"></div>
-            <div id="myForm">
-                <h2>Create New Announcement</h2>
-                <form action="/create/new/announcement/<%=thisBatch._id%>" method="POST">
-                    <div class="flex-column">
-                        <label>Title</label>
-                    </div>
-                    <div class="inputForm">
-                        <input placeholder="Enter New Announcement" name="text" class="input" type="text" required />
-                    </div>
-                    <button type="submit" class="button-submit">Create Announcement</button>
-                </form>
-            </div>
+        </div>
+        
+        <!-- Overlay and Form for Creating New Announcement -->
+        <div id="overlay"></div>
+        <div id="myForm">
+            <h2>Create New Announcement</h2>
+            <form action="/create/new/announcement/<%=thisBatch._id%>" method="POST">
+                <div class="flex-column">
+                    <label>Title</label>
+                </div>
+                <div class="inputForm">
+                    <input placeholder="Enter New Announcement" name="text" class="input" type="text" required />
+                </div>
+                <button type="submit" class="button-submit">Create Announcement</button>
+            </form>
         </div>
     </div>
 
     <script>
-        const batchId = '<%= thisBatch ? thisBatch._id : "defaultBatchId" %>'; // Ensure thisBatch is defined
-    
+        const batchId = '<%= thisBatch ? thisBatch._id : "defaultBatchId" %>';
+
         document.getElementById('announcements-button').addEventListener('click', async () => {
             document.getElementById('tests').style.display = 'none';
             document.getElementById('announcements').style.display = 'block';
-            console.log(batchId); // Check if batchId is being set correctly
-    
             try {
-                console.log(`Fetching announcements for batch ID: ${batchId}`);
-                const response = await fetch(`/batch/${batchId}/announcements`); // Correct URL
-                if (!response.ok) {
-                    console.error('Network response was not ok:', response.statusText);
-                    return;
-                }
+                const response = await fetch(`/batch/${batchId}/announcements`);
+                if (!response.ok) return;
+
                 const announcements = await response.json();
-    
-                console.log('Announcements fetched:', announcements);
-    
                 const announcementList = document.getElementById('announcement-list');
-                announcementList.innerHTML = ''; // Clear previous announcements
-    
+                announcementList.innerHTML = '';
+
                 if (announcements.length === 0) {
                     announcementList.innerHTML = '<li>No announcements available.</li>';
                 } else {
@@ -239,24 +227,21 @@
             document.getElementById('tests').style.display = 'block';
         });
 
-        
         const toggleButton = document.getElementById('toggleButton');
-    const myForm = document.getElementById('myForm');
-    const overlay = document.getElementById('overlay');
+        const myForm = document.getElementById('myForm');
+        const overlay = document.getElementById('overlay');
 
-    toggleButton.addEventListener('click', () => {
-        console.log('Toggle button clicked'); // Debugging log
-        if (myForm.style.display === 'none' || myForm.style.display === '') {
-            myForm.style.display = 'block';
-            overlay.style.display = 'block';
-            toggleButton.textContent = 'Hide Form';
-        } else {
-            myForm.style.display = 'none';
-            overlay.style.display = 'none';
-            toggleButton.textContent = 'Show Form';
-        }
-    });
-
+        toggleButton.addEventListener('click', () => {
+            if (myForm.style.display === 'none' || myForm.style.display === '') {
+                myForm.style.display = 'block';
+                overlay.style.display = 'block';
+                toggleButton.textContent = 'Hide Form';
+            } else {
+                myForm.style.display = 'none';
+                overlay.style.display = 'none';
+                toggleButton.textContent = 'Show Form';
+            }
+        });
     </script>
 </body>
 </html>

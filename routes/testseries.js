@@ -78,5 +78,10 @@ router.post('/final', async (req, res) => {
   const tests = await Test.find({});
   res.render('./testseries/admin-test', { tests });
 });
+
+//Test Portal Home Page
+router.get('/testportal', ensureAuthenticated,isAdmin,(req, res) => {
+  res.render('./testseries/indexx.ejs');
+});
   
 module.exports = router;

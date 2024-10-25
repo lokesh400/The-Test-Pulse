@@ -27,14 +27,21 @@ const Upload = {
   }
 
 
+  function isAdmin(req, res, next) {
+    if (req.isAuthenticated() && req.user.role === 'admin') {
+      return next();
+    }
+    res.render("./error/accessdenied.ejs");
+  }
+
   
   //ADMIN ROUTE TO CREATE NEW BATCH
-router.get('/admin/createnewbatch', ensureAuthenticated,async (req, res) => {
+router.get('/admin/createnewbatch', ensureAuthenticated,isAdmin,async (req, res) => {
       res.render('./batch/createbatchindex.ejs');
   });
 
 // Post request of above route
-router.post('/admin/create/batch', upload.single("file"), async (req, res) => {
+router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("file"), async (req, res) => {
     try {
      const {name,grade,tag,description} = req.body;
      const result = await Upload.uploadFile(req.file.path);
@@ -83,7 +90,7 @@ router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
   });
 
 //Post route to include a test in batch
-router.post('/create/:id/:testId', async (req, res) => {
+router.post('/create/:id/:testId',ensureAuthenticated,isAdmin, async (req, res) => {
     try {
       let { id, testId } = req.params; // Extracting id and name from params
       const newte = await Batch.findById(testId); // Find the batch by title
@@ -119,7 +126,7 @@ router.get('/batch/:id/announcements',ensureAuthenticated, async (req, res) => {
 
 // ROUTE TO ADD ANNOUNCEMENTS
 
-router.post('/create/new/announcement/:testId', async (req, res) => {
+router.post('/create/new/announcement/:testId', ensureAuthenticated,async (req, res) => {
   try {
     const { testId } = req.params; // Extracting testId from params
     const {text} = req.body; // Extract the announcement data from the request body
@@ -141,5 +148,18 @@ router.post('/create/new/announcement/:testId', async (req, res) => {
   }
 });
 
+
+// ROUTE TO DELETE A BATCH
+router.delete('/delete/:id/',ensureAuthenticated,isAdmin, async (req, res) => {
+  try {
+    let {id} = req.params; // Extracting id and name from params
+    await Batch.findByIdAndDelete(id); // Find the batch by title
+    
+    res.redirect('/showallbatches')
+  }
+    catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 module.exports = router;

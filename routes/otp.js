@@ -10,7 +10,13 @@ const Otp = require('../models/Otp');
 router.post('/new/send-otp', async (req, res) => {
     const { email } = req.body;
 
-    const otp = otpGenerator.generate(6, { digits: true, upperCase: false, specialChars: false,lowerCase:false });
+    const otp = otpGenerator.generate(6, { 
+        digits: true, 
+        upperCaseAlphabets: false, 
+        lowerCaseAlphabets: false, 
+        specialChars: false 
+    });
+    
     const expirationTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
     try {
@@ -26,14 +32,14 @@ router.post('/new/send-otp', async (req, res) => {
             }
            });
         
-           
+           try{
               const mailOptions = await transporter.sendMail({
                 from:"lokeshbadgujjar401@gmail.com",
                 to: `${email}`,
                 subject: 'Your OTP Code',
                 text: `your otp to create your account is ${otp}`,
             });
-        
+           } catch(error){
             transporter.sendMail(mailOptions,(error,info)=>{
                 if(error){
                     console.log(error)
@@ -42,6 +48,7 @@ router.post('/new/send-otp', async (req, res) => {
                     console.log(info+response);
                 }
             })
+        }
 
         
         let user = await Otp.findOne({ email });
