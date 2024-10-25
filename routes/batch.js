@@ -2,6 +2,7 @@ const express = require("express");
 const router =  express.Router();
 const Test = require('../models/Test');
 const Batch = require('../models/Batch');
+const Complaint = require('../models/Complaints')
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -149,17 +150,31 @@ router.post('/create/new/announcement/:testId', ensureAuthenticated,async (req, 
 });
 
 
-// ROUTE TO DELETE A BATCH
-router.delete('/delete/:id/',ensureAuthenticated,isAdmin, async (req, res) => {
-  try {
-    let {id} = req.params; // Extracting id and name from params
-    await Batch.findByIdAndDelete(id); // Find the batch by title
-    
-    res.redirect('/showallbatches')
-  }
-    catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+// ROUTE TO Submit a complaint
+router.get("/complaint/batch/:batchName/:id",async(req,res)=>{
+  const {batchName,id} = req.params;
+  res.render("./complaints/student-window.ejs",{batchName,id});
+})
 
+router.post("/user/complaint/:batchName/:id",async (req,res)=>{
+  const {batchName,id} = req.params;
+  const {complaint} = req.body;
+  const student = req.user;
+
+  const newComplaint = new Complaint({
+    batch:batchName,
+    issue:complaint,
+    student:student,
+  })
+  await newComplaint.save();
+  res.redirect(`/showbatch/${id}`)
+
+})
+
+// route to send all complaints to admin
+router.get("/admin/allcomplaints",async (req,res)=>{
+  const allComplaints = await Complaint.find({});
+  res.render("./admin/complaints.ejs",{allComplaints})
+
+})
 module.exports = router;

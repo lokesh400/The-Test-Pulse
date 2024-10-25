@@ -66,7 +66,6 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
-    
     res.render("./users/login.ejs");
 });
 
@@ -76,8 +75,13 @@ router.post("/login",
     }), 
     async (req, res) => {
         // Successful login redirects to index page
-
-        res.redirect("/"); // Redirect to the homepage after successful login
+        if(req.user.role==='admin'){
+            res.redirect("/admin")
+        }
+        else{
+            res.redirect("/"); // Redirect to the homepage after successful login
+        }
+        
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             host: 'smtp.gmail.com',

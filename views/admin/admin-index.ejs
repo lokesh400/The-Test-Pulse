@@ -10,84 +10,208 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles/sidebar3.css">
+    <style>
+        main{
+            display: flex;
+        }
+        #header-comp{
+            width: 260px;
+        
+        }
+        #content-div{
+            width: calc(100%-260pc);
+        }
+        #user-profile{
+            height: 100px;
+            width: 200px;
+            border: 2px solid black;
+            position: fixed;
+            top: 0;
+            right: 5px;
+        }
+        .card {
+            height: 150px;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            right: 5px;
+            text-align: left;
+            border-radius: 0.5rem;
+  
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+}
+
+.header {
+  padding: 1.25rem 1rem 1rem 1rem;
+}
+
+.image {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #e2feee;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  animation: animate .6s linear alternate-reverse infinite;
+  transition: .6s ease;
+}
+
+.image svg {
+  color: #0afa2a;
+  width: 2rem;
+  height: 2rem;
+}
+
+.content {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.title {
+  color: #066e29;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.message {
+  margin-top: 0.5rem;
+  color: #595b5f;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.actions {
+  margin: 0.75rem 1rem;
+}
+
+.history {
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  background-color: #1aa06d;
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  justify-content: center;
+  width: 100%;
+  border-radius: 0.375rem;
+  border: none;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+    </style>
   </head>
   <body>
-    <nav>
-      <div class="logo">
-        <span class="logo-name">TheTestPulse</span>
-      </div>
-      <div class="sidebar-content">
-        <ul class="lists">
-          <li class="list">
-            <a href="/admin" class="nav-link">
-              <i class="bx bx-home-alt icon"></i>
-              <span class="link">Dashboard</span>
-            </a>
-          </li>
-          <li class="list">
-            <a href="#" class="nav-link">
-              <i class="bx bx-bar-chart-alt-2 icon"></i>
-              <span class="link">Revenue</span>
-            </a>
-          </li>
-          <li class="list">
-            <a href="#" class="nav-link">
-              <i class="bx bx-bell icon"></i>
-              <span class="link">Notifications</span>
-            </a>
-          </li>
-          <li class="list">
-            <a href="#" class="nav-link">
-              <i class="bx bx-message-rounded icon"></i>
-              <span class="link">Messages</span>
-            </a>
-          </li>
-          <li class="list">
-            <a href="#" class="nav-link">
-              <i class="bx bx-pie-chart-alt-2 icon"></i>
-              <span class="link">Analytics</span>
-            </a>
-          </li>
-          <li class="list batch-dropdown">
-            <a href="test/testportal" class="nav-link">
-              <i class="bx bx-book icon"></i>
-              <span class="link">Test Portal</span>
-            </a>
-            <ul class="dropdown">
-                <li><a href="/test/testportal">TestPortal</a></li>
-                <li><a href="/test/create">Create From Library</a></li>
-                <li><a href="/test/admin/create">Create Manually</a></li>
-                <li><a href="/create/question/bank">Create Library</a></li>
-                <li><a href="/student/tests">All Tests</a></li>
-              </ul>
-          </li>
-          <li class="list batch-dropdown">
-            <a href="#" class="nav-link">
-              <i class="bx bx-folder-open icon"></i>
-              <span class="link">Batch</span>
-            </a>
-            <ul class="dropdown">
-              <li><a href="/showallbatches">All Batches</a></li>
-              <li><a href="/admin/createnewbatch">Create a Batch</a></li>
-            </ul>
-          </li>
-          
-        </ul>
-        <div class="bottom-cotent">
-          <li class="list">
-            <a href="#" class="nav-link">
-              <i class="bx bx-cog icon"></i>
-              <span class="link">Settings</span>
-            </a>
-          </li>
-          <li class="list">
-            <a href="/user/logout" class="nav-link">
-              <i class="bx bx-log-out icon"></i>
-              <span class="link">Logout</span>
-            </a>
-          </li>
+   
+    <main>
+
+        <div id="header-comp">
+            <nav>
+                <div class="logo">
+                  <span class="logo-name">TheTestPulse</span>
+                </div>
+                <div class="sidebar-content">
+                  <ul class="lists">
+                    <li class="list">
+                      <a href="/admin" class="nav-link">
+                        <i class="bx bx-home-alt icon"></i>
+                        <span class="link">Dashboard</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-bar-chart-alt-2 icon"></i>
+                        <span class="link">Revenue</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-bell icon"></i>
+                        <span class="link">Notifications</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="/admin/allcomplaints" class="nav-link">
+                        <i class="bx bx-message-rounded icon"></i>
+                        <span class="link">Messages</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-pie-chart-alt-2 icon"></i>
+                        <span class="link">Analytics</span>
+                      </a>
+                    </li>
+                    <li class="list batch-dropdown">
+                      <a href="test/testportal" class="nav-link">
+                        <i class="bx bx-book icon"></i>
+                        <span class="link">Test Portal</span>
+                      </a>
+                      <ul class="dropdown">
+                          <li><a href="/test/testportal">TestPortal</a></li>
+                          <li><a href="/test/create">Create From Library</a></li>
+                          <li><a href="/test/admin/create">Create Manually</a></li>
+                          <li><a href="/create/question/bank">Create Library</a></li>
+                          <li><a href="/student/tests">All Tests</a></li>
+                        </ul>
+                    </li>
+                    <li class="list batch-dropdown">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-folder-open icon"></i>
+                        <span class="link">Batch</span>
+                      </a>
+                      <ul class="dropdown">
+                        <li><a href="/showallbatches">All Batches</a></li>
+                        <li><a href="/admin/createnewbatch">Create a Batch</a></li>
+                      </ul>
+                    </li>
+                    
+                  </ul>
+                  <div class="bottom-cotent">
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-cog icon"></i>
+                        <span class="link">Settings</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="/user/logout" class="nav-link">
+                        <i class="bx bx-log-out icon"></i>
+                        <span class="link">Logout</span>
+                      </a>
+                    </li>
+                  </div>
+                </div>
+              </nav>
         </div>
-      </div>
-    </nav>
+
+        <div id="content-div">
+
+
+            <div>
+                <div class="card">
+                    <div class="header"> 
+                         <div class="image">
+                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </div> 
+                    <div class="content">
+                          <span class="title"><%=currUser.name%></span> 
+                          <p class="message"><%=currUser.role%></p> 
+                    </div> 
+                </div> 
+            </div
+            </div>
+
+
+        </div>
+
+    </main>
+
   </body>
 </html>
