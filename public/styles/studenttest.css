@@ -1,43 +1,38 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
     font-family: Arial, sans-serif;
     overflow: hidden;
   }
 
   .sidebar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 10 columns */
-    gap: 0; /* No gap between items */
-    padding: 0; /* No padding on container */
-    padding: 10px;
-    width: 250px;
-    background-color: #f4f4f4;
+    padding: auto;
+    width: 280px;
+    background-color: white;
     height: 100vh;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
 
   }
 
-  .sidebar button {
-    padding: 5px;
-    margin: 1px; 
-    height: 30px;
-    width: 30px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
+  .sidebar-button {
+    margin: 5px; 
+    height: 40px;
+    width: 40px;
+    background-color:#f3f1f1;
+    color: black;
+    border: 1 px solid rgba(0, 0, 0, 0.078);
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-
-  .sidebar button:hover {
-    background-color: #0056b3;
   }
 
   .content {
     width: calc(100% - 250px);
     margin-right: 1%;
+  }
+
+  #question-list{
+    margin-top: 200px;
   }
 
   .question-block {
@@ -71,23 +66,21 @@ body {
   }
 
   .answered {
-    background-color: green !important; /* Color for answered questions */
+    background-color: #0056b3 !important; /* Color for answered questions */
   }
 
   .skipped {
-    background-color: rgba(255, 77, 0, 0.497) !important; /* Color for skipped questions */
+    background-color: rgb(255, 77, 0) !important; /* Color for skipped questions */
   }
 
   .title{
       justify-content: center;
       display: flex;
-      border-bottom: 2px solid black;
-      border-top: 2px solid black;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.551);
   }
 
   #heading{
       width: 90%;
-      text-align: center;
   }
 
   .btn-container{
@@ -99,7 +92,7 @@ body {
       font-size: xx-small;
   }
   #ques-img{
-      width: 30vw;
+      width: 40vw;
   }
   
   /* From Uiverse.io by Na3ar-17 */ 
@@ -192,6 +185,47 @@ transform: scale(1);
     color: white; /* Footer text color */
     text-align: center; /* Center text */
     padding: 10px 0; /* Padding for spacing */
+}
+
+#attemptedCount{
+  font-size: small;
+  border: 2px solid #0056b3;
+  background-color: #0056b3;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#notAttemptedCount{
+  font-size: small;
+  border: 2px solid rgba(0, 128, 0, 0.716) ;
+  background-color: rgba(0, 128, 0, 0.716) ;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#skippedCount{
+  font-size: small;
+  border: 2px solid rgb(255, 77, 0) ;
+  background-color: rgb(255, 77, 0);
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#counters{
+  background-color: rgba(0, 255, 255, 0.14);
+  width: fit-content;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#counters p{
+  width: 200px;
+  height: 25px;
+  padding-top: 5px;
+  padding-left: 5px;
+  margin: auto;
+  margin-top: 5px;
 }
 
 @keyframes pulse {

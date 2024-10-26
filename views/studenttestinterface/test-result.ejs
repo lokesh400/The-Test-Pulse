@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Results</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+      color: #007bff;
+    }
+
+    /* Summary Block */
+    .summary {
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 800px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* Question Block */
+    .question-result {
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 800px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-result h3 {
+      font-size: 1.1em;
+      margin-bottom: 15px;
+    }
+
+    /* Image */
+    .question-result img {
+      max-width: 100%;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    /* Option Styles */
+    .option {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      font-size: 1em;
+    }
+
+    .option span:first-child {
+      flex: 1;
+    }
+
+    /* Correct / Incorrect Indicators */
+    .correct-answer {
+      background-color: #e7f9f1;
+      border-left: 4px solid #28a745;
+    }
+
+    .incorrect-answer {
+      background-color: #fdecea;
+      border-left: 4px solid #dc3545;
+    }
+
+    .skipped-answer {
+      background-color: #e0f0ff;
+      border-left: 4px solid #007bff;
+    }
+
+    .correct {
+      color: #28a745;
+    }
+
+    .incorrect {
+      color: #dc3545;
+    }
+
+  </style>
+</head>
+<body>
+  <h2><%= test.title %> - Results</h2>
+
+  <div class="summary">
+    <h3>Summary</h3>
+    <p>Obtained Marks: <%= obtainedMarks %> out of <%= totalMarks %></p>
+    <p>Correct Answers: <%= correctCount %></p>
+    <p>Incorrect Answers: <%= incorrectCount %></p>
+    <p>Skipped Questions: <%= skippedCount %></p>
+</div>
+
+
+  <% test.questions.forEach((question, index) => {
+      const savedAnswer = savedAnswers.find(ans => ans.questionId.toString() === question._id.toString());
+      const selectedOption = savedAnswer ? savedAnswer.selectedOption : null;
+      const isCorrect = savedAnswer && savedAnswer.isCorrect;
+  %>
+    <div class="question-result">
+      <h3>Question <%= index + 1 %>: <img src="<%= question.questionText %>" alt=""></h3>
+      
+      <% question.options.forEach((option, optionIndex) => { %>
+        <div class="option
+          <% if (optionIndex === question.correctAnswer) { %>correct-answer<% } 
+             else if (optionIndex === selectedOption && !isCorrect) { %>incorrect-answer<% } 
+             else if (selectedOption === null) { %>skipped-answer<% } %>">
+          
+          <span><%= option %></span>
+          
+          <% if (optionIndex === selectedOption) { %>
+            <span class="<%= isCorrect ? 'correct' : 'incorrect' %>">
+              (Your answer: <%= isCorrect ? 'Correct' : 'Incorrect' %>)
+            </span>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+</body>
+</html>

@@ -9,14 +9,17 @@
 
   <button id="clickToStart">Click here to start the test in fullscreen</button>
 
-  <div class="content">
+  <div class="content" id="testContent" style="display: none;">
+
     <div class="title">
-        <div class="timer" id="timer"><span>Time Left:</span><span id="timeRemaining"><%= test.duration %></span></div>
-        <div id="heading"><h3><%= test.title %></h3></div>
-        <button type="button" onclick="Submit()">Submit</button>
+        <div id="heading">
+            <h3><%= test.title %></h3>
+        </div>
+        <button class="btn" type="button" onclick="Submit()">Submit</button>
     </div>
 
-    <form id="testForm" style="display:none;" action="/student/test/<%= test._id %>" method="POST">
+
+    <form id="testForm" action="/student/test/<%= test._id %>" method="POST">
       <% test.questions.forEach((question, index) => { %>
         <div class="question-block" id="question-<%= index %>">
             
@@ -37,41 +40,56 @@
            <br>
           <% }) %>
         </div>
-          <!-- Buttons for Save & Next, Skip, and Clear Selection -->
+        <!-- Buttons for Save & Next, Skip, and Clear Selection -->
         <footer class="footer">
             <button type="button" class="btn" onclick="saveAndNext(<%= index %>)">Save & Next</button>
             <button type="button" class="btn" onclick="skipQuestion(<%= index %>)">Skip</button>
             <button type="button" class="btn" onclick="clearSelection(<%= index %>)">Clear Selection</button>
         </footer>
             
-                  
         </div>
       <% }) %>
-      <!-- Hidden field to track last saved question index -->
       <input type="hidden" name="currentQuestionIndex" id="currentQuestionIndex" value="0">
     </form>
   </div>
 
-  <!-- Sidebar to list all questions -->
   <div class="sidebar">
-    <!-- <div id="questionList"> -->
+
+    <div>
+        <h5 id="timeRemaining"><%= test.duration %></h5>
+    </div>
+        <!-- Counters Display -->
+    <div id="counters">
+        <p>Attempted:<span id="attemptedCount">0</span></p>
+        <p>Skipped: <span id="skippedCount">0</span></p>
+        <p>Not Attempted: <span id="notAttemptedCount"><%= test.questions.length %></span></p>
+      </div>
+
+    <div id="questionList">
       <% test.questions.forEach((question, index) => { %>
-          <button type="button" id="sidebar-button-<%= index %>" onclick="showQuestion(<%= index %>)"><%= index + 1 %></button>
+          <button type="button" class="sidebar-button" id="sidebar-button-<%= index %>" onclick="showQuestion(<%= index %>)"><%= index + 1 %></button>
       <% }) %>
-    <!-- </div> -->
+    </div>
   </div>
 
-
   <script>
-    let totalTime = <%= test.time %> * 60; // Convert duration in minutes to seconds
+    let totalTime = <%= test.time %> * 60;
     let timerInterval;
+    let attemptedCount = 0;
+    let skippedCount = 0;
+    let notAttemptedCount = <%= test.questions.length %>;
 
-    // Function to start the countdown timer
+    function updateCounters() {
+        document.getElementById('attemptedCount').textContent = attemptedCount;
+        document.getElementById('skippedCount').textContent = skippedCount;
+        document.getElementById('notAttemptedCount').textContent = notAttemptedCount;
+    }
+
     function startTimer() {
         timerInterval = setInterval(() => {
             if (totalTime <= 0) {
                 clearInterval(timerInterval);
-                document.getElementById('testForm').submit(); // Auto-submit the form
+                document.getElementById('testForm').submit();
                 alert('Time is up! Your test has been submitted.');
             } else {
                 totalTime--;
@@ -82,138 +100,108 @@
         }, 1000);
     }
 
-    // Function to show a specific question by index
     function showQuestion(index) {
         hideAllQuestions();
         document.getElementById(`question-${index}`).classList.add('active');
     }
 
-    // Function to hide all questions
     function hideAllQuestions() {
         const allQuestions = document.querySelectorAll('.question-block');
         allQuestions.forEach(question => question.classList.remove('active'));
     }
 
-    // Function to save the answer and move to the next question
     function saveAndNext(index) {
         const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
         if (selectedOption) {
             const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+            if (!sidebarButton.classList.contains('answered')) {
+                attemptedCount++;
+                notAttemptedCount--;
+            }
             sidebarButton.classList.remove('skipped');
             sidebarButton.classList.add('answered');
+            updateCounters();
 
             if (index + 1 < <%= test.questions.length %>) {
                 showQuestion(index + 1);
             } else {
                 alert('This was the last question!');
-                clearInterval(timerInterval); // Stop the timer
+                clearInterval(timerInterval);
             }
         } else {
             alert('Please select an option before saving.');
         }
     }
 
-    // Function to skip the current question and move to the next one
     function skipQuestion(index) {
         const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+        if (!sidebarButton.classList.contains('skipped')) {
+            skippedCount++;
+            notAttemptedCount--;
+        }
         sidebarButton.classList.remove('answered');
         sidebarButton.classList.add('skipped');
+        updateCounters();
 
         if (index + 1 < <%= test.questions.length %>) {
             showQuestion(index + 1);
         } else {
             alert('This was the last question!');
-            clearInterval(timerInterval); // Stop the timer
+            clearInterval(timerInterval);
         }
     }
 
-    // Function to clear the selected option for a specific question
     function clearSelection(index) {
         const radioButtons = document.querySelectorAll(`input[name="answers[${index}]"]`);
-        radioButtons.forEach(radio => {
-            radio.checked = false; // Clear the selection
-        });
+        radioButtons.forEach(radio => radio.checked = false);
 
         const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+        if (sidebarButton.classList.contains('answered')) {
+            attemptedCount--;
+            notAttemptedCount++;
+        } else if (sidebarButton.classList.contains('skipped')) {
+            skippedCount--;
+            notAttemptedCount++;
+        }
         sidebarButton.classList.remove('answered');
         sidebarButton.classList.remove('skipped');
+        updateCounters();
     }
 
-    // Function to submit the form
     function Submit() {
         document.getElementById('testForm').submit();
     }
 
-    // Initially show the first question
     showQuestion(0);
 
     // Fullscreen and timer setup
     document.getElementById("clickToStart").addEventListener("click", function() {
         enterFullscreen();
         startTimer();
+        document.getElementById("clickToStart").style.display = "none";
+        document.getElementById("testContent").style.display = "block";
     });
 
+    function enterFullscreen() {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { // Firefox
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { // IE/Edge
+            elem.msRequestFullscreen();
+        }
+    }
 
-    let isFullscreen = false;  // Track if in fullscreen mode
-            let initialWidth, initialHeight; // Store initial dimensions
-            let resizeListenerAdded = false; // Flag to manage resize listener
-    
-            // Function to enter fullscreen
-            function enterFullscreen() {
-                let docElement = document.documentElement;
-    
-                // Request fullscreen based on the browser
-                if (docElement.requestFullscreen) {
-                    docElement.requestFullscreen();
-                } else if (docElement.mozRequestFullScreen) { // Firefox
-                    docElement.mozRequestFullScreen();
-                } else if (docElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                    docElement.webkitRequestFullscreen();
-                } else if (docElement.msRequestFullscreen) { // IE/Edge
-                    docElement.msRequestFullscreen();
-                }
-            }
-    
-            // Button click to enter fullscreen
-            document.getElementById("clickToStart").addEventListener("click", function() {
-                enterFullscreen();
-                startTimer();
-            });
-    
-            // Detect when fullscreen mode changes
-            document.addEventListener("fullscreenchange", function() {
-                if (document.fullscreenElement) {
-                    // Entered fullscreen
-                    isFullscreen = true;
-                    resizeListenerAdded = false; // Reset the resize listener flag
-                    document.getElementById("clickToStart").style.display = "none";
-                    document.getElementById("testForm").style.display = "block";
-                    
-                    // Record initial size after entering fullscreen
-                    initialWidth = window.innerWidth;
-                    initialHeight = window.innerHeight;
-    
-                    // Add resize event listener to detect subsequent resizes
-                    window.addEventListener('resize', handleResize);
-                } else {
-                    // Exited fullscreen
-                    isFullscreen = false;
-                    window.removeEventListener('resize', handleResize); // Remove listener on exit
-                }
-            });
-    
-            // Handle the window resize event
-            function handleResize() {
-                // Submit the form if the window is resized after entering fullscreen
-                if (isFullscreen) {
-                    if (window.innerWidth !== initialWidth || window.innerHeight !== initialHeight) {
-                        document.getElementById("testForm").submit();
-                    }
-                }
-            }
-    
-
-</script>
-
+    // Monitor fullscreen exit
+    document.addEventListener("fullscreenchange", function() {
+        if (!document.fullscreenElement) {
+            alert("Fullscreen mode was exited. Submitting the test.");
+            document.getElementById('testForm').submit();
+        }
+    });
+  </script>
 </body>
 </html>

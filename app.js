@@ -9,13 +9,12 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 
-
-
 const dataModule = require('./public/js/data.js');
 const DataModel = require('./models/Data'); // Adjust the path if necessary
 
 const Test = require('./models/Test');
 const User = require('./models/User');
+
 
 
 
@@ -29,6 +28,7 @@ const testrouter = require("./routes/testseries.js");
 const questionbankrouter = require("./routes/questionbank.js");
 const batchrouter = require("./routes/batch.js");
 const otprouter = require("./routes/otp.js");
+const studenttestrouter = require("./routes/studenttest.js");
 
 const app = express();
 const port = 8000;
@@ -141,6 +141,7 @@ app.use("/user",otprouter);
 app.use("/test",testrouter);
 app.use("/",questionbankrouter);
 app.use("/",batchrouter);
+app.use("/",studenttestrouter);
 
 app.get("/", (req,res)=>{
   res.render("./index.ejs")
@@ -222,50 +223,7 @@ app.delete('/admin/delete/test/:id', async (req, res) => {
 });
 
 
-// Student Route - Render test attempt page
-app.get('/student/tests',ensureAuthenticated, async (req, res) => {
-  const tests = await Test.find(); // Fetch all tests from the database
-  res.render('./testseries/student-tests.ejs', { tests });
-});
 
-app.get('/student/test/:id', async (req, res) => {
-  const test = await Test.findById(req.params.id);
-  res.render('./studenttestinterface/attempt-test.ejs', { test });
-});
-
-// app.get('/student/test/:id', async (req, res) => {
-//   const test = await Test.findById(req.params.id);
-//   res.render('./testseries/attempt2.ejs', { test });
-// });
-
-// Handle test submission and calculate the score
-app.post('/student/test/:testId', async (req, res) => {
-  const testId = req.params.testId;
-  const answers = req.body.answers || {}; // Use an empty object as default if answers are undefined
-  const test = await Test.findById(testId); // Fetch the test from your database
-  let score = 0;
-
-  // Check if the test and questions exist
-  if (!test || !test.questions) {
-      return res.status(400).send('Test not found.');
-  }
-
-  // Iterate through the questions and compare answers
-  test.questions.forEach((question, index) => {
-      const userAnswer = answers[index]; // This will be undefined if the question was skipped
-      if (userAnswer !== undefined) { // Only check if the answer exists
-          if (question.correctAnswer == userAnswer) {
-              score += 4;
-          } else{
-            score -= 1;
-          }
-      }
-      
-  });
-
-  // Here, you can save the score or whatever you need to do with the results
-  res.send(`Your score is: ${score}/${test.questions.length*4}`);
-});
 
 // Admin Route - List all tests
 app.get('/admin/tests', async (req, res) => {

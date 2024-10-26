@@ -22,7 +22,6 @@ function isAdmin(req, res, next) {
 }
 
 router.get('/admin/create',ensureAuthenticated,isAdmin,(req, res) => {
-  console.log(req.user.role)
   res.render('./testseries/createtest.ejs');
 });
 

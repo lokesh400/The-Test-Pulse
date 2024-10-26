@@ -167,10 +167,14 @@
                     <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
                     <p><%= thisBatch.title %></p>
                     <div class="card-button">
-                        <a href="/student/test/<%= thisBatch.tests[i] %>">
+                        <a href="/student/test/<%= thisBatch.tests[i]%>">
                             <button class="btn">Attempt Test <%= thisBatch.tests[i] %></button>
                         </a>   
                     </div>
+                    <div class="test-card">
+                        <!-- Other test details -->
+                        <a href="/student/test/<%= thisBatch.tests[i]%>/result" class="btn btn-secondary">Show Result</a>
+                      </div>
                     <% } %>
                 <% } else { %>
                     <p>No tests available.</p>
