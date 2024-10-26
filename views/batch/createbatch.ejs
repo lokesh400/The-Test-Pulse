@@ -26,70 +26,8 @@
         </div>
       <% }) %>
     </div>  
-  </div>
-
- 
+  </div> 
 </div>
-
-  <!-- <script>
-           // script.js
-           document.getElementById('deleteButton').addEventListener('click', function() {
-        const itemId = this.getAttribute('data-id');
-        sendDeleteRequest(itemId);
-    });
-    
-    function sendDeleteRequest(itemId) {
-        fetch(`http://localhost:8000/admin/delete/test/${itemId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Failed to delete item.');
-            }
-        })
-        .then(data => {
-            showToast(data.message, 'success'); // Call with success type
-            // Redirect after a delay to allow the toast to be displayed
-            setTimeout(() => {
-                window.location.href = window.location.href; // Reloads the same page
-            }, 3000); // Adjust the delay as needed (3000ms = 3 seconds)
-        })
-        .catch(error => {
-            showToast('Error: ' + error.message, 'error'); // Call with error type
-        });
-    }
-    
-    function showToast(message, type) {
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-        const loaderProgress = document.querySelector('.loader-progress');
-    
-        toastMessage.innerText = message;
-    
-        // Set the background color based on the type
-        if (type === 'success') {
-            toast.style.backgroundColor = '#00b3ff99';
-        } else if (type === 'error') {
-            toast.style.backgroundColor = 'red';
-        }
-    
-        loaderProgress.style.width = '100%';
-        toast.classList.add('show');
-    
-        setTimeout(() => {
-            loaderProgress.style.width = '0%'; // Shrink loader
-        }, 10);
-    
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-  </script> -->
 
 </body>
 </html>

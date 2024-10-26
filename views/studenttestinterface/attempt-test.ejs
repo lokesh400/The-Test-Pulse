@@ -53,7 +53,7 @@
     </form>
   </div>
 
-  <div class="sidebar">
+  <div class="sidebar" id="side" style="display: none;">
 
     <div>
         <h5 id="timeRemaining"><%= test.duration %></h5>
@@ -180,6 +180,7 @@
         startTimer();
         document.getElementById("clickToStart").style.display = "none";
         document.getElementById("testContent").style.display = "block";
+        document.getElementById("side").style.display = "block";
     });
 
     function enterFullscreen() {
