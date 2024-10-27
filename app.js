@@ -144,7 +144,15 @@ app.use("/",batchrouter);
 app.use("/",studenttestrouter);
 
 app.get("/", (req,res)=>{
-  res.render("./index.ejs")
+  if (req.isAuthenticated() && req.user.role === 'admin') {
+    res.redirect("/admin")
+  }
+  if (req.isAuthenticated() && req.user.role === 'student') {
+    res.redirect("/student")
+  }
+  else{
+    res.render("./index.ejs")
+  }
 })
 
 app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
