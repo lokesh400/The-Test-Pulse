@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 // Question Schema
 const QuestionSchema = new mongoose.Schema({
   questionText: String,

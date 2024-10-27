@@ -59,7 +59,7 @@
     });
     
     function sendDeleteRequest(itemId) {
-        fetch(`http://localhost:8000/admin/delete/test/${itemId}`, {
+        fetch(`/admin/delete/test/${itemId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

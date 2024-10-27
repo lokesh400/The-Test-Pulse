@@ -69,49 +69,6 @@ router.post('/student/test/:testId', async (req, res) => {
 
 
 //Route to render result
-// router.get('/student/test/:id/result', async (req, res) => {
-//     const testId = req.params.id;
-//     const studentId = req.user._id; // assuming the user session contains the student ID
-
-//     // Fetch test data
-//     const test = await Test.findById(testId).populate('questions');
-
-//     // Fetch previously saved answers for this test by the student
-//     const studentTest = await StudentTest.findOne({ studentId, testId });
-//     const savedAnswers = studentTest ? studentTest.answers : [];
-
-//     // Calculate total marks and counts
-//     const totalQuestions = test.questions.length;
-//     let correctCount = 0;
-//     let incorrectCount = 0;
-//     let skippedCount = 0;
-
-//     savedAnswers.forEach(answer => {
-//         if (answer.selectedOption === null) {
-//             skippedCount++; // Count it as skipped if there's no answer selected
-//         } else if (answer.isCorrect) {
-//             correctCount++; // Count it as correct if the answer is correct
-//         } else {
-//             incorrectCount++; // Otherwise, count it as incorrect
-//         }
-//     });
-
-//     const totalMarks = totalQuestions * 4; // Assuming each question is worth 4 marks
-//     const obtainedMarks = studentTest ? studentTest.score : 0; // Fetch the obtained score
-
-//     // Render a results page with both test, saved answers, and summary data
-//     res.render('./studenttestinterface/test-result.ejs', {
-//         test,
-//         savedAnswers,
-//         totalMarks,
-//         obtainedMarks, // Pass obtained marks to the template
-//         totalQuestions,
-//         correctCount,
-//         incorrectCount,
-//         skippedCount
-//     });
-// });
-
 router.get('/student/test/:id/result', async (req, res) => {
     const testId = req.params.id;
     const studentId = req.user._id; // assuming the user session contains the student ID

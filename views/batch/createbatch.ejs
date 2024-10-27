@@ -3,6 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Available Tests</title>
+  <style>
+    .question-block {
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+  </style>
 </head>
 <body>
   
@@ -14,7 +26,7 @@
     <div id="content-div">
     <div>
       <% tests.forEach(test => { %>
-       <div class="cookieCard">
+       <div class="question-block">
              <h4 class="cookieHeading"><%= test.title %></h4>
              <div>
              <span class="cookieDescription">Questions<%= test.questions.length %></span><span class="cookieDescription"> &nbsp| Marks:<%= test.questions.length*4 %></span>
@@ -22,12 +34,46 @@
                 <button>Include</button>
              </form>
              </div>
-             <button id="deleteButton" data-id="<%= test._id %>">Delete</button>
+             <form id="deleteTestForm" action="/admin/delete/test/<%= test._id %>" method="post" onsubmit="deleteTest(event)">
+                <button type="submit">Delete</button>
+            </form>
         </div>
       <% }) %>
     </div>  
   </div> 
 </div>
+
+<script>
+    async function deleteTest(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const form = event.target;
+        const actionUrl = form.action; // Get the action URL from the form
+
+        try {
+            const response = await fetch(actionUrl, {
+                method: 'DELETE', // Specify the DELETE method
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(data.message); // Show success message
+                // Optionally, you can redirect or update the UI here
+                location.reload(); // Reload the page or redirect to a different page
+            } else {
+                alert(data.error); // Show error message
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            alert('Error deleting item. Please try again.');
+        }
+    }
+</script>
+
 
 </body>
 </html>

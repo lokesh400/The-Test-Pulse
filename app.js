@@ -209,17 +209,24 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 //Test DELETE Route
 
 app.delete('/admin/delete/test/:id', async (req, res) => {
-  const itemId = req.params.id;
-    try {
-        const result = await Test.findByIdAndDelete(itemId);
-        if (result) {
-            return res.status(200).json({ message: 'Item deleted successfully!' });
-        } else {
-            return res.status(404).json({ error: 'Item not found.' });
-        }
-    } catch (error) {
-        return res.status(500).json({ error: 'Error deleting item.' });
-    }
+  const testId = req.params.id;
+  try {
+      // First, delete the test
+      const result = await Test.findByIdAndDelete(testId);
+      if (!result) {
+          return res.status(404).json({ error: 'Test not found.' });
+      }
+
+      // Then, remove it from all batches that contain it in the `tests` array
+      await Batch.updateMany(
+          { tests: testId },
+          { $pull: { tests: testId } }
+      );
+
+      return res.status(200).json({ message: 'Test deleted successfully!' });
+  } catch (error) {
+      return res.status(500).json({ error: 'Error deleting test.' });
+  }
 });
 
 
@@ -234,11 +241,6 @@ app.get('/admin/tests', async (req, res) => {
 
 app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")
-})
-
-//Student-Complaint
-app.post("/user/complaint",(req,res)=>{
-  res.send("hello")
 })
 
 
