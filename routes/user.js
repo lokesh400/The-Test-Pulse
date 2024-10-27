@@ -79,7 +79,7 @@ router.post("/login",
             res.redirect("/admin")
         }
         else{
-            res.redirect("/"); // Redirect to the homepage after successful login
+            res.redirect("/student"); // Redirect to the homepage after successful login
         }
         
         const transporter = nodemailer.createTransport({

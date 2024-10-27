@@ -151,7 +151,9 @@ app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
   res.render("./admin/admin-index.ejs")
 })
 
-
+app.get("/student", ensureAuthenticated,(req,res)=>{
+  res.render("./student.ejs")
+})
 // app.get('/some-route',ensureAuthenticated, (req, res) => {
 //     console.log(currUser);
 // });
