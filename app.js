@@ -17,10 +17,6 @@ const User = require('./models/User');
 const Batch = require('./models/Batch');
 
 
-
-
-
-
 const blogsrouter = require("./routes/blogs.js");
 const jobsrouter = require("./routes/jobs.js");
 const userrouter = require("./routes/user.js");
@@ -284,6 +280,10 @@ app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
   }
 });
 
+
+app.get('/info',ensureAuthenticated, (req, res) => {
+  res.render("./users/userDetails.ejs");
+});
 
 // Start server
 app.listen(port, () => {

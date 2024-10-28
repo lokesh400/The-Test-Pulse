@@ -6,7 +6,10 @@
     <title>Student Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="./css/student.css">
+    <link rel="stylesheet" href="/css/student.css">
+    <link rel="stylesheet" href="/styles/quickaccess.css">
+    <link rel="stylesheet" href="/styles/popularbatches.css">
+    <link rel="stylesheet" href="/styles/studentsidebar.css">
 </head>
 <body>
     <div class="container">
@@ -26,10 +29,18 @@
                 <%- include("./components/student/welcome.ejs") %>
             </div>
 
+            <div style="background-color: #ffffff;padding: 2px; border-radius: 10px;">
+                <h1 style="margin-left: 10px;">Quick Access</h1>
             <div class="enrolled-courses">
               <%- include("./components/student/enrolledbatches.ejs") %>
             </div>
+            </div>
 
+            <hr>
+
+            <div>
+                <%- include("./components/student/popularbatches.ejs") %>
+              </div>
             <div class="course-instructors">
                 <!-- <h2>Course Instructors</h2> -->
                 <!-- Add course instructors here -->

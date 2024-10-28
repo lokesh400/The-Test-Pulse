@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+}
+
+.user-profile-card {
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 300px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.user-profile-card:hover {
+  transform: scale(1.05);
+}
+
+.user-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-top: 20px;
+}
+
+.user-details {
+  padding: 20px;
+}
+
+.user-details h2 {
+  margin: 10px 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.user-details p {
+  color: #666;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+  </style>
+</head>
+<body>
+  <div class="user-profile-card">
+    <div class="user-avatar">
+      <img src="'https://via.placeholder.com/150'" alt="User Avatar">
+    </div>
+    <div class="user-details">
+      <p><strong>Name:</strong> <%= currUser.name %></p>
+      <p><strong>Email:</strong> <%= currUser.email %></p>
+    </div>
+  </div>
+</body>
+</html>

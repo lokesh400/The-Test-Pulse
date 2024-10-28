@@ -6,8 +6,10 @@ body {
 }
 
 .container {
-    display: flex;
-    min-height: 100vh;
+        height: 100%;
+        width: 100%;
+        margin: auto;
+    
 }
 
 .sidebar {
@@ -15,20 +17,13 @@ body {
     top: 0;
     left: 0;
     height: 100vh; /* Sidebar occupies full height */
-    width: 230px;
+    width: 270px;
     margin-top: 10px;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
-    background-color: #8a4af3;
-    padding: 20px;
     overflow: hidden;
     border-radius: 10px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
 }
 
 .sidebar a {
@@ -99,8 +94,8 @@ body {
     padding: 20px;
     border-radius: 20px;
     margin-bottom: 20px;
-    display: flex; /* Use flexbox for alignment */
-    flex-wrap: wrap; /* Allow cards to wrap to the next line */
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
 }
 
