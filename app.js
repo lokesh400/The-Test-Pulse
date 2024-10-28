@@ -209,26 +209,54 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
 
 //Test DELETE Route
 
+// app.delete('/admin/delete/test/:id', async (req, res) => {
+//   const testId = req.params.id;
+//   try {
+//       // First, delete the test
+//       const result = await Test.findByIdAndDelete(testId);
+//       if (!result) {
+//           return res.status(404).json({ error: 'Test not found.' });
+//       }
+
+//       // Then, remove it from all batches that contain it in the `tests` array
+//       await Batch.updateMany(
+//           { tests: testId },
+//           { $pull: { tests: testId } }
+//       );
+
+//       return res.status(200).json({ message: 'Test deleted successfully!' });
+//   } catch (error) {
+//       return res.status(500).json({ error: 'Error deleting test.' });
+//   }
+// });
+
 app.delete('/admin/delete/test/:id', async (req, res) => {
-  const testId = req.params.id;
+  const testId = req.params.id; // Get the test ID from the request parameters
   try {
-      // First, delete the test
+      // First, delete the test from the Test collection
       const result = await Test.findByIdAndDelete(testId);
       if (!result) {
           return res.status(404).json({ error: 'Test not found.' });
       }
 
       // Then, remove it from all batches that contain it in the `tests` array
-      await Batch.updateMany(
-          { tests: testId },
-          { $pull: { tests: testId } }
+      const updateResult = await Batch.updateMany(
+          { tests: testId }, // Find batches containing the test ID
+          { $pull: { tests: testId } } // Remove the test ID from the tests array
       );
 
-      return res.status(200).json({ message: 'Test deleted successfully!' });
+      // Optionally, you can check how many batches were modified
+      if (updateResult.modifiedCount > 0) {
+          return res.status(200).json({ message: 'Test deleted successfully from all batches!' });
+      } else {
+          return res.status(200).json({ message: 'Test deleted successfully, but not found in any batches.' });
+      }
   } catch (error) {
+      console.error('Error deleting test:', error);
       return res.status(500).json({ error: 'Error deleting test.' });
   }
 });
+
 
 
 

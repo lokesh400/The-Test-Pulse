@@ -119,7 +119,10 @@ router.get("/logout", (req, res, next) => {
     });
 });
 
-
+//contactus
+router.get("/support", (req, res) => {
+    res.render("./users/contactus.ejs");
+});
 
 
 

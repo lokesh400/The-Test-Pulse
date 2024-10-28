@@ -37,9 +37,6 @@ const Upload = {
 
   const checkPurchasedBatch = (req, res, next) => {
     const { id } = req.params;
-    console.log('User purchased batches:', req.user.purchasedBatches);
-    console.log('Checking batch ID:', id);
-
     if (req.user.purchasedBatches.includes(id)|| req.user.role === 'admin') {
         return next();
     } else {
@@ -99,7 +96,7 @@ router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (re
       }
       res.render('./batch/particularbatchhome.ejs', { thisBatch });
   } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(500).send('Server error');
   }
 });
@@ -139,7 +136,6 @@ router.get('/batch/:id/announcements',ensureAuthenticated, async (req, res) => {
       if (!batch) {
           return res.status(404).send('Batch not found');
       }
-
       res.json(batch.announcements);
   } catch (error) {
       console.error(error);
@@ -148,22 +144,18 @@ router.get('/batch/:id/announcements',ensureAuthenticated, async (req, res) => {
 });
 
 // ROUTE TO ADD ANNOUNCEMENTS
-
 router.post('/create/new/announcement/:testId', ensureAuthenticated,async (req, res) => {
   try {
     const { testId } = req.params; // Extracting testId from params
     const {text} = req.body; // Extract the announcement data from the request body
-    console.log(testId,text)
     // Find the batch by testId
     const batch = await Batch.findById(testId); 
     if (!batch) {
       return res.status(404).json({ message: 'Batch not found' }); // Handle case where batch is not found
     }
-    
     // Push the new announcement into the announcements array
     batch.announcements.push(text); 
     await batch.save(); // Save the updated batch
-
     res.redirect('/showallbatches'); // Redirect after successful creation
   } catch (error) {
     console.error(error); // Log the error for debugging

@@ -24,7 +24,7 @@
         <div class="nav">
             <button id="announcements-button" class="button">Announcements</button>
             <button id="tests-button" class="button">Show Tests</button>
-            <% if (currUser && currUser.isAdmin) { %>
+            <% if (currUser && currUser.role === 'admin') { %>
                 <a href="/batch/<%= thisBatch._id %>/authorize-students"><button class="button">authorize</button></a>
                 <button class="button" id="toggleButton">Add Announcement</button>
                 <button class="button"><a href="/update-batch/<%=thisBatch._id%>" style="color: white;">Update</a></button>
