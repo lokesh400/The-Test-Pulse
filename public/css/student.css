@@ -4,27 +4,33 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
+
 .sidebar {
+    position: fixed; /* Fixes sidebar position on the left */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Sidebar occupies full height */
     width: 230px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     background-color: #8a4af3;
     padding: 20px;
-    border-radius: 20px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    overflow: hidden;
+    border-radius: 10px;
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
 }
-.sidebar-img {
-    width: 50px;
-    margin-bottom: 20px;
-}
+
 .sidebar a {
     color: white;
     text-decoration: none;
@@ -33,30 +39,37 @@ body {
     align-items: center;
     width: 100%;
 }
+
 .sidebar a i {
     margin-right: 10px;
 }
+
 .sidebar a.active {
     background-color: #6a2fc4;
     padding: 10px;
     border-radius: 10px;
 }
+
 .main-content {
-    flex: 1;
+    margin-left: 270px; /* Provides space for the sidebar */
     padding: 20px;
+    flex: 1;
     overflow-y: auto;
 }
+
 .search-bar {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
+
 .search-bar input {
     width: 50%;
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #ddd;
 }
+
 .welcome-banner {
     background-color: #8a4af3;
     color: white;
@@ -67,69 +80,42 @@ body {
     align-items: center;
     margin-bottom: 20px;
 }
+
 .welcome-banner img {
     width: 150px;
 }
-.finance, .enrolled-courses, .course-instructors, .daily-notice {
+
+/* .enrolled-courses,
+.course-instructors,
+.daily-notice {
     background-color: white;
     padding: 20px;
     border-radius: 20px;
     margin-bottom: 20px;
-}
-.finance h2, .enrolled-courses h2, .course-instructors h2, .daily-notice h2 {
-    margin-top: 0;
-}
-/* .finance .card {
-    display: inline-block;
-    width: 30%;
-    margin-right: 3%;
-    text-align: center;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: #f5f5f5;
 } */
-.card1 {
-    display: inline-block;
-    width: 30%;
-    margin-right: 3%;
-    text-align: center;
+
+.enrolled-courses {
+    background-color: white;
     padding: 20px;
     border-radius: 20px;
-    background-color: #f5f5f5;
-}
-.finance .card.active {
-    border: 2px solid #8a4af3;
-}
-.enrolled-courses .card1 img {
-    width: 50px;
-    margin-bottom: 10px;
-}
-.course-instructors img {
-    width: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-.daily-notice .notice {
-    margin-bottom: 10px;
-}
-.daily-notice .notice h3 {
-    margin: 0;
-}
-.daily-notice .notice p {
-    margin: 5px 0;
-}
-.profile {
-    display: flex;
-    align-items: center;
     margin-bottom: 20px;
+    display: flex; /* Use flexbox for alignment */
+    flex-wrap: wrap; /* Allow cards to wrap to the next line */
+    justify-content: space-around;
 }
-.profile-img {
-    width: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+
+.card1 {
+    width: 30%; /* Each card takes up 30% of the width */
+    border: 2px solid #8a4af3;
+    padding: 20px;
+    margin-top: 20px;
+    box-sizing: border-box; /* Ensures padding and border are included in total width */
+    border-radius: 30px;
 }
+
+
 .footer-nav {
-    display: none;
+    display: none; /* Default hidden for desktop, visible on mobile */
     visibility: hidden;
     position: fixed;
     bottom: 0;
@@ -138,69 +124,100 @@ body {
     color: white;
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
+    align-items: center;
+    padding: 5px 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2); /* Adds subtle shadow for depth */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
 }
+
 .footer-nav a {
     color: white;
     text-decoration: none;
     text-align: center;
-}
-.footer-nav a i {
-    display: block;
-    font-size: 20px;
-}
-.footer-nav a span {
-    font-size: 12px;
+    font-size: 10px;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
-@media (max-width: 768px) {
+.footer-nav a i {
+    display: block;
+    font-size: 18px; /* Increase icon size */
+    margin-bottom: 1px; /* Space between icon and text */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-nav a:hover {
+    color: #ddd; /* Lighter color on hover */
+    transform: translateY(-2px); /* Lifts the element slightly */
+}
+
+.footer-nav a i:hover {
+    color: #ddd;
+    transform: scale(1.1); /* Enlarges icon slightly on hover */
+}
+
+.footer-nav a span {
+    font-size: 12px; /* Smaller font for labels */
+}
+
+/* Button styling */
+.view-button {
+    background-color: #8a4af3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.view-button:hover {
+    background-color: #6a2fc4;
+    transform: translateY(-2px);
+}
+
+.view-button:active {
+    background-color: #5a1fa4;
+    transform: translateY(0);
+}
+
+.sidebar .progress-bar {
+    display: none; /* Hides the progress bar within the sidebar */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 600px) {
     .container {
         flex-direction: column;
     }
+
     .sidebar {
-        display: none;
+        display: none; /* Hide sidebar on mobile */
     }
+
     .main-content {
-        max-width: 100vw;
-        /* padding: 10px; */
+        margin-left: 0; /* Remove left margin for full width */
     }
+
     .search-bar input {
         width: 80%;
     }
+
     .welcome-banner {
         flex-direction: column;
         text-align: center;
     }
-    .welcome-banner img {
-        width: 100px;
-        margin-top: 10px;
-    }
-    .card1{
-    display:block;
-    width: 90%;
-    margin-top: 5px;
-    text-align: center;
-    /* padding: 20px; */
-    border-radius: 20px;
-    background-color: #f5f5f5;
-    }
-    /* .finance .card, .enrolled-courses .card {
-        width: 100%;
-        margin: 10px 0;
-    } */
-    .course-instructors .profile {
-        flex-direction: column;
-        text-align: center;
-    }
-    /* .course-instructors .profile img {
-        margin-bottom: 10px;
-    } */
+
     .footer-nav {
         display: flex;
         visibility: visible;
     }
-    .finance{
-      width: 90%;
 
+    .enrolled-courses .card1,
+    .finance .card {
+        width: 100%;
+        margin: 10px 0;
     }
 }

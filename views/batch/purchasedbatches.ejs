@@ -1,53 +1,53 @@
-<html>
- <head>
-  <title>
-   Student Portal
-  </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="/css/student.css">
-  <style>
-    #thumbnail-img{
-      width: 100%;
-    }
-  </style>
- </head>
- <body>
-  <div class="container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/student.css">
+    <style>
+      #thumbnail-img{
+        width: 100%;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
 
-   <div class="sidebar">
-    <%- include("../components/student/sidebar.ejs") %>
-   </div>
+        <!-- Sidebar -->
+        <div class="sidebar">
+           <%- include("../components/student/sidebar.ejs") %>
+        </div>
 
-   <div class="main-content">
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="search-bar">
+                <input type="text" value="My Batches" readonly>
+            </div>
 
-    <div class="search-bar">
-     <input placeholder="Search" type="text"/>
+
+            <div class="enrolled-courses">
+              <% batches.forEach(batch => { %>
+                <div class="card1">
+                  <img id="thumbnail-img" src="<%=batch.thumbnail%>" alt="">
+                      <br>
+                      <span class="card-int__title"><%=batch.title%> |</span>
+                         <span class="card-int__title">Class:<%=batch.class%></span>
+                          &nbsp;
+                      <a href="/showbatch/<%=batch._id%>"><button class="view-button">Open</button></a>
+                 </div>
+                 <% }) %>
+            </div>
+
+
+        </div>
     </div>
 
-     <h2>My Batches</h2>
-
-    <div class="enrolled-courses">
-      <% batches.forEach(batch => { %>
-      <div class="card1">
-        
-        <img id="thumbnail-img" src="<%=batch.thumbnail%>" alt="">
-            <br>
-            <span class="card-int__title"><%=batch.title%> |</span>
-               <span class="card-int__title">Class:<%=batch.class%></span>
-                &nbsp;
-            <a href="/showbatch/<%=batch._id%>"><button class="btn-3d">Open</button></a>
-       </div>
-       <% }) %>
+    <!-- Footer Navigation for Mobile -->
+    <div class="footer-nav">
+      <%- include("../components/student/footer.ejs") %>
     </div>
-
-    
-   </div>
-  </div>
-
-  <div class="footer-nav">
-    <%- include("../components/student/footer.ejs") %>
-  </div>
-
- </body>
+</body>
 </html>

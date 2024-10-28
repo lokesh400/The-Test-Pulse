@@ -1,158 +1,50 @@
-<html>
- <head>
-  <title>
-   Student Portal
-  </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="./css/student.css">
- </head>
- <body>
-  <div class="container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="./css/student.css">
+</head>
+<body>
+    <div class="container">
 
-   <div class="sidebar">
-    <img alt="Logo" height="50" src="https://storage.googleapis.com/a1aa/image/1e0qODOBqjRfI0bGj5peaToyW3KVuECYtxD3XFdwZ5vgqjWnA.jpg" width="50"/>
-    <a class="active" href="#">
-     <i class="fas fa-tachometer-alt">
-     </i>
-     Dashboard
-    </a>
-    <a href="#">
-     <i class="fas fa-money-check-alt">
-     </i>
-     Payment Info
-    </a>
-    <a href="#">
-     <i class="fas fa-clipboard-list">
-     </i>
-     Registration
-    </a>
-    <a href="#">
-     <i class="fas fa-book">
-     </i>
-     Courses
-    </a>
-    <a href="#">
-     <i class="fas fa-calendar-times">
-     </i>
-     Drop Semester
-    </a>
-    <a href="#">
-     <i class="fas fa-chart-bar">
-     </i>
-     Result
-    </a>
-    <a href="#">
-     <i class="fas fa-bell">
-     </i>
-     Notice
-    </a>
-    <a href="#">
-     <i class="fas fa-calendar-alt">
-     </i>
-     Schedule
-    </a>
-    <a href="#">
-     <i class="fas fa-sign-out-alt">
-     </i>
-     Logout
-    </a>
-   </div>
+        <!-- Sidebar -->
+        <div class="sidebar">
+           <%- include("./components/student/sidebar.ejs") %>
+        </div>
 
-   <div class="main-content">
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+            </div>
 
-    <div class="search-bar">
-     <input placeholder="Search" type="text"/>
+            <div class="welcome-banner">
+                <%- include("./components/student/welcome.ejs") %>
+            </div>
+
+            <div class="enrolled-courses">
+              <%- include("./components/student/enrolledbatches.ejs") %>
+            </div>
+
+            <div class="course-instructors">
+                <h2>Course Instructors</h2>
+                <!-- Add course instructors here -->
+            </div>
+
+            <div class="daily-notice">
+                <h2>Daily Notice</h2>
+            </div>
+
+        </div>
     </div>
 
-    <div class="welcome-banner">
-     <div>
-      <p>
-       September 4, 2023
-      </p>
-      <h1>
-       Welcome back, John!
-      </h1>
-      <p>
-       Always stay updated in your student portal
-      </p>
-     </div>
-     <img alt="Welcome Image" height="150" src="https://storage.googleapis.com/a1aa/image/USXeq4OWj2yIBqHH666LaEph6rfeBKZRkHsp4SfrGlLxUHtOB.jpg" width="150"/>
+    <!-- Footer Navigation for Mobile -->
+    <div class="footer-nav">
+      <%- include("./components/student/footer.ejs") %>
     </div>
-
-    <!-- <div class="finance">
-     <h2>
-      Finance
-     </h2>
-
-     <div class="card">
-      <p>
-       $ 10,000
-      </p>
-      <p>
-       Total Payable
-      </p>
-     </div>
-     <div class="card active">
-      <p>
-       $ 5,000
-      </p>
-      <p>
-       Total Paid
-      </p>
-     </div>
-     <div class="card">
-      <p>
-       $ 300
-      </p>
-      <p>
-       Others
-      </p>
-     </div>
-    </div> -->
-
-    <div class="enrolled-courses">
-      <%- include("./components/student/enrolledbatches.ejs") %>
-    </div>
-
-    <div class="course-instructors">
-    
-    </div>
-    
-    <div class="daily-notice">
-     <h2>
-      Daily notice
-     </h2>
-     <div class="notice">
-      <h3>
-       Prelim payment due
-      </h3>
-      <p>
-       Sorem ipsum dolor sit amet, consectetur adipisicing elit.
-      </p>
-      <a href="#">
-       See more
-      </a>
-     </div>
-     <div class="notice">
-      <h3>
-       Exam schedule
-      </h3>
-      <p>
-       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
-      </p>
-      <a href="#">
-       See more
-      </a>
-     </div>
-    </div>
-
-   </div>
-  </div>
-
-  <div class="footer-nav">
-    <%- include("./components/student/footer.ejs") %>
-  </div>
-
- </body>
+</body>
 </html>
