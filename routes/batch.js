@@ -35,6 +35,18 @@ const Upload = {
     res.render("./error/accessdenied.ejs");
   }
 
+  const checkPurchasedBatch = (req, res, next) => {
+    const { id } = req.params;
+    console.log('User purchased batches:', req.user.purchasedBatches);
+    console.log('Checking batch ID:', id);
+
+    if (req.user.purchasedBatches.includes(id)|| req.user.role === 'admin') {
+        return next();
+    } else {
+        return res.status(403).send('Access denied: You have not purchased this batch.');
+    }
+};
+
   
   //ADMIN ROUTE TO CREATE NEW BATCH
 router.get('/admin/createnewbatch', ensureAuthenticated,isAdmin,async (req, res) => {
@@ -77,12 +89,22 @@ router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
   });
   
 // show a particular requested batch
-router.get('/showbatch/:id',ensureAuthenticated, async (req, res) => {
-    const {id} = req.params;
-    const thisBatch = await Batch.findById(id);
-    res.render('./batch/particularbatchhome.ejs',{thisBatch});
-   });
-  
+ 
+router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
+  const { id } = req.params;
+  try {
+      const thisBatch = await Batch.findById(id);
+      if (!thisBatch) {
+          return res.status(404).send('Batch not found');
+      }
+      res.render('./batch/particularbatchhome.ejs', { thisBatch });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).send('Server error');
+  }
+});
+
+
 // Route to include tests in a batch
 router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
     const {id} = req.params;
@@ -177,4 +199,17 @@ router.get("/admin/allcomplaints",async (req,res)=>{
   res.render("./admin/complaints.ejs",{allComplaints})
 
 })
+
+//Route to show purchased batch 
+router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
+  var batches = [];
+  for (let i = 0; i < req.user.purchasedBatches.length; i++) {
+    const batch = await Batch.findById(req.user.purchasedBatches[i]);
+    if (batch) {
+        batches.push(batch); // Push the found batch into the array
+    }
+  }
+   res.render('./batch/purchasedbatches.ejs',{batches});
+ });
+
 module.exports = router;

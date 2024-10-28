@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batch Page</title>
     <link rel="stylesheet" href="/styles/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/student.css">
     <style>
         body {
             margin: 0;
@@ -109,6 +112,14 @@
 </head>
 <body>
 
+    <div class="container">
+
+        <div class="sidebar">
+            <%- include("../components/student/sidebar.ejs") %>
+           </div>
+        
+           <div class="main-content">
+
     <div id="heading">
         <h2><%=thisBatch.title%></h2>
     </div>
@@ -117,6 +128,7 @@
         <button id="announcements-button" class="button">Announcements</button>
         <button id="tests-button" class="button">Show Tests</button>
         <% if (currUser && currUser.isAdmin) { %>
+            <a href="/batch/<%= thisBatch._id %>/authorize-students"><button class="button">authorize</button></a>
             <button class="button" id="toggleButton">Add Announcement</button>
             <button class="button"><a href="/update-batch/<%=thisBatch._id%>" style="color: white;">Update</a></button>
         <% } %>
@@ -151,7 +163,7 @@
                 <% } %>
             </div>
         </div>
-        
+
         <!-- Overlay and Form for Creating New Announcement -->
         <div id="overlay" onclick="toggleForm()"></div>
         <div id="myForm" style="display:none">
@@ -163,6 +175,14 @@
             </form>
         </div>
     </div>
+
+
+    </div>
+</div>
+
+<div class="footer-nav">
+    <%- include("../components/student/footer.ejs") %>
+  </div>
 
     <script>
         const batchId = '<%= thisBatch ? thisBatch._id : "defaultBatchId" %>';

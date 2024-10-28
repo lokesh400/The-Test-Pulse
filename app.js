@@ -14,7 +14,7 @@ const DataModel = require('./models/Data'); // Adjust the path if necessary
 
 const Test = require('./models/Test');
 const User = require('./models/User');
-
+const Batch = require('./models/Batch');
 
 
 
@@ -103,12 +103,14 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currUser = req.user;
-  next();
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.currUser = req.user;
+    next();
 });
+
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -162,11 +164,6 @@ app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
 app.get("/student", ensureAuthenticated,(req,res)=>{
   res.render("./student.ejs")
 })
-// app.get('/some-route',ensureAuthenticated, (req, res) => {
-//     console.log(currUser);
-// });
-
-
 
 
 app.get('/currentaffairs/create/new', (req,res) => {
@@ -252,6 +249,42 @@ app.get('/admin/tests', async (req, res) => {
 app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")
 })
+
+app.get('/batch/:batchId/authorize-students', async (req, res) => {
+  try {
+      const { batchId } = req.params; // Destructure batchId from req.params
+      const students = await User.find(); // Fetch all students
+      res.render('authorize-students', { students, batchId }); // Render the EJS template with the students and batchId
+  } catch (error) {
+      console.error('Error fetching students:', error);
+      res.status(500).send('Server Error');
+  }
+});
+
+
+// Route to authorize a student
+ 
+app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
+  const { batchId,studentEmail } = req.params;
+  const userString = JSON.stringify(studentEmail, null, 2);
+  const emailMatch = userString.match(/email:\s*'([^']+)'/);
+  const email = emailMatch ? emailMatch[1] : null; // Pretty print the user object
+  try {
+      // Fetch current user document
+      const user = await User.find({ email: email });
+      // Add batch ID to purchasedBatches
+      await User.updateOne(
+          { email: email },
+          { $addToSet: { purchasedBatches: batchId } }
+      );
+      req.flash('success_msg', 'Batch authorized successfully!');
+      res.redirect(`/batch/${batchId}/authorize-students`);
+  } catch (error) {
+      console.error('Error authorizing student:', error);
+      req.flash('error_msg', 'An error occurred while authorizing the batch.');
+      res.status(500).send('Server Error');
+  }
+});
 
 
 // Start server

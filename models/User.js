@@ -18,7 +18,8 @@ const UserSchema = new mongoose.Schema({
   },
   testScore:{
     type:Number,
-  }
+  },
+  purchasedBatches:Array,
 });
 
 UserSchema.plugin(passportLocalMongoose);
