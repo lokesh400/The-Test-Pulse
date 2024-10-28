@@ -80,15 +80,6 @@ body {
     width: 150px;
 }
 
-/* .enrolled-courses,
-.course-instructors,
-.daily-notice {
-    background-color: white;
-    padding: 20px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-} */
-
 .enrolled-courses {
     background-color: white;
     padding: 20px;
@@ -113,6 +104,7 @@ body {
     display: none; /* Default hidden for desktop, visible on mobile */
     visibility: hidden;
     position: fixed;
+    left: 0;
     bottom: 0;
     width: 100%;
     background-color: #8a4af3;
