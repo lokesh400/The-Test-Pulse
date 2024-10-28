@@ -1,210 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Test</title>
-    <link rel="stylesheet" href="/styles/sidebar.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin HomePage</title>
+    <linkhref="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/sidebar3.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .question-block {
-            margin-bottom: 20px;
-        }
-
-        #questions-preview {
-            margin-top: 30px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .question-checkbox {
-            margin-right: 10px;
-        }
-        #quest-div{
-            background-color: aqua;
-        }
-        #questions-container{
-            width: 90%;
-            margin: auto;
-            margin-top: 20px;
-            /* background-color: cyan; */
-            padding: 10px;
-        }
-        #info{
+        main{
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
         }
-
-        select{
-            border: solid aqua;
-            border-top: none;
-            border-left: none;
-            padding: 10px;
-            border-bottom-right-radius: 5px ;
-            /* background-color: antiquewhite; */
-            
+        #header-comp{
+            width: 260px;
+        
         }
-
-        #header{
-            margin-top: 0px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 100px;
-        };
-
-        #heading {
-            width: 95%;
-            text-align: center;
+        #content-div{
+            width: calc(100%-260pc);
         }
+        #user-profile{
+            height: 100px;
+            width: 200px;
+            border: 2px solid black;
+            position: fixed;
+            top: 0;
+            right: 5px;
+        }
+        .card {
+            height: 150px;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            right: 5px;
+            text-align: left;
+            border-radius: 0.5rem;
+  
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+}
+
+.header {
+  padding: 1.25rem 1rem 1rem 1rem;
+}
+
+.image {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #e2feee;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  animation: animate .6s linear alternate-reverse infinite;
+  transition: .6s ease;
+}
+
+.image svg {
+  color: #0afa2a;
+  width: 2rem;
+  height: 2rem;
+}
+
+.content {
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.title {
+  color: #066e29;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.message {
+  margin-top: 0.5rem;
+  color: #595b5f;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.actions {
+  margin: 0.75rem 1rem;
+}
+
+.history {
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  background-color: #1aa06d;
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  justify-content: center;
+  width: 100%;
+  border-radius: 0.375rem;
+  border: none;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
 
     </style>
-</head>
-<body>
+  </head>
+  <body>
+   
+    <main>
 
-    <div id="main">
+        <div id="header-comp">
+            <nav>
+                <div class="logo">
+                  <span class="logo-name">TheTestPulse</span>
+                </div>
+                <div class="sidebar-content">
+                  <ul class="lists">
+                    <li class="list">
+                      <a href="/admin" class="nav-link">
+                        <i class="bx bx-home-alt icon"></i>
+                        <span class="link">Dashboard</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-bar-chart-alt-2 icon"></i>
+                        <span class="link">Revenue</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-bell icon"></i>
+                        <span class="link">Notifications</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="/admin/allcomplaints" class="nav-link">
+                        <i class="bx bx-message-rounded icon"></i>
+                        <span class="link">Messages</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-pie-chart-alt-2 icon"></i>
+                        <span class="link">Analytics</span>
+                      </a>
+                    </li>
+                    <li class="list batch-dropdown">
+                      <a href="test/testportal" class="nav-link">
+                        <i class="bx bx-book icon"></i>
+                        <span class="link">Test Portal</span>
+                      </a>
+                      <ul class="dropdown">
+                          <li><a href="/test/testportal">TestPortal</a></li>
+                          <li><a href="/test/create">Create From Library</a></li>
+                          <li><a href="/test/admin/create">Create Manually</a></li>
+                          <li><a href="/create/question/bank">Create Library</a></li>
+                          <li><a href="/student/tests">All Tests</a></li>
+                        </ul>
+                    </li>
+                    <li class="list batch-dropdown">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-folder-open icon"></i>
+                        <span class="link">Batch</span>
+                      </a>
+                      <ul class="dropdown">
+                        <li><a href="/showallbatches">All Batches</a></li>
+                        <li><a href="/admin/createnewbatch">Create a Batch</a></li>
+                      </ul>
+                    </li>
+                    
+                  </ul>
+                  <div class="bottom-cotent">
+                    <li class="list">
+                      <a href="#" class="nav-link">
+                        <i class="bx bx-cog icon"></i>
+                        <span class="link">Settings</span>
+                      </a>
+                    </li>
+                    <li class="list">
+                      <a href="/user/logout" class="nav-link">
+                        <i class="bx bx-log-out icon"></i>
+                        <span class="link">Logout</span>
+                      </a>
+                    </li>
+                  </div>
+                </div>
+              </nav>
+        </div>
 
         <div id="content-div">
-    <div id="header">
-    <h2 id="heading">Create a New Test</h2>
-    <p>Checked: <span id="checkedCount">0</span></p>
-    </div>
-
-    <a href="/create/information">Create Chapter</a>
 
 
-    <form action="/create-ques" method="POST" id="testForm" encType="multipart/form-data">
-       
-         <div id="info">
-        <label for="subject">Subject:</label>
-        <select id="subject" name="subject" onchange="fetchChapters()" required>
-            <option value="">Select Subject</option>
-            Subjects will be dynamically loaded
-        </select><br><br>
-
+            <div>
+                <div class="card">
+                    <div class="header"> 
+                         <div class="image">
+                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </div> 
+                    <div class="content">
+                          <span class="title"><%=currUser.name%></span> 
+                          <p class="message"><%=currUser.role%></p> 
+                    </div> 
+                </div> 
+            </div>
+            </div>
         
-        <label for="chapter">Chapter:</label>
-        <select id="chapter" name="chapter" onchange="fetchTopics()" required>
-            <option value="">Select Chapter</option>
-            Chapters will be dynamically loaded
-        </select><br><br>
+            <% if (success_msg.length>0) { %>
+                <div class="flash-message success"><%= success_msg %></div>
+            <% } %>
+            <% if (error_msg.length>0) { %>
+                <div class="flash-message error"><%= error_msg %></div>
+            <% } %>
 
-        <label for="topic">Topic:</label>
-        <select id="topic" name="topic" onchange="fetchQuestions()" required>
-            <option value="">Select Topic</option>
-            Topics will be dynamically loaded
-        </select><br><br>
+            <a href="/create/information">Create Chapter</a>
 
-        <label for="Question">Question Image</label>
-        <input type="file" name="file"/>
+            <form action="/create-ques" method="POST" id="testForm" enctype="multipart/form-data">
+                <div id="info">
+                    <label for="subject">Subject:</label>
+                    <select id="subject" name="subject" onchange="fetchChapters()" required>
+                        <option value="">Select Subject</option>
+                        <!-- Subjects will be dynamically loaded -->
+                    </select>
 
-        <label for="option">Right Option</label>
-        <input type="number" name="correct">
+                    <label for="chapter">Chapter:</label>
+                    <select id="chapter" name="chapter" onchange="fetchTopics()" required>
+                        <option value="">Select Chapter</option>
+                        <!-- Chapters will be dynamically loaded -->
+                    </select>
 
-        <button type="submit">Create Test</button>
+                    <label for="topic">Topic:</label>
+                    <select id="topic" name="topic" onchange="fetchQuestions()" required>
+                        <option value="">Select Topic</option>
+                        <!-- Topics will be dynamically loaded -->
+                    </select>
+
+                    <label for="file">Question Image:</label>
+                    <input type="file" name="file" required />
+
+                    <label for="correct">Right Option:</label>
+                    <input type="number" name="correct" required />
+
+                    <button type="submit">Create Test</button>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
-
-    <div id="header-div-cpm">
-        <%- include('../components/sidebar.ejs') %>
     </div>
 
-</div>
+        </div>
+
+    </main>
 
     <script>
-        // let selectedQuestions = []; // Array to store selected questions
-        // let questionCount = 0;
-
-        // Fetch all subjects from the backend
-
         async function fetchSubjects() {
-           
-           let response = await fetch('/api/subjects')
-           let data = await response.json();
-           let sub = data.length;
-
-           const subject = document.getElementById("subject");
-           subject.innerHTML = '<option value="">Select Subject</option>'
-           for(let i=0; i<sub ; i++){
-            const option = document.createElement('option');
-                           option.value = data[i].Name;
-                           option.textContent = data[i].Name;
-                           subject.appendChild(option);     
-           }
-           
-        }
-
-       
-        // Fetch chapters for the selected subject
-          async  function fetchChapters() {
-
-            const subjectName = document.getElementById('subject').value;
-
-             let response = await fetch(`/api/chapters/${subjectName}`);
-             let data = await response.json();
-
-             const chapter = document.getElementById("chapter");
-             chapter.innerHTML = '<option value="">Select Chapter</option>';
-             for(let i=0; i<data.length ; i++){
-                const option = document.createElement('option');
-                               option.value = data[i].ChapterName;
-                               option.textContent = data[i].ChapterName;
-                               chapter.appendChild(option); 
-                    
-           }
-        }
-
-        // Fetch topics for the selected chapter
-        async function fetchTopics() {
-
-            const chapterName = document.getElementById('chapter').value;
-            let response = await fetch(`/api/topics/${chapterName}`)
+            let response = await fetch('/api/subjects');
             let data = await response.json();
-
-                    const topicDropdown = document.getElementById('topic');
-                    topicDropdown.innerHTML = '<option value="">Select Topic</option>';
-                    for(let i=0; i<data.length ; i++){
-                        const option = document.createElement('option');
-                               option.value = data[i].TopicName;
-                               option.textContent = data[i].TopicName;
-                               topicDropdown.appendChild(option); 
-                    
-                       }
+            const subject = document.getElementById("subject");
+            subject.innerHTML = '<option value="">Select Subject</option>';
+            for (let i = 0; i < data.length; i++) {
+                const option = document.createElement('option');
+                option.value = data[i].Name;
+                option.textContent = data[i].Name;
+                subject.appendChild(option);
+            }
         }
 
+        async function fetchChapters() {
+            const subjectName = document.getElementById('subject').value;
+            let response = await fetch(`/api/chapters/${subjectName}`);
+            let data = await response.json();
+            const chapter = document.getElementById("chapter");
+            chapter.innerHTML = '<option value="">Select Chapter</option>';
+            for (let i = 0; i < data.length; i++) {
+                const option = document.createElement('option');
+                option.value = data[i].ChapterName;
+                option.textContent = data[i].ChapterName;
+                chapter.appendChild(option);
+            }
+        }
 
-        // Fetch questions for the selected topic
-        // async function fetchQuestions() {
-
-        //     const topic = document.getElementById('topic').value;
-
-        //     let response = await fetch(`/api/questions/${topic}`)
-        //     let data = await response.json();
-
-                
-        //             const container = document.getElementById('questions-container');
-        //             container.innerHTML = ''; 
-
-        //             for(let i=0; i<data.length ; i++){
-
-        //                 const questionBlock = document.createElement('div');
-        //                 questionBlock.className = 'question-block';
-        //                 questionBlock.innerHTML = `
-        //                        <label><input type="checkbox" name="options[]" value="${data[i]._id}" class="checkbox"> Q${i+1} &nbsp ${data[i].Question} </label><br>`;
-        //                 container.appendChild(questionBlock);
-        //                 questionBlock.querySelector('.checkbox').addEventListener('change', updateCounter);
-        //                }
-        // }
-
+        async function fetchTopics() {
+            const chapterName = document.getElementById('chapter').value;
+            let response = await fetch(`/api/topics/${chapterName}`);
+            let data = await response.json();
+            const topicDropdown = document.getElementById('topic');
+            topicDropdown.innerHTML = '<option value="">Select Topic</option>';
+            for (let i = 0; i < data.length; i++) {
+                const option = document.createElement('option');
+                option.value = data[i].TopicName;
+                option.textContent = data[i].TopicName;
+                topicDropdown.appendChild(option);
+            }
+        }
         fetchSubjects();
-
-
     </script>
-</body>
+
+  </body>
 </html>
