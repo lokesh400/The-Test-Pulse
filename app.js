@@ -125,8 +125,6 @@ function isAdmin(req, res, next) {
   }
   res.render("./error/accessdenied.ejs");
 }
-// app.use(fileUpload())
-
 
 
 // app.get('/currentaffairs', async (req, res) => {
