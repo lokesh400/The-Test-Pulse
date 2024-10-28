@@ -81,7 +81,7 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
   
   //All Batches
 router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
-   const allBatches = await Batch.find({});
+    const allBatches = await Batch.find({});
     res.render('./batch/showallbatches.ejs',{allBatches});
   });
   
@@ -194,7 +194,9 @@ router.get("/admin/allcomplaints",async (req,res)=>{
 
 //Route to show purchased batch 
 router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
-  var batches = [];
+
+  try{
+    var batches = [];
   for (let i = 0; i < req.user.purchasedBatches.length; i++) {
     const batch = await Batch.findById(req.user.purchasedBatches[i]);
     if (batch) {
@@ -202,6 +204,10 @@ router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
     }
   }
    res.render('./batch/purchasedbatches.ejs',{batches});
+  }catch(error){
+    res.send(error.message)
+  }
+  
  });
 
 module.exports = router;
