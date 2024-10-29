@@ -5,6 +5,13 @@ const passport = require("passport");
 const nodemailer = require('nodemailer');
 const Otp = require('../models/Otp');
 
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/user/login');
+  }
+
 // Signup route
 router.get('/signup', (req, res) => {
     res.render("./users/signup.ejs");
@@ -128,6 +135,10 @@ router.get("/support", (req, res) => {
     res.render("./users/contactus.ejs");
 });
 
+//User Info
+router.get('/info',ensureAuthenticated, (req, res) => {
+    res.render("./users/userDetails.ejs");
+  });
 
 
 module.exports = router;

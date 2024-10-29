@@ -174,6 +174,43 @@ body {
     display: none; /* Hides the progress bar within the sidebar */
 }
 
+
+/* header */
+
+.header-container {
+    display: none;
+}
+.app-logo {
+    width: 24px; /* Adjusted size for mobile */
+    height: 24px; /* Adjusted size for mobile */
+    cursor: pointer;
+}
+.app-name-card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    font-size: 16px; /* Adjusted font size for mobile */
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px 10px; /* Adjusted padding for mobile */
+    margin: 0 10px; /* Adjusted margin for mobile */
+}
+.profile-picture {
+    width: 30px; /* Adjusted size for mobile */
+    height: 30px; /* Adjusted size for mobile */
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
 /* Responsive Design for Smaller Screens */
 @media (max-width: 600px) {
     .container {
@@ -185,11 +222,8 @@ body {
     }
 
     .main-content {
-        margin-left: 0; /* Remove left margin for full width */
-    }
-
-    .search-bar input {
-        width: 80%;
+        margin-top: 50px;
+        margin-left: 0;
     }
 
     .welcome-banner {
@@ -206,5 +240,18 @@ body {
     .finance .card {
         width: 100%;
         margin: 10px 0;
+    }
+    .header-container {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        padding: 10px; /* Adjusted padding for mobile */
+        width: 100%;
+        justify-content: space-around;
+        position: fixed;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        left: 0;
+        top: 0;
+        background-color: white;
     }
 }

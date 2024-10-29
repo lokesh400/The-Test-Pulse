@@ -308,11 +308,6 @@ app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
   }
 });
 
-
-app.get('/info',ensureAuthenticated, (req, res) => {
-  res.render("./users/userDetails.ejs");
-});
-
 // Start server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

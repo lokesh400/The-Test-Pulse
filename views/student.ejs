@@ -55,6 +55,7 @@
             <div>
                 <%- include("./components/student/popularbatches.ejs") %>
               </div>
+
             <div class="course-instructors">
                 <!-- <h2>Course Instructors</h2> -->
                 <!-- Add course instructors here -->
@@ -68,7 +69,11 @@
     </div>
 
     <!-- Footer Navigation for Mobile -->
-    <div class="footer-nav">
+    <div class="header-container" >
+        <%- include("./components/student/student-header.ejs") %>
+      </div>
+
+    <div class="footer-nav" >
       <%- include("./components/student/footer.ejs") %>
     </div>
 
