@@ -9,6 +9,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 
+
 const dataModule = require('./public/js/data.js');
 const DataModel = require('./models/Data'); // Adjust the path if necessary
 
@@ -157,6 +158,14 @@ app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
 
 app.get("/student", ensureAuthenticated,(req,res)=>{
   res.render("./student.ejs")
+})
+
+app.get("/terms-and-conditions",(req,res)=>{
+  res.render("./users/terms-and-conditions.ejs")
+})
+
+app.get("/privacy-policy",(req,res)=>{
+  res.render("./users/privacy-policy.ejs")
 })
 
 

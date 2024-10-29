@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        .batch-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .pay-button {
+            margin-top: 10px;
+            background-color: #3399cc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Select a Batch to Enroll</h2>
+
+    <div id="batchContainer">
+        <% batches.forEach(batch => { %>
+            <div class="batch-card" data-batch-id="<%= batch._id %>" data-amount="<%= batch.amount %>">
+                <h3><%= batch.name %></h3>
+                <p>Price: ₹<%= batch.amount %></p>
+                <p><%= batch.description %></p>
+                <button class="pay-button" 
+                        onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
+                    Pay ₹<%= batch.amount %>
+                </button>
+            </div>
+        <% }); %>
+    </div>
+
+    <script>
+
+
+            
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+const razorpay = new Razorpay({
+  key_id: 'rzp_test_SI6yMLEElaFA2G', // replace with your Razorpay key_id
+  key_secret: '5RRkecA33KsM6fAgWYt0DIJH' // replace with your Razorpay key_secret
+})
+
+app.get('/payment',ensureAuthenticated, async (req, res) => {
+  const batches = await Batch.find(); // Fetch available batches from database
+  const email = req.user.email; 
+  console.log(email)
+  res.render('payment', { keyId: 'rzp_test_SI6yMLEElaFA2G', batches ,email});
+});
+
+// Create Razorpay order on server-side
+app.post('/create-order', ensureAuthenticated, async (req, res) => {
+  const { batchId, email } = req.body;
+
+  // Fetch the selected batch from the database
+  const batch = await Batch.findById(batchId);
+  
+  // Check if the batch exists
+  if (!batch) {
+      return res.status(404).json({ error: 'Batch not found' });
+  }
+
+  const options = {
+      amount: batch.amount * 100, // Convert amount to paise (e.g., 500 INR = 50000 paise)
+      currency: 'INR',
+      receipt: `receipt_${Math.floor(Math.random() * 1000000)}`,
+  };
+
+  try {
+      const order = await razorpay.orders.create(options);
+      res.json({ orderId: order.id, amount: order.amount, batchId, email });
+  } catch (error) {
+      console.error('Error creating Razorpay order:', error);
+      res.status(500).send(error);
+  }
+})
+
+// Verify payment and enroll student in batch
+app.post('/verify-payment', ensureAuthenticated, async (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, batchId, email } = req.body;
+
+    // Verify the payment signature
+    const generated_signature = crypto.createHmac('sha256','5RRkecA33KsM6fAgWYt0DIJH' )
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .digest('hex');
+
+    const isValidPayment = generated_signature === razorpay_signature;
+
+    if (isValidPayment) {
+        try {
+            // Find the student by email or however you identify them in your system
+            const user = await User.find({ email: email });
+            // Check if the student exists
+            if (!user) {
+                return res.status(404).json({ success: false, message: "Student not found" });
+            }
+            // Enroll student in the batch (database logic here)
+            await User.updateOne(
+              { email: email },
+              { $addToSet: { purchasedBatches: batchId } }
+          );
+            res.status(200).json({ success: true, message: "Enrollment successful" });
+        } catch (error) {
+            console.error("Error enrolling student:", error);
+            res.status(500).json({ success: false, message: "Enrollment failed, please try again later." });
+        }
+    } else {
+        res.status(400).json({ success: false, message: "Invalid payment signature" });
+    }
+});
+
+
+
+
+// app.get('/payment', (req, res) => {
+//   res.render('payment');
+// });
+
+// app.post('/create-order', async (req, res) => {
+//   const amount = 50000; // amount in paise
+//   const options = {
+//       amount: amount,
+//       currency: 'INR',
+//       receipt: 'receipt_order_74394'
+//   };
+//   try {
+//       const order = await razorpay.orders.create(options);
+//       console.log(order)
+//       res.json(order);
+//   } catch (error) {
+//       res.status(500).send(error);
+//   }
+// })
+
+
+// app.post('/verify-payment', (req, res) => {
+//   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+//   const hmac = crypto.createHmac('sha256', '5RRkecA33KsM6fAgWYt0DIJH');
+//   hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
+//   const generatedSignature = hmac.digest('hex');
+
+//   if (generatedSignature === razorpay_signature) {
+//       res.send('Payment verified successfully');
+//   } else {
+//       res.status(400).send('Invalid signature');
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        async function initiatePayment(batchId, amount, email) {
+            const studentId = 'YOUR_STUDENT_ID'; // Replace with actual student ID
+
+            // Create order on server
+            const orderResponse = await fetch('/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount, batchId, email }) // Send email here
+            });
+
+            if (!orderResponse.ok) {
+                const errorResponse = await orderResponse.json();
+                alert(`Failed to create order: ${errorResponse.error || 'Unknown error'}`);
+                console.error('Order creation error:', errorResponse);
+                return;
+            }
+
+            const order = await orderResponse.json();
+
+            const options = {
+                key: '<%= keyId %>', // Razorpay Key ID
+                amount: amount, // Ensure amount is sent correctly
+                currency: 'INR',
+                name: 'Your Company Name',
+                description: 'Batch Enrollment',
+                order_id: order.orderId, // Use the orderId from the created order
+                handler: async function (response) {
+                    // On successful payment, verify and enroll student
+                    const verifyResponse = await fetch('/verify-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            batchId,
+                            email // Include email for verification
+                        })
+                    });
+
+                    if (verifyResponse.ok) {
+                        alert('Payment successful and enrollment complete!');
+                        window.location.href = '/show/purchasedbatches'; // Redirect to a confirmation page
+                    } else {
+                        const errorVerification = await verifyResponse.json();
+                        alert(`Payment verification failed: ${errorVerification.message || 'Unknown error'}`);
+                    }
+                },
+                prefill: {
+                    name: 'Student Name', // Replace with dynamic student name if available
+                    email: email, // Use the passed email for prefill
+                    contact: '9999999999' // Replace with actual contact number if available
+                },
+                theme: { color: '#3399cc' }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+</body>
+</html>
