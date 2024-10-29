@@ -10,8 +10,22 @@
     <link rel="stylesheet" href="/styles/quickaccess.css">
     <link rel="stylesheet" href="/styles/popularbatches.css">
     <link rel="stylesheet" href="/styles/studentsidebar.css">
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    
+        @keyframes slideOut {
+            from { transform: translateX(0); }
+            to { transform: translateX(100%); }
+        }
+    </style>
 </head>
 <body>
+
+    <%- include("./components/flash.ejs") %>
+
     <div class="container">
 
         <!-- Sidebar -->
@@ -57,6 +71,21 @@
     <div class="footer-nav">
       <%- include("./components/student/footer.ejs") %>
     </div>
+
+
+<script>
+    // Auto-hide toast notifications after a specified time
+    setTimeout(() => {
+        const successToast = document.getElementById('successToast');
+        const errorToast = document.getElementById('errorToast');
+        if (successToast) {
+            successToast.style.display = 'none';
+        }
+        if (errorToast) {
+            errorToast.style.display = 'none';
+        }
+    }, 3500); // Adjust timing as needed
+</script>
 
 </body>
 </html>

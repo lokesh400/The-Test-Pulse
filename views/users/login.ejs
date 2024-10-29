@@ -5,8 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/styles/login.css">
+    <style>
+      /* Keyframes for slide-in and slide-out animations */
+      @keyframes slideIn {
+          from { transform: translateX(100%); } /* Start from the right */
+          to { transform: translateX(0); }      /* End at the normal position */
+      }
+  
+      @keyframes slideOut {
+          from { transform: translateX(0); }    /* Start at the normal position */
+          to { transform: translateX(100%); }   /* Move out to the right */
+      }
+  </style>
 </head>
 <body>
+  
+  <% if (error && error.length > 0) { %>
+    <div id="errorToast" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        transform: translateX(100%); /* Start off-screen */
+        animation: slideIn 0.5s forwards, slideOut 0.5s 3s forwards;">
+        <%= error[0] %>
+    </div>
+<% } %>
+
    
     <div id="form-main-div">
     <form class="form" action="/user/login" method="POST">
@@ -38,6 +68,17 @@
 
 </form>
 </div>
+
+<script>
+  // Auto-hide toast notification after 3 seconds
+  setTimeout(() => {
+      const toast = document.getElementById('errorToast');
+      if (toast) {
+          toast.style.opacity = '0'; // Fade out effect
+          setTimeout(() => toast.style.display = 'none', 500); // Hide after fade-out
+      }
+  }, 3000);
+</script>
 
 </body>
 </html>

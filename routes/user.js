@@ -66,12 +66,16 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
-    res.render("./users/login.ejs");
+    const error = req.flash("error");
+    req.flash('success_msg', 'Welcome back!');
+    res.render("./users/login.ejs",{ error });
+
 });
 
 router.post("/login",
     passport.authenticate("local", {
         failureRedirect: "/user/login",
+        failureFlash: true, // Enable flash messages for failures
     }), 
     async (req, res) => {
         // Successful login redirects to index page
