@@ -27,6 +27,7 @@ const batchrouter = require("./routes/batch.js");
 const otprouter = require("./routes/otp.js");
 const studenttestrouter = require("./routes/studenttest.js");
 const paymentrouter = require("./routes/payment.js");
+const newrouter = require("./routes/membersandstudents.js");
 
 const app = express();
 const port = 8000;
@@ -141,6 +142,7 @@ app.use("/",questionbankrouter);
 app.use("/",batchrouter);
 app.use("/",studenttestrouter);
 app.use("/",paymentrouter);
+app.use("/",newrouter);
 
 app.get("/", (req,res)=>{
   if (req.isAuthenticated() && req.user.role === 'admin') {
@@ -169,52 +171,11 @@ app.get("/terms-and-conditions",(req,res)=>{
 
 app.get("/privacy-policy",(req,res)=>{
   res.render("./users/privacy-policy.ejs")
-})
-
-
-app.get('/currentaffairs/create/new', (req,res) => {
-  res.render('listings/create');
-})
-
-// Route to handle submitted data
-app.post('/submit-data', async (req, res) => {
-    const { data } = req.body;
-    if (Array.isArray(data)) {
-        try {
-
-          var d = new Date();
-          const date = d.getDate();
-          const month = d.getMonth();
-          const y = d.getYear();
-          const year = y-100;
-          const newData = new DataModel({ 
-            text: data,
-            date:date,
-            month:month,
-            year:year
-        });
-        await newData.save();
-            res.status(200).send('Data submitted');
-        } catch (error) {
-            console.error('Error saving data:', error);
-            res.status(500).send('Error saving data');
-        }
-    } else {
-        res.status(400).send('Invalid data format');
-    }
-    console.log(data)
 });
 
-app.get('/currentaffairs', async (req, res) => {
-  const allListing = await DataModel.find({});
-  res.render('./listings/showall',{allListing});
-});
 
-app.post('/get/currentaffair/by/month', async (req, res) => {
-  var selectedOption = req.body.selectedOption;
-  const allListing = await DataModel.find({month : selectedOption});
-  res.render('./listings/show',{allListing});
-});
+
+
 
 
 app.delete('/admin/delete/test/:id', async (req, res) => {

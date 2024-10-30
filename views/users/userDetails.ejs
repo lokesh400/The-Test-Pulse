@@ -1,68 +1,94 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   User Information
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
   <style>
-    body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-}
-
-.user-profile-card {
-  background-color: #ffffff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  width: 300px;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.user-profile-card:hover {
-  transform: scale(1.05);
-}
-
-.user-avatar img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-top: 20px;
-}
-
-.user-details {
-  padding: 20px;
-}
-
-.user-details h2 {
-  margin: 10px 0;
-  font-size: 1.5em;
-  color: #333;
-}
-
-.user-details p {
-  color: #666;
-  margin: 5px 0;
-  font-size: 0.9em;
-}
-
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .user-card {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            color: #fff;
+        }
+        .user-card img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 4px solid #fff;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-info h2 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .user-info p {
+            margin: 5px 0;
+            color: #ffffff;
+        }
+        .user-info .email, .user-info .phone {
+            display: flex;
+            align-items: center;
+        }
+        .user-info .email i, .user-info .phone i {
+            margin-right: 10px;
+            color: #FFD700;
+        }
+        @media (max-width: 768px) {
+            .user-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .user-card img {
+                margin-bottom: 20px;
+            }
+        }
   </style>
-</head>
-<body>
-  <div class="user-profile-card">
-    <div class="user-avatar">
-      <img src="'https://via.placeholder.com/150'" alt="User Avatar">
+ </head>
+ <body>
+  <div class="container">
+   <div class="user-card">
+    <img alt="User Picture" height="150" src="/images/user.png" width="150"/>
+    <div class="user-info">
+     <h2>
+      <%= currUser.name %>
+     </h2>
+     <p>
+      Age: NA
+     </p>
+     <p>
+      Location: NA
+     </p>
+     <p class="email">
+      <i class="fas fa-envelope">
+      </i>
+      <%= currUser.email %>
+     </p>
+     <p class="phone">
+      <i class="fas fa-phone">
+      </i>
+      <%= currUser.contactNumber %>
+     </p>
     </div>
-    <div class="user-details">
-      <p><strong>Name:</strong> <%= currUser.name %></p>
-      <p><strong>Email:</strong> <%= currUser.email %></p>
-    </div>
+   </div>
   </div>
-</body>
+ </body>
 </html>

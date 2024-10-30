@@ -7,8 +7,8 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_SI6yMLEElaFA2G', // replace with your Razorpay key_id
-  key_secret: '5RRkecA33KsM6fAgWYt0DIJH' // replace with your Razorpay key_secret
+  key_id: process.env.rzp_key_id,
+  key_secret: process.env.rzp_key_secret,
 })
 
   function ensureAuthenticated(req, res, next) {
@@ -39,7 +39,7 @@ const razorpay = new Razorpay({
 router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
     const allBatches = await Batch.find({}); // Fetch available batches from database
     const email = req.user.email; 
-    res.render('./batch/showallbatches.ejs', { keyId: 'rzp_test_SI6yMLEElaFA2G', allBatches ,email});
+    res.render('./batch/showallbatches.ejs', { keyId: process.env.rzp_key_id, allBatches ,email});
   });  
 
   // Create Razorpay order on server-side
@@ -74,7 +74,7 @@ router.post('/verify-payment', ensureAuthenticated, async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, batchId, email } = req.body;
 
     // Verify the payment signature
-    const generated_signature = crypto.createHmac('sha256','5RRkecA33KsM6fAgWYt0DIJH' )
+    const generated_signature = crypto.createHmac('sha256',process.env.rzp_key_secret )
         .update(`${razorpay_order_id}|${razorpay_payment_id}`)
         .digest('hex');
 

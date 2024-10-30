@@ -5,6 +5,9 @@ const UserSchema = new mongoose.Schema({
   name:{
     type:String,
   },
+  contactNumber:{
+    type:Number,
+  },
   role:{
     type:String
   },
