@@ -221,7 +221,7 @@ router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
  });
 
 // Routes to add a batch manually if payment fails
-app.get('/batch/:batchId/authorize-students', async (req, res) => {
+router.get('/batch/:batchId/authorize-students', async (req, res) => {
   try {
       const { batchId } = req.params; // Destructure batchId from req.params
       const students = await User.find(); // Fetch all students
@@ -232,7 +232,7 @@ app.get('/batch/:batchId/authorize-students', async (req, res) => {
   }
 });
 // Post Route to authorize a student
-app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
+router.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
   const { batchId,studentEmail } = req.params;
   const userString = JSON.stringify(studentEmail, null, 2);
   const emailMatch = userString.match(/email:\s*'([^']+)'/);
