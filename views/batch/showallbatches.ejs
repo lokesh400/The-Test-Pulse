@@ -8,11 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/student.css">
     <link rel="stylesheet" href="/styles/studentsidebar.css">
-    <style>
-      #thumbnail-img{
-        width: 100%;
-      }
-    </style>
+    <link rel="stylesheet" href="/styles/popularbatches.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
     <div class="container">
@@ -23,27 +20,57 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <div class="search-bar">
-                <input type="text" placeholder="Search">
-            </div>
-
+        
             <div class="enrolled-courses">
+              <div class="unique-container">
+              <div class="unique-card-container">
             <% allBatches.forEach(batch => { %>
-              <div class="card1">
-                <img id="thumbnail-img" src="<%=batch.thumbnail%>" alt="">
-                   <span class="card-int__title"><%=batch.title%> |</span>
-                   <span class="card-int__title">Class:<%=batch.class%></span>
-                    &nbsp;
-                    <a href="/showbatch/<%=batch._id%>"><button class="view-button">Open</button></a>
-              </div>
+                <div class="unique-card">
+                 <img alt="Prayas JEE 90 days Crash Course 2025" height="150" src="<%=batch.thumbnail%>" width="300"/>
+                 <div class="unique-title">
+                  <%=batch.title%>
+                 </div>
+                
+                 <div class="unique-details">
+                  <div class="unique-icon-text">
+                   <i class="fas fa-calendar-alt">
+                   </i>
+                   <span>
+                    Starts on 21 Oct, 2024 | Ends on 30 Jun, 2025
+                   </span>
+                  </div>
+                 </div>
+                 <div class="unique-price">
+                  ₹<%=batch.amount%>
+                  <del>
+                   ₹<%=batch.amount*2%>
+                  </del>
+                 </div>
+                 <div class="unique-discount">
+                  <i class="fas fa-tag">
+                  </i>
+                  <span>
+                   Discount of 50% applied
+                  </span>
+                 </div>
+                 <div class="unique-buttons">
+                  <button class="unique-explore">
+                   EXPLORE
+                  </button>
+                  <button class="pay-button unique-buy-now" 
+                      onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
+                     Pay ₹<%= batch.amount %>
+                  </button>
+                 </div>
+                </div>
           <% }) %>
             </div>
-
-
+          </div>
+        </div>
+        
         </div>
     </div>
 
-    <!-- Footer Navigation for Mobile -->
 
      <!-- Footer Navigation for Mobile -->
      <div class="header-container" >
@@ -53,5 +80,68 @@
     <div class="footer-nav">
       <%- include("../components/student/footer.ejs") %>
     </div>
+
+    <script>
+      async function initiatePayment(batchId, amount, email) {
+            const studentId = '<%=email%>'; // Replace with actual student ID
+
+            // Create order on server
+            const orderResponse = await fetch('/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount, batchId, email }) // Send email here
+            });
+
+            if (!orderResponse.ok) {
+                const errorResponse = await orderResponse.json();
+                alert(`Failed to create order: ${errorResponse.error || 'Unknown error'}`);
+                console.error('Order creation error:', errorResponse);
+                return;
+            }
+
+            const order = await orderResponse.json();
+
+            const options = {
+                key: '<%= keyId %>', // Razorpay Key ID
+                amount: amount, // Ensure amount is sent correctly
+                currency: 'INR',
+                name: 'The Test Pulse',
+                description: 'Batch Enrollment',
+                order_id: order.orderId, // Use the orderId from the created order
+                handler: async function (response) {
+                    // On successful payment, verify and enroll student
+                    const verifyResponse = await fetch('/verify-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            batchId,
+                            email // Include email for verification
+                        })
+                    });
+
+                    if (verifyResponse.ok) {
+                        alert('Payment successful and enrollment complete!');
+                        window.location.href = '/show/purchasedbatches'; // Redirect to a confirmation page
+                    } else {
+                        const errorVerification = await verifyResponse.json();
+                        alert(`Payment verification failed: ${errorVerification.message || 'Unknown error'}`);
+                    }
+                },
+                prefill: {
+                    name: '<%=currUser.name%>', // Replace with dynamic student name if available
+                    email: '<%=email%>', // Use the passed email for prefill
+                    contact: '<%=currUser.contactNumber%>' // Replace with actual contact number if available
+                },
+                theme: { color: '#3399cc' }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+
 </body>
 </html>

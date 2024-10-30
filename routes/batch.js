@@ -9,6 +9,14 @@ const cloudinary = require('cloudinary').v2;
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+
+const razorpay = new Razorpay({
+  key_id: 'rzp_test_SI6yMLEElaFA2G', // replace with your Razorpay key_id
+  key_secret: '5RRkecA33KsM6fAgWYt0DIJH' // replace with your Razorpay key_secret
+})
+
 const Upload = {
     uploadFile: async (filePath) => {
       try {
@@ -80,13 +88,15 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
   });  
   
   //All Batches
-router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
-    const allBatches = await Batch.find({});
-    res.render('./batch/showallbatches.ejs',{allBatches});
-  });
+
+
+// router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
+//     const allBatches = await Batch.find({}); // Fetch available batches from database
+//     const email = req.user.email; 
+//     res.render('./batch/showallbatches.ejs', { keyId: 'rzp_test_SI6yMLEElaFA2G', allBatches ,email});
+//   });  
   
 // show a particular requested batch
- 
 router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
   const { id } = req.params;
   try {
@@ -209,5 +219,39 @@ router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
   }
   
  });
+
+// Routes to add a batch manually if payment fails
+app.get('/batch/:batchId/authorize-students', async (req, res) => {
+  try {
+      const { batchId } = req.params; // Destructure batchId from req.params
+      const students = await User.find(); // Fetch all students
+      res.render('authorize-students', { students, batchId }); // Render the EJS template with the students and batchId
+  } catch (error) {
+      console.error('Error fetching students:', error);
+      res.status(500).send('Server Error');
+  }
+});
+// Post Route to authorize a student
+app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
+  const { batchId,studentEmail } = req.params;
+  const userString = JSON.stringify(studentEmail, null, 2);
+  const emailMatch = userString.match(/email:\s*'([^']+)'/);
+  const email = emailMatch ? emailMatch[1] : null; // Pretty print the user object
+  try {
+      // Fetch current user document
+      const user = await User.find({ email: email });
+      // Add batch ID to purchasedBatches
+      await User.updateOne(
+          { email: email },
+          { $addToSet: { purchasedBatches: batchId } }
+      );
+      req.flash('success_msg', 'Batch authorized successfully!');
+      res.redirect(`/batch/${batchId}/authorize-students`);
+  } catch (error) {
+      console.error('Error authorizing student:', error);
+      req.flash('error_msg', 'An error occurred while authorizing the batch.');
+      res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;

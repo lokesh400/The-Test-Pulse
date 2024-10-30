@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const passport = require("passport");
 const nodemailer = require('nodemailer');
+const passportLocalMongoose = require('passport-local-mongoose');
 const Otp = require('../models/Otp');
 
 function ensureAuthenticated(req, res, next) {
@@ -129,6 +130,35 @@ router.get("/logout", (req, res, next) => {
         res.redirect("/"); // Redirect to homepage after logout
     });
 });
+
+// Forget Password Route
+
+router.get("/forget-password", (req, res, next) => {
+    res.render("./users/forgetpassword.ejs")
+});
+
+router.post('/forget-password', async (req, res) => {
+    const { otp,newPassword, confirmNewPassword,email } = req.body;
+    // Validate new passwords match
+    console.log(otp,newPassword,email,confirmNewPassword);
+    let user = await Otp.findOne({ email });
+    if(newPassword==confirmNewPassword&&otp==user.otp){
+    try {
+        const student = await User.findOne({email});
+        // Update to new password
+        await student.setPassword(newPassword);
+        await student.save();
+        req.flash('success_msg', 'Password Updated');
+        res.render('./users/login.ejs');
+
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.render('./users/login.ejs', { error: "An error occurred, please try again" });
+    }}
+});
+
+module.exports = router;
+
 
 //contactus
 router.get("/support", (req, res) => {

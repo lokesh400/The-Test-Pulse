@@ -26,6 +26,7 @@ const questionbankrouter = require("./routes/questionbank.js");
 const batchrouter = require("./routes/batch.js");
 const otprouter = require("./routes/otp.js");
 const studenttestrouter = require("./routes/studenttest.js");
+const paymentrouter = require("./routes/payment.js");
 
 const app = express();
 const port = 8000;
@@ -139,6 +140,7 @@ app.use("/test",testrouter);
 app.use("/",questionbankrouter);
 app.use("/",batchrouter);
 app.use("/",studenttestrouter);
+app.use("/",paymentrouter);
 
 app.get("/", (req,res)=>{
   if (req.isAuthenticated() && req.user.role === 'admin') {
@@ -214,31 +216,6 @@ app.post('/get/currentaffair/by/month', async (req, res) => {
   res.render('./listings/show',{allListing});
 });
 
-// TEST SERIES
-
-
-//Test DELETE Route
-
-// app.delete('/admin/delete/test/:id', async (req, res) => {
-//   const testId = req.params.id;
-//   try {
-//       // First, delete the test
-//       const result = await Test.findByIdAndDelete(testId);
-//       if (!result) {
-//           return res.status(404).json({ error: 'Test not found.' });
-//       }
-
-//       // Then, remove it from all batches that contain it in the `tests` array
-//       await Batch.updateMany(
-//           { tests: testId },
-//           { $pull: { tests: testId } }
-//       );
-
-//       return res.status(200).json({ message: 'Test deleted successfully!' });
-//   } catch (error) {
-//       return res.status(500).json({ error: 'Error deleting test.' });
-//   }
-// });
 
 app.delete('/admin/delete/test/:id', async (req, res) => {
   const testId = req.params.id; // Get the test ID from the request parameters
@@ -282,41 +259,6 @@ app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")
 })
 
-app.get('/batch/:batchId/authorize-students', async (req, res) => {
-  try {
-      const { batchId } = req.params; // Destructure batchId from req.params
-      const students = await User.find(); // Fetch all students
-      res.render('authorize-students', { students, batchId }); // Render the EJS template with the students and batchId
-  } catch (error) {
-      console.error('Error fetching students:', error);
-      res.status(500).send('Server Error');
-  }
-});
-
-
-// Route to authorize a student
- 
-app.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
-  const { batchId,studentEmail } = req.params;
-  const userString = JSON.stringify(studentEmail, null, 2);
-  const emailMatch = userString.match(/email:\s*'([^']+)'/);
-  const email = emailMatch ? emailMatch[1] : null; // Pretty print the user object
-  try {
-      // Fetch current user document
-      const user = await User.find({ email: email });
-      // Add batch ID to purchasedBatches
-      await User.updateOne(
-          { email: email },
-          { $addToSet: { purchasedBatches: batchId } }
-      );
-      req.flash('success_msg', 'Batch authorized successfully!');
-      res.redirect(`/batch/${batchId}/authorize-students`);
-  } catch (error) {
-      console.error('Error authorizing student:', error);
-      req.flash('error_msg', 'An error occurred while authorizing the batch.');
-      res.status(500).send('Server Error');
-  }
-});
 
 // Start server
 app.listen(port, () => {

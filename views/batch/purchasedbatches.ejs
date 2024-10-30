@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/student.css">
     <link rel="stylesheet" href="/styles/studentsidebar.css">
+    <link rel="stylesheet" href="/styles/popularbatches.css">
     <style>
       #thumbnail-img{
         width: 100%;
@@ -24,23 +25,51 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <div class="search-bar">
-                <input type="text" value="My Batches" readonly>
-            </div>
+            
 
-
-            <div class="enrolled-courses">
-              <% batches.forEach(batch => { %>
-                <div class="card1">
-                  <img id="thumbnail-img" src="<%=batch.thumbnail%>" alt="">
-                      <br>
-                      <span class="card-int__title"><%=batch.title%> |</span>
-                         <span class="card-int__title">Class:<%=batch.class%></span>
-                          &nbsp;
-                      <a href="/showbatch/<%=batch._id%>"><button class="view-button">Open</button></a>
-                 </div>
-                 <% }) %>
-            </div>
+          <div class="enrolled-courses">
+            <h1>My Batches</h1>
+            <div class="unique-container">
+            <div class="unique-card-container">
+          <% batches.forEach(batch => { %>
+              <div class="unique-card">
+               <img alt="" height="150" src="<%=batch.thumbnail%>" width="300"/>
+               <div class="unique-title">
+                <%=batch.title%>
+               </div>
+              
+               <div class="unique-details">
+                <div class="unique-icon-text">
+                 <i class="fas fa-calendar-alt">
+                 </i>
+                 <span>
+                  Starts on 21 Oct, 2024 | Ends on 30 Jun, 2025
+                 </span>
+                </div>
+               </div>
+               <div class="unique-price">
+                ₹<%=batch.amount%>
+                <del>
+                 ₹<%=batch.amount*2%>
+                </del>
+               </div>
+               <div class="unique-discount">
+                <i class="fas fa-tag">
+                </i>
+                <span>
+                 Discount of 50% applied
+                </span>
+               </div>
+               <div class="unique-buttons">
+                  <button class="unique-buy-now">
+                    <a style="text-decoration: none; color: white;" href="/showbatch/<%=batch._id%>">Study</a>
+                  </button>
+               </div>
+              </div>
+        <% }) %>
+          </div>
+        </div>
+      </div>
 
 
         </div>
