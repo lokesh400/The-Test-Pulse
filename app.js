@@ -157,6 +157,7 @@ app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
 })
 
 app.get("/student", ensureAuthenticated,(req,res)=>{
+  req.flash('success_msg', 'Login Successfull');
   res.render("./student.ejs")
 })
 
