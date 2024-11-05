@@ -67,14 +67,11 @@
                                     onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
                                     Pay ₹<%= batch.amount %>
                             </button>
-
-                            if(purchased || currUser.role==='admin'){
-                                <button class="unique-buy-now">
-                                    <a style="text-decoration: none; color: white;" href="/showbatch/<%=batch._id%>">Study</a>
-                                </button>
-                            }
-
                     <% } %>
+                           <button class="unique-buy-now">
+                                <a style="text-decoration: none; color: white;" href="/showbatch/<%=batch._id%>">Study</a>
+                            </button>
+
                  
                  </div>
                 </div>
