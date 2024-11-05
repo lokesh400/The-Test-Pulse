@@ -58,10 +58,24 @@
                   <button class="unique-explore">
                    EXPLORE
                   </button>
-                  <button class="pay-button unique-buy-now" 
-                      onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
-                     Pay ₹<%= batch.amount %>
-                  </button>
+
+                     <%  
+                        const idd = batch._id;
+                        const purchased = currUser.purchasedBatches.includes(idd);
+                        if (!purchased) { %>
+                            <button class="pay-button unique-buy-now" 
+                                    onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
+                                    Pay ₹<%= batch.amount %>
+                            </button>
+
+                            if(purchased || currUser.role==='admin'){
+                                <button class="unique-buy-now">
+                                    <a style="text-decoration: none; color: white;" href="/showbatch/<%=batch._id%>">Study</a>
+                                </button>
+                            }
+
+                    <% } %>
+                 
                  </div>
                 </div>
           <% }) %>

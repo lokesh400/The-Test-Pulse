@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-const Question = require('../models/Question');
+const Team = require('../models/Team');
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -47,46 +47,54 @@ router.get('/create/new/team',ensureAuthenticated,isAdmin,(req,res)=>{
     res.render('./admin/create-team.ejs')
 })
 
-router.post('/create-ques', upload.single("file"), async (req, res) => {
-  try {
-      const { subject, chapter, topic, correct } = req.body;
-      const result = await Upload.uploadFile(req.file.path);
-      const imageUrl = result.secure_url;
+router.post('/create/new/team/member', upload.single("file"), async (req, res) => {
+    try {
+        // Check if the file was uploaded
+        if (!req.file) {
+            req.flash('error_msg', 'No file uploaded.');
+            return res.redirect('/create/new/team');
+        }
 
-      fs.unlink(req.file.path, (err) => {
-          if (err) {
-              console.error('Error deleting local file:', err);
-          } else {
-              console.log('Local file deleted successfully');
-          }
-      });
+        // Destructure and validate request body
+        const { Name, Subject, College } = req.body;
+        if (!Name || !Subject || !College) {
+            req.flash('error_msg', 'All fields are required.');
+            return res.redirect('/create/new/team');
+        }
 
-      const newQuestion = new Question({ 
-          SubjectName: subject,
-          ChapterName: chapter,
-          TopicName: topic,
-          Question: imageUrl,
-          Option1: "Option 1",
-          Option2: "Option 2",
-          Option3: "Option 3",
-          Option4: "Option 4",
-          CorrectOption: correct
-      });
+        // Upload file and get URL
+        const result = await Upload.uploadFile(req.file.path);
+        const imageUrl = result.secure_url;
 
-      await newQuestion.save();
+        // Delete local file after upload
+        fs.unlink(req.file.path, (err) => {
+            if (err) {
+                console.error('Error deleting local file:', err);
+            } else {
+                console.log('Local file deleted successfully');
+            }
+        });
 
-      req.flash('success_msg', 'Question created successfully!'); // Set success flash message
-      res.redirect('/create/question/bank'); // Redirect to the form page or any other page
-  } catch (error) {
-      console.error(error);
-      req.flash('error_msg', 'Upload failed.'); // Set error flash message
-      res.redirect('/create/question/bank'); // Redirect back to the form page or error page
-  }
+        // Create new team document
+        const newTeam = new Team({ 
+            name: Name,
+            college: College,
+            subject: Subject,
+            photo: imageUrl,
+        });
+
+        // Save to database
+        await newTeam.save();
+        req.flash('success_msg', 'Added successfully!');
+        res.redirect('/create/new/team'); // Redirect to the form page or any other page
+
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg', 'Upload failed. Please try again.'); // Set error flash message
+        res.redirect('/create/new/team'); // Redirect back to the form page or error page
+    }
 });
 
-  
-router.get('/create/information',ensureAuthenticated, (req,res) => {
-    res.render('./questionbank/createinfo.ejs')
-  })
 
+  
 module.exports = router;
