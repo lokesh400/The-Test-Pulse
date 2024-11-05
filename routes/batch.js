@@ -2,7 +2,8 @@ const express = require("express");
 const router =  express.Router();
 const Test = require('../models/Test');
 const Batch = require('../models/Batch');
-const Complaint = require('../models/Complaints')
+const Complaint = require('../models/Complaints');
+const User = require('../models/User');
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
