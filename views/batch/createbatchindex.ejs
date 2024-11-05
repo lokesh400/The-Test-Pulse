@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,15 +8,7 @@
 </head>
 <body>
    
-    <div id="form-main-div">
-    <form class="form" action="/admin/create/batch" method="POST" encType="multipart/form-data">
-        <h3>Create Batch</h3>
-        <div class="flex-column">
-          <label>Title</label>
-        </div>
-          <div class="inputForm">
-            <input placeholder="Enter Batch Title" name="name" class="input" type="text"/>
-          </div>
+    
         
           <div class="flex-column">
             <label>Class</label>
@@ -25,33 +17,13 @@
               <input class="input" name="grade"/>
             </div>
 
-        <div class="flex-column">
-          <label>Upload Thumbnail</label>
-        </div>
-          <div class="inputForm">
-            <input class="input" name="file" type="file"/>
-          </div>
+        
 
-          <div class="flex-column">
-            <label>Description</label>
-          </div>
-            <div class="inputForm">
-              <input class="input" name="descritption" type="text"/>
-            </div>
+          
 
-            <div class="flex-column">
-              <label>Description</label>
-            </div>
-              <div class="inputForm">
-                <input class="input" name="amount" type="number"/>
-              </div>
             
-            <div class="flex-column">
-              <label>Tag</label>
-            </div>
-              <div class="inputForm">
-                <input class="input" name="tag" type="text"/>
-              </div>    
+            
+               
     
              
         
@@ -62,5 +34,94 @@
 </form>
 </div>
 
+</body>
+</html> -->
+
+
+
+
+<html>
+<head>
+    <title>Add Course</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Apple+SD+Gothic+Neo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/newbatch.css">
+
+</head>
+<body>
+  
+    <div class="batch-container">
+
+      <div class="batch-tips">
+        <h3>Course Upload Tips</h3>
+        <ul>
+            <li>Set the Course Price option or make it free.</li>
+            <li>Standard sizes for the course thumbnail is 1024x576.</li>
+            <li>Video section contains the course overview video.</li>
+            <li>Course Builder is where you create & organize a course.</li>
+            <li>Add Topics in the Course Builder section to create lessons, quizzes, and assignments.</li>
+            <li>Information from the Additional Data section shows up on the course single page.</li>
+            <li>Make Announcements to notify any important updates.</li>
+            <li>Notice to all enrolled students at once.</li>
+        </ul>
+    </div>
+
+        <div class="batch-header">
+            <h1>Create New Batch</h1>
+        </div>
+        
+        <form action="/admin/create/batch" method="POST" encType="multipart/form-data">
+          <div class="batch-form-group">
+            <label for="batch-course-title">COURSE TITLE *</label>
+            <input id="batch-course-title" name="name" required placeholder="ENTER COURSE TITLE">
+        </div>
+
+        <div class="batch-form-group">
+            <label for="batch-course-description">COURSE DESCRIPTION *</label>
+            <textarea id="batch-course-description" name="description" required placeholder="ENTER DESCRIPTION"></textarea>
+        </div>
+
+        <div class="batch-form-group">
+            <label for="batch-course-price">COURSE PRICE*</label>
+            <input type="number" id="batch-course-price" name="amount" required placeholder="ENTER COURSE PRICE">
+        </div>
+
+        <div class="batch-form-group">
+          <label for="batch-course-price">CATEGORY</label>
+          <input id="batch-course-price" name="tag" required placeholder="ENTER COURSE PRICE">
+        </div>
+
+        <div class="batch-form-group">
+          <label for="batch-course-price">CLASS</label>
+          <input id="batch-course-price" name="grade" required placeholder="ENTER COURSE PRICE">
+        </div>
+
+        <div class="batch-form-group">
+            <label for="batch-course-thumbnail">Course Thumbnail *</label>
+            <div class="batch-thumbnail">
+                <i class="fas fa-cloud-upload-alt">
+                  <input style="border: none;" required name="file" type="file"/>
+                </i>
+                <small>Aspect ratio 16:9</small>
+                <small>Recommended size 1024x576</small>
+            </div>
+        </div>
+
+        <div class="batch-form-group">
+            <label for="batch-benefits">BENEFITS OF THE COURSE *</label>
+            <textarea id="batch-benefits" required placeholder="ENTER BENEFITS OF THE COURSE"></textarea>
+        </div>
+
+        <div class="batch-form-group">
+            <label for="batch-requirements">REQUIREMENTS/INSTRUCTIONS *</label>
+            <input required id="batch-requirements" placeholder="ENTER REQUIREMENTS/INSTRUCTIONS">
+        </div>
+
+        <div class="batch-form-group">
+            <button class="batch-btn" type="Submit">ADD</button>
+        </div>
+        
+    </div>
+        </form>
 </body>
 </html>

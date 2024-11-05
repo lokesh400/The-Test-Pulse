@@ -1,6 +1,7 @@
 #form-main-div{
   margin: auto;
   width: 450px;
+  
 }
 
 h3{
@@ -9,6 +10,7 @@ h3{
 }
 
 .form {
+  border: 2px solid;
   display: flex;
   flex-direction: column;
   gap: 10px;

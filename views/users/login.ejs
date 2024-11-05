@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/styles/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+       .eye-icon {
+      cursor: pointer;
+      font-size: 20px;
+      right: 5px;  /* Adjust this value to position the icon inside the input */
+      position: absolute;
+      
+    }
+    .inputForm {
+      position: relative;
+      
+    }
       /* Keyframes for slide-in and slide-out animations */
       @keyframes slideIn {
           from { transform: translateX(100%); } /* Start from the right */
@@ -40,7 +52,7 @@
    
     <div id="form-main-div">
     <form class="form" action="/user/login" method="POST">
-        <h3>Login</h3>
+        <h3>Welcome Back</h3>
         <div class="flex-column">
           <label>Username</label>
         </div>
@@ -52,24 +64,43 @@
           <label>Password </label>
         </div>
           <div class="inputForm">
-            <input placeholder="Enter your Password" class="input" name="password" type="password">
+            <input type="password" class="password-field input" name="password" id="password" >
+            <i class="fas fa-eye eye-icon" id="togglePassword"></i>
+  
           </div>
         
         <div class="flex-row">
-          <div>
-          <input type="radio">
-          <label>Remember me </label>
-          </div>
           <span class="span"><a href="/user/forget-password">Forget Password?</a></span>
         </div>
         <button type="submit" class="button-submit">Sign In</button>
 
         <p class="p">Don't have an account? <span class="span"><a href="/user/Signup">Signup</a></span>
-
+      
 </form>
 </div>
 
 <script>
+ 
+ // Get the password input field and eye icon button
+ const passwordField = document.getElementById('password');
+    const togglePasswordButton = document.getElementById('togglePassword');
+
+    // Function to toggle the password visibility
+    togglePasswordButton.onclick = function() {
+      // Check the current type of the password field
+      if (passwordField.type === 'password') {
+        // If password is hidden, show it
+        passwordField.type = 'text';
+        togglePasswordButton.classList.remove('fa-eye');  // Remove 'eye' icon
+        togglePasswordButton.classList.add('fa-eye-slash');  // Add 'eye-slash' icon
+      } else {
+        // If password is visible, hide it
+        passwordField.type = 'password';
+        togglePasswordButton.classList.remove('fa-eye-slash');  // Remove 'eye-slash' icon
+        togglePasswordButton.classList.add('fa-eye');  // Add 'eye' icon
+      }
+    };
+
   // Auto-hide toast notification after 3 seconds
   setTimeout(() => {
       const toast = document.getElementById('errorToast');

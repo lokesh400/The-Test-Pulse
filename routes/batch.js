@@ -62,7 +62,7 @@ router.get('/admin/createnewbatch', ensureAuthenticated,isAdmin,async (req, res)
 // Post request of above route
 router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("file"), async (req, res) => {
     try {
-     const {name,grade,tag,description} = req.body;
+     const {name,grade,tag,description,amount} = req.body;
      const result = await Upload.uploadFile(req.file.path);
      const imageUrl = result.secure_url
      fs.unlink(req.file.path, (err) => {
@@ -79,7 +79,8 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
        tests:[],
        announcements:[],
        tag:tag,
-       description:description
+       description:description,
+       amount:amount
      });
      await newBatch.save();
    } catch (error) {
