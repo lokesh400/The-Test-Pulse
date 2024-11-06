@@ -71,40 +71,6 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
     res.json(chapter);
   })  
   
-  // Define the route
-// router.post('/create-ques', upload.single("file"), async (req, res) => {
-//      try {
-//       const {subject,chapter,topic,correct} = req.body;
-//       const result = await Upload.uploadFile(req.file.path);
-//       const imageUrl = result.secure_url
-//       fs.unlink(req.file.path, (err) => {
-//         if (err) {
-//           console.error('Error deleting local file:', err);
-//         } else {
-//           console.log('Local file deleted successfully');
-//         }
-//       });
-//       const newQuestion = new Question({ 
-//         SubjectName : subject,
-//         ChapterName : chapter,
-//         TopicName: topic,
-//         Question : imageUrl,
-//         Option1 : "Option 1",
-//         Option2 : "Option 2",
-//         Option3 : "Option 3",
-//         Option4: "Option 4",
-//         CorrectOption:correct
-//       });
-//       await newQuestion.save();
-  
-//       console.log(imageUrl)
-//       console.log(subject)
-//       res.json(result); // Send the upload result as a response
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).send('Upload failed.');
-//     }
-//   });
 
 router.post('/create-ques', upload.single("file"), async (req, res) => {
   try {
@@ -134,12 +100,14 @@ router.post('/create-ques', upload.single("file"), async (req, res) => {
 
       await newQuestion.save();
 
-      req.flash('success_msg', 'Question created successfully!'); // Set success flash message
-      res.redirect('/create/question/bank'); // Redirect to the form page or any other page
+      // req.flash('success_msg', 'Question created successfully!'); // Set success flash message
+      // res.redirect('/create/question/bank'); // Redirect to the form page or any other page
+      res.status(200).json({ message: 'Question created successfully!' });
   } catch (error) {
-      console.error(error);
-      req.flash('error_msg', 'Upload failed.'); // Set error flash message
-      res.redirect('/create/question/bank'); // Redirect back to the form page or error page
+      // console.error(error);
+      // req.flash('error_msg', 'Upload failed.'); // Set error flash message
+      // res.redirect('/create/question/bank'); // Redirect back to the form page or error page
+      res.status(500).json({ message: error })
   }
 });
 

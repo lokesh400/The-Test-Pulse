@@ -1,127 +1,48 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/styles/login.css">
-</head>
-<body>
-   
-    
-        
-          <div class="flex-column">
-            <label>Class</label>
-          </div>
-            <div class="inputForm">
-              <input class="input" name="grade"/>
-            </div>
-
-        
-
-          
-
-            
-            
-               
-    
-             
-        
-        
-
-        <button type="submit" class="button-submit">Create Batch</button>
-
-</form>
-</div>
-
-</body>
-</html> -->
-
-
-
-
-<html>
-<head>
-    <title>Add Course</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Batch</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Apple+SD+Gothic+Neo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/newbatch.css">
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/styles/sidebar3.css">
+    <link rel="stylesheet" href="/styles/admin.css">
+  </head>
+  <body>
+   
+    <main>
 
-</head>
-<body>
-  
-    <div class="batch-container">
-
-      <div class="batch-tips">
-        <h3>Course Upload Tips</h3>
-        <ul>
-            <li>Set the Course Price option or make it free.</li>
-            <li>Standard sizes for the course thumbnail is 1024x576.</li>
-            <li>Video section contains the course overview video.</li>
-            <li>Course Builder is where you create & organize a course.</li>
-            <li>Add Topics in the Course Builder section to create lessons, quizzes, and assignments.</li>
-            <li>Information from the Additional Data section shows up on the course single page.</li>
-            <li>Make Announcements to notify any important updates.</li>
-            <li>Notice to all enrolled students at once.</li>
-        </ul>
-    </div>
-
-        <div class="batch-header">
-            <h1>Create New Batch</h1>
-        </div>
-        
-        <form action="/admin/create/batch" method="POST" encType="multipart/form-data">
-          <div class="batch-form-group">
-            <label for="batch-course-title">COURSE TITLE *</label>
-            <input id="batch-course-title" name="name" required placeholder="ENTER COURSE TITLE">
+        <div id="header-comp">
+            <%- include('../components/admin-sidebar.ejs') %>
         </div>
 
-        <div class="batch-form-group">
-            <label for="batch-course-description">COURSE DESCRIPTION *</label>
-            <textarea id="batch-course-description" name="description" required placeholder="ENTER DESCRIPTION"></textarea>
-        </div>
+        <div id="content-div">
 
-        <div class="batch-form-group">
-            <label for="batch-course-price">COURSE PRICE*</label>
-            <input type="number" id="batch-course-price" name="amount" required placeholder="ENTER COURSE PRICE">
-        </div>
+            <%- include('../components/create-batch.ejs') %>          
+            
 
-        <div class="batch-form-group">
-          <label for="batch-course-price">CATEGORY</label>
-          <input id="batch-course-price" name="tag" required placeholder="ENTER COURSE PRICE">
-        </div>
-
-        <div class="batch-form-group">
-          <label for="batch-course-price">CLASS</label>
-          <input id="batch-course-price" name="grade" required placeholder="ENTER COURSE PRICE">
-        </div>
-
-        <div class="batch-form-group">
-            <label for="batch-course-thumbnail">Course Thumbnail *</label>
-            <div class="batch-thumbnail">
-                <i class="fas fa-cloud-upload-alt">
-                  <input style="border: none;" required name="file" type="file"/>
-                </i>
-                <small>Aspect ratio 16:9</small>
-                <small>Recommended size 1024x576</small>
+            <div>
+                <div class="card">
+                    <div class="header"> 
+                         <div class="image">
+                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20 7L9.00004 18L3.99994 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </div> 
+                    <div class="content">
+                          <span class="title"><%=currUser.name%></span> 
+                          <p class="message"><%=currUser.role%></p> 
+                    </div> 
+                </div> 
+              </div>
             </div>
+
+
         </div>
 
-        <div class="batch-form-group">
-            <label for="batch-benefits">BENEFITS OF THE COURSE *</label>
-            <textarea id="batch-benefits" required placeholder="ENTER BENEFITS OF THE COURSE"></textarea>
-        </div>
+    </main>
 
-        <div class="batch-form-group">
-            <label for="batch-requirements">REQUIREMENTS/INSTRUCTIONS *</label>
-            <input required id="batch-requirements" placeholder="ENTER REQUIREMENTS/INSTRUCTIONS">
-        </div>
-
-        <div class="batch-form-group">
-            <button class="batch-btn" type="Submit">ADD</button>
-        </div>
-        
-    </div>
-        </form>
-</body>
+  </body>
 </html>

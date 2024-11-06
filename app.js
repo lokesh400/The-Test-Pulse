@@ -147,14 +147,14 @@ app.use("/",newrouter);
 
 app.get("/", (req,res)=>{
   if (req.isAuthenticated() && req.user.role === 'admin') {
-    res.redirect("/admin")
+       res.redirect("/admin")
   }
   if (req.isAuthenticated() && req.user.role === 'student') {
-    res.redirect("/student")
+       res.redirect("/student")
     
   }
   else{
-    res.render("./index.ejs",{Team})
+    res.render("./index.ejs",{Team});
   }
 })
 
@@ -165,7 +165,6 @@ app.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
 app.get("/student", ensureAuthenticated,(req,res)=>{
   req.flash('success_msg', 'Login Successfull');
   res.render("./student.ejs")
-  console.log(req.user)
 })
 
 app.get("/terms-and-conditions",(req,res)=>{
