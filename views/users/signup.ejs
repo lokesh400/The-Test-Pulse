@@ -5,8 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/styles/signup.css">
+    <link rel="stylesheet" href="/styles/flash.css">
 </head>
 <body>
+
+    <% if (error_msg && error_msg.length>0) { %>
+        <div id="successToast">
+          <div class="info__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
+          </div>
+          <div class="info__title"> <%= error_msg %></div>
+          </div>
+          <% } %>
+          
+
     <div id="form-main-div">
         <form id="form" action="/user/signup" method="POST">
             <p class="title">Register</p>
@@ -62,6 +74,8 @@
     }
     
     try {
+        document.getElementById('send-otp').style.display = 'none';
+        document.getElementById('otp-field').style.display = 'block';
         const response = await fetch('/user/new/send-otp', {
             method: 'POST',
             headers: {
@@ -74,13 +88,20 @@
         alert(result.message);
 
         // Show the OTP input field and the submit button
-        document.getElementById('otp-field').style.display = 'block';
         document.getElementById('submit-button').style.display = 'block';
     } catch (error) {
         console.error('Error sending OTP:', error);
         alert('An error occurred while sending OTP.');
     }
 });
+
+setTimeout(() => {
+        const successToast = document.getElementById('successToast');
+        const errorToast = document.getElementById('errorToast');
+        if (successToast) {
+            successToast.style.display = 'none';
+        }
+    }, 2000); // Adjust timing as needed
 
     </script>
 

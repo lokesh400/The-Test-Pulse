@@ -5,6 +5,7 @@ const passport = require("passport");
 const nodemailer = require('nodemailer');
 const passportLocalMongoose = require('passport-local-mongoose');
 const Otp = require('../models/Otp');
+const forgetOtp = require('../models/forgetOtp');
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -64,7 +65,8 @@ router.post('/signup', async (req, res) => {
     } catch (error) {
         console.error(error);
         // Render signup page with an error message
-        res.render("./users/signup.ejs", {error : error.message});
+        req.flash('error_msg', error.message);
+        res.render("./users/signup.ejs");
     }
     }
     else{
@@ -74,52 +76,66 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
-    const error = req.flash("error");
-    req.flash('success_msg', 'Welcome back!');
-    res.render("./users/login.ejs",{ error });
-
+    res.render("./users/login.ejs");
 });
 
-router.post("/login",
-    passport.authenticate("local", {
-        failureRedirect: "/user/login",
-        failureFlash: true, // Enable flash messages for failures
-    }), 
-    async (req, res) => {
-        // Successful login redirects to index page
-        if(req.user.role==='admin'){
-            res.redirect("/admin")
+router.post("/login", async (req, res, next) => {
+    // Passport Authentication manually
+    passport.authenticate("local", async (err, user, info) => {
+        if (err) {
+            console.error("Error during authentication:", err);
+            req.flash('error_msg', 'Something went wrong. Please try again.');
+            return res.redirect("/user/login"); // Redirect back to login if there was an error
         }
-        else{
-            res.redirect("/student"); // Redirect to the homepage after successful login
+
+        if (!user) {
+            req.flash('error_msg', info.message || 'Invalid credentials. Please check your username and password.');
+            return res.redirect("/user/login"); // Invalid login credentials
         }
-        
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            host: 'smtp.gmail.com',
-            secure: false,
-            port: 587,
-            auth: {
-                user: "lokeshbadgujjar401@gmail.com",
-                pass: process.env.mailpass
+
+        // If login is successful, log in the user
+        req.login(user, async (err) => {
+            if (err) {
+                console.error("Login failed:", err);
+                req.flash('error_msg', 'Login failed. Please try again.');
+                return res.redirect("/user/login");
+            }
+
+            // Flash a success message and redirect based on user role
+            req.flash('success_msg', 'You have successfully logged in!');
+            if (user.role === 'admin') {
+                res.redirect("/admin"); // Redirect to admin dashboard
+            } else {
+                res.redirect("/student"); // Redirect to student page
+            }
+
+            // Send login email notification
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                host: 'smtp.gmail.com',
+                secure: false,
+                port: 587,
+                auth: {
+                    user: "lokeshbadgujjar401@gmail.com",
+                    pass: process.env.mailpass, // Securely store the email password in environment variables
+                }
+            });
+
+            try {
+                const info = await transporter.sendMail({
+                    from: "lokeshbadgujjar401@gmail.com",
+                    to: user.email,
+                    subject: 'Recent Login Activity Noticed',
+                    text: `Dear ${user.email}, a recent login has been made from your account on TheTestPulse Platform. If this wasn't you, please change your password.`,
+                });
+                console.log("Email sent: ", info.response);
+            } catch (error) {
+                console.error("Error sending email: ", error);
             }
         });
-        
-        try {
-            const info = await transporter.sendMail({
-                from: "lokeshbadgujjar401@gmail.com",
-                to: `${req.user.email}`,
-                subject: 'Recent Login Activity Noticed',
-                text: `Dear ${req.user.email}, a recent login has been made from your account on TheTestPulse Platform. If this wasn't you, please change your password.`,
-            });
-            console.log("Email sent: ", info.response);
-        } catch (error) {
-            console.error("Error sending email: ", error);
-        }
-        
+    })(req, res, next);
+});
 
-    }
-);
 
 // Logout route
 router.get("/logout", (req, res, next) => {
@@ -137,28 +153,25 @@ router.get("/forget-password", (req, res, next) => {
     res.render("./users/forgetpassword.ejs")
 });
 
-router.post('/forget-password', async (req, res) => {
+router.post('/forget/password', async (req, res) => {
     const { otp,newPassword, confirmNewPassword,email } = req.body;
     // Validate new passwords match
-    console.log(otp,newPassword,email,confirmNewPassword);
-    let user = await Otp.findOne({ email });
-    if(newPassword==confirmNewPassword&&otp==user.otp){
+    let candidate = await Otp.findOne({ email });
+    if(newPassword==confirmNewPassword&&otp==candidate.otp){
     try {
         const student = await User.findOne({email});
         // Update to new password
         await student.setPassword(newPassword);
         await student.save();
-        req.flash('success_msg', 'Password Updated');
+        req.flash('success_msg', 'Password Reset Successfully');
+        req.flash('error_msg', 'Password Reset Successfully');
         res.render('./users/login.ejs');
-
     } catch (error) {
         console.error("Error updating password:", error);
-        res.render('./users/login.ejs', { error: "An error occurred, please try again" });
+        req.flash('error_msg', 'Some error occured');
+        res.render('./users/login.ejs');
     }}
 });
-
-module.exports = router;
-
 
 //contactus
 router.get("/support", (req, res) => {
