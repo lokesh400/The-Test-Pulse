@@ -6,8 +6,12 @@
     <title>Document</title>
     <link rel="stylesheet" href="/styles/signup.css">
     <link rel="stylesheet" href="/styles/flash.css">
+    <link href="/styles/loader.css" rel="stylesheet" />
+    <script src="/js/loader.js"></script>
 </head>
 <body>
+
+    <%- include('../components/loader.ejs') %>
 
     <% if (error_msg && error_msg.length>0) { %>
         <div id="successToast">

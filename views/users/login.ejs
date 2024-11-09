@@ -20,9 +20,12 @@
       
     }
   </style>
+ <link href="/styles/loader.css" rel="stylesheet" />
+ <script src="/js/loader.js"></script>
 </head>
 <body>
-  
+
+ <%- include('../components/loader.ejs') %>
 
   <% if (success_msg && success_msg.length>0) { %>
 <div id="successToast">
