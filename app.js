@@ -29,6 +29,7 @@ const otprouter = require("./routes/otp.js");
 const studenttestrouter = require("./routes/studenttest.js");
 const paymentrouter = require("./routes/payment.js");
 const newrouter = require("./routes/membersandstudents.js");
+const adminrouter = require("./routes/admin.js");
 
 const app = express();
 const port = 8000;
@@ -126,14 +127,6 @@ function isAdmin(req, res, next) {
   res.render("./error/accessdenied.ejs");
 }
 
-
-// app.get('/currentaffairs', async (req, res) => {
-
-//     const allListing = await currentaffair.find({});
-//     res.render('currentaffair',{allListing});
-
-// });
-
 app.use("/blogs",blogsrouter);
 app.use("/jobs",jobsrouter);
 app.use("/user",userrouter);
@@ -144,8 +137,9 @@ app.use("/",batchrouter);
 app.use("/",studenttestrouter);
 app.use("/",paymentrouter);
 app.use("/",newrouter);
+app.use("/",adminrouter);
 
-app.get("/", (req,res)=>{
+app.get("/", async (req,res)=>{
   if (req.isAuthenticated() && req.user.role === 'admin') {
        res.redirect("/admin")
   }
@@ -154,7 +148,9 @@ app.get("/", (req,res)=>{
     
   }
   else{
-    res.render("./index.ejs",{Team});
+    const members = await Team.find({})
+    console.log(members)
+    res.render("./index.ejs",{members});
   }
 })
 
@@ -174,10 +170,6 @@ app.get("/terms-and-conditions",(req,res)=>{
 app.get("/privacy-policy",(req,res)=>{
   res.render("./users/privacy-policy.ejs")
 });
-
-
-
-
 
 
 app.delete('/admin/delete/test/:id', async (req, res) => {
@@ -207,16 +199,11 @@ app.delete('/admin/delete/test/:id', async (req, res) => {
   }
 });
 
-
-
-
-
 // Admin Route - List all tests
 app.get('/admin/tests', async (req, res) => {
   const tests = await Test.find({}); // Fetch all tests from the database
   res.render('./testseries/admin-test', { tests });
 });
-
 
 app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")

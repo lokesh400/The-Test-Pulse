@@ -1,4 +1,4 @@
-<div class="container-fluid">
+  <div class="container-fluid">
     <div class="heading_container heading_center">
       <h2 class="">
         Our <span> Team</span>
@@ -6,67 +6,20 @@
     </div>
 
     <div class="team_container">
-      <div class="row">
-        <div class="col-lg-3 col-sm-6">
-          <div class="box ">
-            <div class="img-box">
-              <img src="images/team-1.jpg" class="img1" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Lokesh
-              </h5>
-              <p>
-                Role
-              </p>
+      <div class="row team-row">
+        <% members.forEach(member => { %>
+          <div class="col-lg-3 col-sm-6 team-member">
+            <div class="box">
+              <div class="img-box">
+                <img src="<%= member.photo %>" class="img1" alt="Team Member">
+              </div>
+              <div class="detail-box">
+                <h5><%= member.name %></h5>
+                <p>Role</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <div class="box ">
-            <div class="img-box">
-              <img src="images/team-2.jpg" class="img1" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Lokesh
-              </h5>
-              <p>
-               Role
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <div class="box ">
-            <div class="img-box">
-              <img src="images/team-3.jpg" class="img1" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-               Lokesh
-              </h5>
-              <p>
-               Role
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <div class="box ">
-            <div class="img-box">
-              <img src="images/team-4.jpg" class="img1" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Lokesh
-              </h5>
-              <p>
-               Role
-              </p>
-            </div>
-          </div>
-        </div>
+        <% }) %>
       </div>
     </div>
   </div>

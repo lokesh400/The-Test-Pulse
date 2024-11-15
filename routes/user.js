@@ -16,6 +16,7 @@ function ensureAuthenticated(req, res, next) {
 
 // Signup route
 router.get('/signup', (req, res) => {
+    req.flash('error_msg', 'Hello Dear');
     res.render("./users/signup.ejs");
 });
 
@@ -76,6 +77,7 @@ router.post('/signup', async (req, res) => {
 
 // Login route
 router.get("/login", (req, res) => {
+    req.flash('error_msg', 'Welcome back');
     res.render("./users/login.ejs");
 });
 

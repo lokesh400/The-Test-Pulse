@@ -1,94 +1,168 @@
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   User Information
-  </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .user-card {
-            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+        #profile{
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            color: #fff;
+            border: 2px solid;
+            width: 90%;
+            margin: auto;
+            margin-top: 10px;
+            border-radius: 20px;
         }
-        .user-card img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-right: 20px;
-            border: 4px solid #fff;
+       img{
+            height: 80px;
+            width: 80px;
         }
-        .user-info {
-            flex: 1;
+        #personal-info{
+            margin-left: 20px;
         }
-        .user-info h2 {
-            margin: 0 0 10px;
-            font-size: 28px;
-            font-weight: 700;
+        #user-info{
+            border: 2px solid;
+            border-radius: 20px;
+            width: 90%;
+            margin: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 10px;
         }
-        .user-info p {
-            margin: 5px 0;
-            color: #ffffff;
-        }
-        .user-info .email, .user-info .phone {
+        #support{
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            /* padding: 10px; */
+            margin: auto;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+        #contact{
+            width: 95%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid;
+            margin: auto;
+            height: fit-content;
+        }
+        
+        #footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            /* padding: 10px 20px; */
         }
-        .user-info .email i, .user-info .phone i {
-            margin-right: 10px;
-            color: #FFD700;
+        #social-media {
+            margin-top: 20px;
+            background-color: #333;
+            width: 90%;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            padding: 10px;
         }
-        @media (max-width: 768px) {
-            .user-card {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
+        #social-media a {
+            color: white;
+            margin: 10px 10px;
+            text-decoration: none;
+            font-size: 1.7em;
+        }
+        #sign-out {
+            background-color:rgba(255, 8, 0, 0.642);
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+
+        }
+        #sign-out h5 {
+            margin: 0;
+            color: #333;
+        }
+        @media(min-width:650px){
+            main{
+                width: 500px;
+                margin: auto;
             }
-            .user-card img {
-                margin-bottom: 20px;
-            }
+            #footer {
+            position: fixed;
+            bottom: 0;
+            width: 450px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            /* align-items: center; */
+            margin-left: 25px;
+            box-sizing: border-box;
+            /* padding: 10px 20px; */
         }
-  </style>
- </head>
- <body>
-  <div class="container">
-   <div class="user-card">
-    <img alt="User Picture" height="150" src="/images/user.png" width="150"/>
-    <div class="user-info">
-     <h2>
-      <%= currUser.name %>
-     </h2>
-     <p>
-      Age: NA
-     </p>
-     <p>
-      Location: NA
-     </p>
-     <p class="email">
-      <i class="fas fa-envelope">
-      </i>
-      <%= currUser.email %>
-     </p>
-     <p class="phone">
-      <i class="fas fa-phone">
-      </i>
-      <%= currUser.contactNumber %>
-     </p>
-    </div>
-   </div>
-  </div>
- </body>
+        #social-media {
+            margin-top: 20px;
+            background-color: #333;
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <section id="profile">
+            <div id="my-img">
+                <img src="/images/logo.png" alt="">
+            </div>
+            <div id="personal-info">
+                <p><b><%= currUser.name %></b></p>
+                <p style="margin-top: 0px;"><%= currUser.email %></p>
+            </div>
+        </section>
+
+        <section id="user-info">
+            <p><b>Name:</b> <%=currUser.name%></p>
+            <p><b>Email:</b> <%=currUser.email%></p>
+            <p><b>Ph.No:</b> <%=currUser.contactNumber%></p>
+            <p><a href="/user/forget-password" style="text-decoration: none; padding: 8px; color: #333; background-color:rgba(255, 8, 0, 0.781); border-radius: 10px; width: 100px; margin-left: calc(50% - 75px); margin-bottom: 10px; ">Reset Password</a></p>
+        </section>
+    
+        <section id="support">
+           
+                <h6 id="contact"><i class="fas fa-comments" style="color: blue;"></i><a href="#" style="text-decoration: none; color: black;" > Live Support</a></h6>
+                <h6 id="contact"><i class="fas fa-address-book" style="color: blue;"></i><a href="/user/support" style="text-decoration: none; color: black;" > Contact Us</a></h6>
+           
+        </section>
+        
+        <section id="footer">
+            <div id="social-media">
+                <div>
+                    <h6 style="margin: auto; text-align: center; margin-top: 10px; margin-bottom: 10px;">Join Our Community</h6>
+                </div>
+                <div style="display: flex; justify-content: space-around;">
+                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href=""><i class="fab fa-twitter"></i></a>
+                <a href=""><i class="fab fa-instagram"></i></a>
+                <a href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+    
+            <div id="sign-out">
+                <i class="fas fa-sign-out-alt" style="color:black;"><a href="/user/logout" style="color: black; text-decoration: none;">Log Out</a></i>
+            </div>
+        </section>
+    </main>
+    
+</body>
 </html>

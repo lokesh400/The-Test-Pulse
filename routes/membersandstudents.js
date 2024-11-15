@@ -44,6 +44,7 @@ const Upload = {
   }
 
 router.get('/create/new/team',ensureAuthenticated,isAdmin,(req,res)=>{
+    req.flash('error_msg', `Hello Sir @ ${req.user.name}`);
     res.render('./admin/create-team.ejs')
 })
 
@@ -57,11 +58,11 @@ router.post('/create/new/team/member', upload.single("file"), async (req, res) =
 
         // Destructure and validate request body
         const { Name, Subject, College } = req.body;
+        console.log(Name, Subject, College)
         if (!Name || !Subject || !College) {
             req.flash('error_msg', 'All fields are required.');
             return res.redirect('/create/new/team');
         }
-
         // Upload file and get URL
         const result = await Upload.uploadFile(req.file.path);
         const imageUrl = result.secure_url;
@@ -85,7 +86,7 @@ router.post('/create/new/team/member', upload.single("file"), async (req, res) =
 
         // Save to database
         await newTeam.save();
-        req.flash('success_msg', 'Added successfully!');
+        req.flash('success_msg', 'Team Member Added Successfully');
         res.redirect('/create/new/team'); // Redirect to the form page or any other page
 
     } catch (error) {
