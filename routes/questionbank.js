@@ -111,6 +111,29 @@ router.post('/create-ques', upload.single("file"), async (req, res) => {
   }
 });
 
+router.post('/create-ques/text', upload.single("file"), async (req, res) => {
+  try {
+      const { subject, chapter, topic, correct,question } = req.body;
+
+      const newQuestion = new Question({ 
+          SubjectName: subject,
+          ChapterName: chapter,
+          TopicName: topic,
+          Question: question,
+          Option1: "Option 1",
+          Option2: "Option 2",
+          Option3: "Option 3",
+          Option4: "Option 4",
+          CorrectOption: correct
+      });
+
+      await newQuestion.save();
+      res.status(200).json({ message: 'Question created successfully!' });
+  } catch (error) {
+      res.status(500).json({ message: error })
+  }
+});
+
   
 router.get('/create/information',ensureAuthenticated, (req,res) => {
     res.render('./questionbank/createinfo.ejs')

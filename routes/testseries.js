@@ -66,13 +66,14 @@ router.post('/secondlastfinalsubmit', async (req, res) => {
 
 // Handle form submission for creating a test
 router.post('/final', async (req, res) => {
-  const { title, questions,time } = req.body;
+  const { title, questions,time, type2 } = req.body;
+  const type = type2.toUpperCase();
   const formattedQuestions = questions.map(q => ({
     questionText: q.questionText,
     options: q.options,
     correctAnswer: q.correctAnswer,
   }));
-  const newTest = new Test({ title, questions: formattedQuestions ,time});
+  const newTest = new Test({ title, questions: formattedQuestions ,time, type});
   await newTest.save();
   const tests = await Test.find({});
   res.render('./testseries/admin-test', { tests });

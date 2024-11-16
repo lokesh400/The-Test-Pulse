@@ -47,7 +47,7 @@
 
     <div id="studentList">
         <% students.forEach(student => { %>
-            <div class="card" data-name="<%= student.name %>">
+            <div class="card" data-name="<%= student.email %>">
                 <span><%= student.name %> (<%= student.email %>)</span>
                 <form action="/batch/<%= batchId %>/authorize/<%= student %>" method="POST">
                     <button type="submit" class="btn-authorize">Authorize</button>
