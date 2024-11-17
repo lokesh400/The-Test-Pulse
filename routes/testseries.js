@@ -22,38 +22,63 @@ function isAdmin(req, res, next) {
 }
 
 router.get('/admin/create',ensureAuthenticated,isAdmin,(req, res) => {
-  res.render('./testseries/createtest.ejs');
+  try{
+    res.render('./testseries/createtest.ejs');
+   }catch(error){
+    res.send(error)
+   }
 });
 
 router.get('/create', ensureAuthenticated,isAdmin, async (req, res) => {
-    res.render('./testseries/TestFromQuestionBank.ejs');
+    try{
+      res.render('./testseries/TestFromQuestionBank.ejs');
+     }catch(error){
+      res.send(error)
+     }
   });
   
 router.get('/api/subjects',ensureAuthenticated,isAdmin, async (req,res) => {
-    const subjects = await Subject.find({})
-    res.json(subjects);
+    try{
+      const subjects = await Subject.find({})
+      res.json(subjects);
+     }catch(error){
+      res.send(error)
+     }
   })
   
 router.get('/api/chapters/:name',ensureAuthenticated,isAdmin, async (req,res) => {
-    const {name} = req.params;
+    try{
+      const {name} = req.params;
     const chapter = await Chapter.find({SubjectName : name})
     res.json(chapter);
+     }catch(error){
+      res.send(error)
+     }
   })
   
 router.get('/api/topics/:name',ensureAuthenticated,isAdmin, async (req,res) => {
-    const {name} = req.params;
-    const chapter = await Topic.find({ChapterName : name})
-    res.json(chapter);
+    try{
+      const {name} = req.params;
+      const chapter = await Topic.find({ChapterName : name})
+      res.json(chapter);
+     }catch(error){
+      res.send(error)
+     }
   })
   
 router.get('/api/questions/:name',ensureAuthenticated,isAdmin, async (req,res) => {
-    const {name} = req.params;
-    const chapter = await Question.find({TopicName : name})
-    res.json(chapter);
+    try{
+      const {name} = req.params;
+      const chapter = await Question.find({TopicName : name})
+      res.json(chapter);
+     }catch(error){
+      res.send(error)
+     }
   })
   
   
 router.post('/secondlastfinalsubmit', async (req, res) => {
+   try{
     const selectedOptions = req.body.options; // options will be an array
     let data =[];
     
@@ -62,11 +87,15 @@ router.post('/secondlastfinalsubmit', async (req, res) => {
        let data2 = data.push(ques)
     }
      res.render('./testseries/TestFromQuestionBank2.ejs',{data});
+   }catch(error){
+    res.send(error)
+   }
 });
 
 // Handle form submission for creating a test
 router.post('/final', async (req, res) => {
-  const { title, questions,time, type2 } = req.body;
+  try{
+    const { title, questions,time, type2 } = req.body;
   const type = type2.toUpperCase();
   const formattedQuestions = questions.map(q => ({
     questionText: q.questionText,
@@ -77,6 +106,9 @@ router.post('/final', async (req, res) => {
   await newTest.save();
   const tests = await Test.find({});
   res.render('./testseries/admin-test', { tests });
+  }catch(error){
+    res.send(error)
+  }
 });
 
 //Test Portal Home Page

@@ -140,30 +140,42 @@ router.get('/create/information',ensureAuthenticated, (req,res) => {
   })
   
 router.post('/create/subject', async(req,res) => {
-    let {subject} = req.body;
-    const newsubject = new Subject({ 
+    try{
+      let {subject} = req.body;
+      const newsubject = new Subject({ 
                             Name: subject
                            });
-     await newsubject.save();
+      await newsubject.save();
+    }catch(error){
+      res.send(error)
+    }
   })
   
 router.post('/create/chapter', async(req,res) => {
-    let {subject,chapter} = req.body;
-    const newsubject = new Chapter({ 
+     try{
+      let {subject,chapter} = req.body;
+      const newsubject = new Chapter({ 
                             SubjectName:subject,
                             ChapterName:chapter
                            });
-     await newsubject.save();
+      await newsubject.save();
+    }catch(error){
+      res.send(error)
+    }
   })
   
 router.post('/create/topic', async(req,res) => {
-    let {subject,chapter,topic} = req.body;
-    const newsubject = new Topic({ 
-                            SubjectName:subject,
-                            ChapterName:chapter,
-                            TopicName:topic
-                           });
-     await newsubject.save();
+     try{
+      let {subject,chapter,topic} = req.body;
+      const newsubject = new Topic({ 
+                              SubjectName:subject,
+                              ChapterName:chapter,
+                              TopicName:topic
+                             });
+       await newsubject.save();
+    }catch(error){
+      res.send(error)
+    }
   })
   
 

@@ -19,10 +19,12 @@ const User = require('../models/User');
   }
 
   
-  //ADMIN ROUTE TO CREATE NEW BATCH
+  //ADMIN ROUTE TO ALL USERS
 router.get('/admin/allusers',async (req, res) => {
       const users = await User.find({})
       res.render('./admin/all-users.ejs',{users});
   });
+
+
 
 module.exports = router;
