@@ -8,7 +8,7 @@ const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
-
+const socketIO = require('socket.io');
 
 const dataModule = require('./public/js/data.js');
 const DataModel = require('./models/Data'); // Adjust the path if necessary
@@ -327,7 +327,54 @@ app.get("/user/complaint",(req,res)=>{
 })
 
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+
+
+const Message = require('./models/Message');
+app.get('/dashboard', async (req, res) => {
+  const users = await User.find(); // Fetch all users
+  res.render('dashboard', { users });
 });
+
+app.get('/chat', async (req, res) => {
+  const { recipient } = req.query;
+  const messages = await Message.find({ $or: [{ sender: recipient }, { recipient: recipient }] });
+  res.render('chat', { recipient, messages });
+});
+
+app.post('/send', async (req, res) => {
+  const { sender, recipient, content } = req.body;
+  const newMessage = new Message({ sender, recipient, content });
+  await newMessage.save();
+  res.redirect(`/chat?recipient=${recipient}`);
+});
+
+// Start server
+const server = app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+
+// Real-time messaging
+const io = socketIO(server);
+
+io.on('connection', (socket) => {
+  console.log('User connected');
+
+  socket.on('private_message', async (data) => {
+    const { sender, recipient, content } = data;
+    const newMessage = new Message({ sender, recipient, content });
+    await newMessage.save();
+    socket.to(recipient).emit('receive_message', data);
+  });
+
+  socket.on('join', (username) => {
+    socket.join(username); // Join the room named after the username
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+
+// Start server
+// app.listen(port, () => {
+//   console.log(`Server is running on http://localhost:${port}`);
+// });
