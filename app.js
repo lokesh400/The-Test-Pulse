@@ -1,5 +1,6 @@
 const express = require("express");
 require('dotenv').config();
+const http = require('http');
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -29,9 +30,14 @@ const studenttestrouter = require("./routes/studenttest.js");
 const paymentrouter = require("./routes/payment.js");
 const newrouter = require("./routes/membersandstudents.js");
 const adminrouter = require("./routes/admin.js");
+const chatsrouter = require("./routes/chats.js");
+const testpdfrouter = require("./routes/testpdf.js");
+const socketHandler = require('./routes/socketHandler');
 
 const app = express();
 const port = 8000;
+const server = http.createServer(app);
+const io = socketIO(server);
 
 
 const multer = require('multer');
@@ -136,6 +142,8 @@ app.use("/",studenttestrouter);
 app.use("/",paymentrouter);
 app.use("/",newrouter);
 app.use("/",adminrouter);
+app.use("/",chatsrouter);
+app.use("/",testpdfrouter);
 
 app.get("/", async (req,res)=>{
   if (req.isAuthenticated() && req.user.role === 'admin') {
@@ -208,173 +216,9 @@ app.get('/admin/test/:id', async (req, res) => {
   res.render('./admin/print-test.ejs', { test });
 });
 
-const puppeteer = require('puppeteer');
-
-app.get('/download-pdf/:id', async (req, res) => {
-  const test = await Test.findById(req.params.id);
-  const htmlContent = `
-    <html>
-    <head>
-       <style>
-        body {
-      font-family: Arial, sans-serif;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .question-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .question {
-      width: 45%;
-      text-align: center;
-    }
-
-    .question img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .button-container {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    button {
-      display: inline-block;
-      width: 200px;
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    /* Print-specific styles */
-    @media print {
-      /* Hide the print button when printing */
-      .button-container {
-        display: none;
-      }
-
-      /* Hide page title */
-      h1 {
-        display: none;
-      }
-
-      /* Hide the browser UI, such as the address bar, and page date/time (if possible) */
-      body {
-        margin: 0;
-        padding: 0;
-      }
-
-      /* Prevent page breaks in unwanted places */
-      .question-container {
-        page-break-inside: avoid;
-      }
-
-      /* Optionally, remove any other UI elements that should not appear when printing */
-      header, footer, nav {
-        display: none !important;
-      }
-    }
-       </style>
-    </head>
-    <body>
-        <h1>Test: ${test.title}</h1>
-        <div class="question-container">
-            ${test.questions.map((question, index) => `
-                <div class="question">
-                    <p><strong>Question ${index + 1}:</strong></p>
-                    <img src="${question.questionText}" alt="Question Image">
-                </div>
-            `).join('')}
-        </div>
-    </body>
-    </html>
-  `;
-
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-  await page.setContent(htmlContent);
-  const pdfBuffer = await page.pdf();
-
-  await browser.close();
-
-  // Send the PDF as a download
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename="test-results.pdf"');
-  res.send(pdfBuffer);
-});
-
-
 app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")
 })
 
-
-
-
-const Message = require('./models/Message');
-app.get('/dashboard', async (req, res) => {
-  const users = await User.find(); // Fetch all users
-  res.render('dashboard', { users });
-});
-
-app.get('/chat', async (req, res) => {
-  const { recipient } = req.query;
-  const messages = await Message.find({ $or: [{ sender: recipient }, { recipient: recipient }] });
-  res.render('chat', { recipient, messages });
-});
-
-app.post('/send', async (req, res) => {
-  const { sender, recipient, content } = req.body;
-  const newMessage = new Message({ sender, recipient, content });
-  await newMessage.save();
-  res.redirect(`/chat?recipient=${recipient}`);
-});
-
-// Start server
-const server = app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
-
-// Real-time messaging
-const io = socketIO(server);
-
-io.on('connection', (socket) => {
-  console.log('User connected');
-
-  socket.on('private_message', async (data) => {
-    const { sender, recipient, content } = data;
-    const newMessage = new Message({ sender, recipient, content });
-    await newMessage.save();
-    socket.to(recipient).emit('receive_message', data);
-  });
-
-  socket.on('join', (username) => {
-    socket.join(username); // Join the room named after the username
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-
-
-// Start server
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-// });
+socketHandler(io);
+server.listen(port, () => console.log(`Server running on http://localhost:${port}`));
