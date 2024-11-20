@@ -1,6 +1,6 @@
 const express = require("express");
 require('dotenv').config();
-const http = require('http');
+
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -36,9 +36,6 @@ const socketHandler = require('./routes/socketHandler');
 
 const app = express();
 const port = 8000;
-const server = http.createServer(app);
-const io = socketIO(server);
-
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -220,5 +217,7 @@ app.get("/user/complaint",(req,res)=>{
   res.render("./complaints/student-window.ejs")
 })
 
+
+const Server = app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+const io = socketIO(Server);
 socketHandler(io);
-server.listen(port, () => console.log(`Server running on http://localhost:${port}`));

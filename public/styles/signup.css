@@ -1,161 +1,126 @@
-body{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-#form-main-div{
-    margin: auto;
-    max-width: 350px;
-}
-#form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 20px;
-    position: relative;
-  }
-  
-  .title {
-    font-size: 28px;
-    color: royalblue;
-    font-weight: 600;
-    letter-spacing: -1px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding-left: 30px;
-  }
-  
-  .title::before,.title::after {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    left: 0px;
-    background-color: royalblue;
-  }
-  
-  .title::before {
-    width: 18px;
-    height: 18px;
-    background-color: royalblue;
-  }
-  
-  .title::after {
-    width: 18px;
-    height: 18px;
-    animation: pulse 1s linear infinite;
-  }
-  
-  .message, .signin {
-    color: rgba(88, 87, 87, 0.822);
-    font-size: 14px;
-  }
-  
-  .signin {
-    text-align: center;
-  }
-  
-  .signin a {
-    color: royalblue;
-  }
-  
-  .signin a:hover {
-    text-decoration: underline royalblue;
-  }
-  
-  .flex {
-    display: flex;
-    width: 100%;
-    gap: 6px;
-  }
-  
-  #form label {
-    position: relative;
-  }
-  
-  #form label .input {
-    width: 100%;
-    padding: 10px 10px 20px 10px;
-    outline: 0;
-    border: 1px solid rgba(105, 105, 105, 0.397);
-    border-radius: 10px;
-  }
-  
-  #form label .input + span {
-    position: absolute;
-    left: 10px;
-    top: 15px;
-    color: grey;
-    font-size: 0.9em;
-    cursor: text;
-    transition: 0.3s ease;
-  }
-  
-  #form label .input:placeholder-shown + span {
-    top: 15px;
-    font-size: 0.9em;
-  }
-  
-  #form label .input:focus + span,.form label .input:valid + span {
-    top: 30px;
-    font-size: 0.7em;
-    font-weight: 600;
-  }
-  
-  #form label .input:valid + span {
-    color: green;
-  }
-  
-  .submit {
-    border: none;
-    outline: none;
-    background-color: royalblue;
-    padding: 10px;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    transform: .3s ease;
-  }
+        #form-main-div {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px #0000009a;
+            width: 80%;
+            margin: auto;
+            max-width: 400px;
+        }
 
-  #send-otp {
-    border: none;
-    outline: none;
-    background-color: royalblue;
-    padding: 10px;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    transform: .3s ease;
-  }
-  
-  .submit:hover {
-    background-color: rgb(56, 90, 194);
-  }
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #333;
+        }
 
-    .toast {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 15px;
-        border-radius: 5px;
-        opacity: 0.9;
-        transition: opacity 0.5s ease;
-    }
+        .message {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
 
-  
-  @keyframes pulse {
-    from {
-      transform: scale(0.9);
-      opacity: 1;
-    }
-  
-    to {
-      transform: scale(1.8);
-      opacity: 0;
-    }
-  }
+        label {
+            display: block;
+            margin-top: 30px;
+            margin-bottom: 5px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input:focus {
+            border-color: #007bff;
+        }
+
+        span {
+            position: absolute;
+            /* top: -1.2rem;
+            left: 0.75rem; */
+            background: #fff;
+            padding: 0 0.25rem;
+            font-size: 0.875rem;
+            color: #007bff;
+        }
+
+        .send-otp, .submit {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-otp {
+            background-color: #007bff;
+            color: #fff;
+            margin-top: 5px;
+            /* margin-bottom: 1rem; */
+        }
+
+        .send-otp:hover {
+            background-color: #0056b3;
+        }
+
+        .submit {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .submit:hover {
+            background-color: #218838;
+        }
+
+        .signin {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .signin a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .signin a:hover {
+            text-decoration: underline;
+        }
+
+        #successToast {
+            display: flex;
+            align-items: center;
+            background-color: #f8d7da;
+            color: #ff0019;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .info__icon {
+            margin-right: 0.5rem;
+        }
+
+        .info__title {
+            font-size: 1rem;
+        }
