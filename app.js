@@ -1,6 +1,5 @@
 const express = require("express");
 require('dotenv').config();
-
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -148,7 +147,6 @@ app.get("/", async (req,res)=>{
   }
   if (req.isAuthenticated() && req.user.role === 'student') {
        res.redirect("/student")
-    
   }
   else{
     const members = await Team.find({})
