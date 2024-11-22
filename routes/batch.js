@@ -13,11 +13,6 @@ const fs = require('fs');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
-const razorpay = new Razorpay({
-  key_id: 'rzp_test_SI6yMLEElaFA2G', // replace with your Razorpay key_id
-  key_secret: '5RRkecA33KsM6fAgWYt0DIJH' // replace with your Razorpay key_secret
-})
-
 const Upload = {
     uploadFile: async (filePath) => {
       try {
@@ -36,7 +31,6 @@ const Upload = {
     res.redirect('/user/login');
   }
 
-
   function isAdmin(req, res, next) {
     if (req.isAuthenticated() && req.user.role === 'admin') {
       return next();
@@ -53,7 +47,6 @@ const Upload = {
     }
 };
 
-  
   //ADMIN ROUTE TO CREATE NEW BATCH
 router.get('/admin/createnewbatch', ensureAuthenticated,isAdmin,async (req, res) => {
       res.render('./batch/createbatchindex.ejs');
