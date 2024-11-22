@@ -123,6 +123,38 @@ button.submit-btn:hover {
     background-color: #f44336;
     color: white;
 }
+       
+.drop-area {
+            width: 100%;
+            height: 50px;
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #888;
+            font-size: 18px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .drop-area.drag-over {
+            background-color: #f0f8ff;
+            border-color: #007bff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
 
   </style>
 </head>
@@ -164,8 +196,11 @@ button.submit-btn:hover {
           <!-- Topics will be dynamically loaded -->
       </select>
 
-      <label for="file">Question Image:</label>
-      <input type="file" name="file" required />
+      <div class="drop-area" id="drop-area">
+        <span>Drag & Drop your image here, or click to select</span>
+        <input type="file" name="file" id="file-input" required />
+        <div class="file-name" id="file-name"></div>
+    </div>
 
       <label for="correct">Right Option:</label>
       <input type="number" name="correct" required />
@@ -263,6 +298,49 @@ button.submit-btn:hover {
         }, 2000);  // Hide after 2 seconds
     }
 });
+
+const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        // Trigger the file input when the user clicks on the drop area
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Prevent the default behavior of the browser when dragging over the drop area
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('drag-over');
+        });
+
+        // Remove the "drag-over" class when drag leaves the drop area
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('drag-over');
+        });
+
+        // Handle the drop event when a file is dropped
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('drag-over');
+            const files = event.dataTransfer.files;
+            fileInput.files = files;
+            displayFileName(files[0]);
+        });
+
+        // Optional: Display the selected file name
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                displayFileName(fileInput.files[0]);
+            }
+        });
+
+        // Function to display the file name
+        function displayFileName(file) {
+            if (file) {
+                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+            }
+        }
 
     </script>
 </body>
