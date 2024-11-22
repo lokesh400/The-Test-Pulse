@@ -5,7 +5,7 @@ const Subject = require('../models/Subject');
 const Chapter = require('../models/Chapter');
 const Topic = require('../models/Topic');
 const Question = require('../models/Question');
-// const Test = require('../models/Test');
+const Test = require('../models/Test');
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -13,13 +13,11 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const { error } = require("console");
 
-
 cloudinary.config({
     cloud_name:process.env.cloud_name, 
     api_key:process.env.api_key, 
     api_secret:process.env.api_Secret
 });
-
 
 const Upload = {
     uploadFile: async (filePath) => {
@@ -99,15 +97,10 @@ router.post('/create-ques', upload.single("file"), async (req, res) => {
       });
 
       await newQuestion.save();
-
-      // req.flash('success_msg', 'Question created successfully!'); // Set success flash message
-      // res.redirect('/create/question/bank'); // Redirect to the form page or any other page
       res.status(200).json({ message: 'Question created successfully!' });
   } catch (error) {
-      // console.error(error);
-      // req.flash('error_msg', 'Upload failed.'); // Set error flash message
-      // res.redirect('/create/question/bank'); // Redirect back to the form page or error page
       res.status(500).json({ message: error })
+      console.log(error);
   }
 });
 

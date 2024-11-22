@@ -88,16 +88,7 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
      res.status(500).send('Upload failed.');
    }
   });  
-  
-  //All Batches
-
-
-// router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
-//     const allBatches = await Batch.find({}); // Fetch available batches from database
-//     const email = req.user.email; 
-//     res.render('./batch/showallbatches.ejs', { keyId: 'rzp_test_SI6yMLEElaFA2G', allBatches ,email});
-//   });  
-  
+   
 // show a particular requested batch
 router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
   const { id } = req.params;
@@ -112,7 +103,6 @@ router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (re
       return res.status(500).send('Server error');
   }
 });
-
 
 // Route to include tests in a batch
 router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
