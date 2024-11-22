@@ -125,8 +125,6 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
   });
   
   
-  
-  
 router.get('/create/information',ensureAuthenticated, (req,res) => {
     res.render('./questionbank/createinfo.ejs')
   })

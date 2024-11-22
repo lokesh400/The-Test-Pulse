@@ -6,23 +6,50 @@ const Complaint = require('../models/Complaints');
 const User = require('../models/User');
 
 const multer = require('multer');
+const path = require('path');
 const cloudinary = require('cloudinary').v2;
-const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const { error } = require("console");
+
+cloudinary.config({
+    cloud_name:process.env.cloud_name, 
+    api_key:process.env.api_key, 
+    api_secret:process.env.api_secret
+});
+
+// Multer disk storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Save files to 'uploads/' folder
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    // Use the original file name
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+// Initialize multer with diskStorage
+const upload = multer({ storage: storage });
+
+// Function to upload files to Cloudinary
+const Upload = {
+  uploadFile: async (filePath) => {
+    try {
+      // Upload the file to Cloudinary
+      const result = await cloudinary.uploader.upload(filePath, {
+        resource_type: "auto", // Auto-detect file type (image, video, etc.)
+      });
+      return result;
+    } catch (error) {
+      throw new Error('Upload failed: ' + error.message);
+    }
+  }
+};
 
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
-const Upload = {
-    uploadFile: async (filePath) => {
-      try {
-        const result = await cloudinary.uploader.upload(filePath);
-        return result; // Return the upload result
-      } catch (error) {
-        throw new Error('Upload failed: ' + error.message);
-      }
-    },
-  };
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
