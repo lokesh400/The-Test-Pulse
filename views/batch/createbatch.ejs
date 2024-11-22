@@ -1,79 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Available Tests</title>
-  <style>
-    .question-block {
-            margin: 20px auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 800px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-  </style>
+    <title>Update</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/styles/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/student.css">
+    <link rel="stylesheet" href="/styles/studentsidebar.css">
+    <link rel="stylesheet" href="/styles/particularbatch.css">
 </head>
 <body>
-  
 
-<div id="main">
-    <p>test id <%= id %></p>
-    <div id="content-div">
-    <div>
-      <% tests.forEach(test => { %>
-       <div class="question-block">
-             <h4 class="cookieHeading"><%= test.title %></h4>
-             <div>
-             <span class="cookieDescription">Questions<%= test.questions.length %></span><span class="cookieDescription"> &nbsp| Marks:<%= test.questions.length*4 %></span>
-             <form action="/create/<%= test._id %>/<%=id %>" method="POST">
-                <button>Include</button>
-             </form>
-             </div>
-             <form id="deleteTestForm" action="/admin/delete/test/<%= test._id %>" method="post" onsubmit="deleteTest(event)">
-                <button type="submit">Delete</button>
-            </form>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <%- include("../components/student/sidebar.ejs") %>
+           </div>
+
+        <div class="main-content">
+
+        <div class="content">
+            
+            <div class="test-card" id="tests" style="display: block;">
+                <% tests.forEach(test => { %>
+                    <div class="test-card">
+                        <h4 class="cookieHeading"><%= test.title %></h4>
+                        <div class="card-button">
+                            <form id="deleteTestForm" action="/admin/delete/test/<%= test._id %>" method="post" onsubmit="deleteTest(event)">
+                                <button class="btn" type="submit">Delete</button>
+                            </form> 
+                        </div>
+                        <div class="card-button">
+                            <form action="/create/<%= test._id %>/<%=id %>" method="POST">
+                                <button class="btn" type="Submit">Include</button>
+                             </form> 
+                        </div>
+                        <br>
+                    </div>
+                   <% }) %>      
+            </div>
+
         </div>
-      <% }) %>
-    </div>  
-  </div> 
+
+
 </div>
+    </div>
 
-<script>
-    async function deleteTest(event) {
-        event.preventDefault(); // Prevent the default form submission
+      <div class="footer-nav">
+        <%- include("../components/student/footer.ejs") %>
+      </div>
 
-        const form = event.target;
-        const actionUrl = form.action; // Get the action URL from the form
-
-        try {
-            const response = await fetch(actionUrl, {
-                method: 'DELETE', // Specify the DELETE method
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message); // Show success message
-                // Optionally, you can redirect or update the UI here
-                location.reload(); // Reload the page or redirect to a different page
-            } else {
-                alert(data.error); // Show error message
+    <div class="header-container" >
+        <%- include("../components/student/student-header.ejs") %>
+       </div>
+    
+       <script>
+        async function deleteTest(event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            const form = event.target;
+            const actionUrl = form.action; // Get the action URL from the form
+    
+            try {
+                const response = await fetch(actionUrl, {
+                    method: 'DELETE', // Specify the DELETE method
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    alert(data.message); // Show success message
+                    // Optionally, you can redirect or update the UI here
+                    location.reload(); // Reload the page or redirect to a different page
+                } else {
+                    alert(data.error); // Show error message
+                }
+            } catch (error) {
+                console.error('Error deleting item:', error);
+                alert('Error deleting item. Please try again.');
             }
-        } catch (error) {
-            console.error('Error deleting item:', error);
-            alert('Error deleting item. Please try again.');
         }
-    }
-</script>
-
+    </script>      
 
 </body>
 </html>
-
-

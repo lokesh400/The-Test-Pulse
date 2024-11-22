@@ -48,7 +48,8 @@
                         
                         <% thisBatch.tests.forEach(function(test) { %>
                             <div class="test-card">
-                                <p> <b>Title:</b> <%= test[1]%></p>
+                                <p><b>Title:</b> <%= test[1]%></p>
+                                <br>
                                 <div class="card-button">
                                     <a href="/student/test/<%= test[0] %>">
                                         <button class="btn">Attempt Test</button>

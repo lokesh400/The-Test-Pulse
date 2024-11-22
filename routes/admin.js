@@ -2,6 +2,7 @@ const express = require("express");
 const router =  express.Router();
 const User = require('../models/User');
 const Test = require('../models/Test');
+const Batch = require('../models/Batch');
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -65,8 +66,8 @@ router.delete('/admin/delete/test/:id', async (req, res) => {
             return res.status(200).json({ message: 'Test deleted successfully, but not found in any batches.' });
         }
     } catch (error) {
-        console.error('Error deleting test:', error);
-        return res.status(500).json({ error: 'Error deleting test.' });
+        console.log('Error deleting test:', error);
+        return res.status(500).json({ error });
     }
   });
   

@@ -36,11 +36,22 @@ const razorpay = new Razorpay({
 };
 
 //Route to show all batches
-router.get('/showallbatches',ensureAuthenticated, async (req, res) => {
-    const allBatches = await Batch.find({}); // Fetch available batches from database
-    const email = req.user.email; 
-    res.render('./batch/showallbatches.ejs', { keyId: process.env.rzp_key_id, allBatches ,email});
-  });  
+router.get('/showallbatches', ensureAuthenticated, async (req, res) => {
+  try {
+      const allBatches = await Batch.find({});
+      const filteredBatches = allBatches.filter(batch => batch.amount > 0);
+      const email = req.user.email;
+      res.render('./batch/showallbatches.ejs', {
+          keyId: process.env.rzp_key_id,
+          allBatches: filteredBatches,
+          email
+      });
+  } catch (err) {
+      console.error("Error fetching batches: ", err);
+      res.status(500).send('Server error');
+  }
+});
+
 
   // Create Razorpay order on server-side
 router.post('/create-order', ensureAuthenticated, async (req, res) => {

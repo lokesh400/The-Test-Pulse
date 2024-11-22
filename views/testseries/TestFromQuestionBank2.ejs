@@ -3,76 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Test</title>
+    <link rel="stylesheet" href="/styles/sidebar.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #444;
+        }
+
+        #main {
+            width: 100%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5em;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 12px;
+            font-size: 1.1em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+            /* width: 220px; */
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2em;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 200px;
+            height: 50px;
+            margin-top: 92px;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #questions-container {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: #f8f8f8;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
 
         .question-block {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        #questions-Container {
-            /* margin-top: 30px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px; */
-            display: block;
-            width: 90%;
-        }
-        #show{
-            width: 90%;
-            border: none;
+        .question-block h3 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 15px;
         }
 
-        #option-container{
+        #option-container {
             display: flex;
-            border: none;  
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
-        #options{
-            width: 25%;
+        #options {
+            width: 22%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f2f2f2;
+            transition: all 0.3s ease;
         }
-        
+
+        #options:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        #correct-ans {
+            width: 50px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f2f2f2;
+            transition: all 0.3s ease;
+        }
+
+        #correct-ans:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+
+        .readonly-input {
+            background-color: #f0f0f0;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .question-block input {
+            background-color: #f9f9f9;
+        }
+
+        .question-block input[readonly] {
+            background-color: #f0f0f0;
+            color: #888;
+        }
+
+        /* Small screen responsiveness */
+        @media (max-width: 768px) {
+            .question-block h3 {
+                font-size: 1.2em;
+            }
+
+            #options {
+                width: 48%;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="/styles/sidebar.css">
 </head>
 <body>
 
-    
     <div id="main">
-
         <div id="content-div">
-    <h1>Create a New Test</h1>
-    <form action="/test/final" method="POST" id="testForm">
-        <label for="title">Test Title:</label>
-        <input type="text" name="title" required><br><br>
-        <label for="time">Time (in minutes):</label>
-        <input type="number" name="time" required><br><br>
-        <label for="type2">Type</label>
-        <input name="type2" required><br><br>
+            <h1>Create a New Test</h1>
+            <form action="/test/final" method="POST" id="testForm">
 
-        <div id="questions-container">
-            <% for(let i = 0; i < data.length ; i++) { %>
-                <div class="question-block">
-                    <h3>Question <%= i + 1 %></h3>
-                    <input id="show" type="text" name="questions[<%= i %>][questionText]" value="<%= data[i].Question %>" readonly required><br>
-                <div id="option-container">
-                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option1 %>" readonly required>
-                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option2 %>" readonly required>
-                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option3 %>" readonly required>
-                    <input id="options" type="text" name="questions[<%= i %>][options][]"   value="<%= data[i].Option4 %>" readonly required><br>
+                <div style="display: flex;">
+                    <div>
+                        <label for="title">Test Title:</label>
+                <input type="text" name="title" required>
+
+                <label for="time">Time (in minutes):</label>
+                <input type="number" name="time" required>
+
+                <label for="type2">Type:</label>
+                <input type="text" name="type2" required>
+                    </div>
+                    <button type="submit">Create Test</button>
                 </div>
-                    <label>Correct Option (0-3):</label>
-                    <input id="correct-ans" type="number" name="questions[<%= i %>][correctAnswer]" value="<%= data[i].CorrectOption%>" readonly required><br><br>
+
+                
+                <div id="questions-container">
+                    <% for(let i = 0; i < data.length; i++) { %>
+                        <div class="question-block">
+                            <h3>Question <%= i + 1 %></h3>
+                            <input class="readonly-input" type="text" name="questions[<%= i %>][questionText]" value="<%= data[i].Question %>" readonly required><br>
+
+                            <div id="option-container">
+                                <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option1 %>" readonly required>
+                                <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option2 %>" readonly required>
+                                <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option3 %>" readonly required>
+                                <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option4 %>" readonly required><br>
+                            </div>
+
+                            <label for="correct-ans">Correct Option (0-3):</label>
+                            <input id="correct-ans" type="number" name="questions[<%= i %>][correctAnswer]" value="<%= data[i].CorrectOption %>" readonly required><br>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
+
+            </form>
         </div>
-        <button type="submit">Create Test</button>
-    </form>
     </div>
 
-
-</div>
 </body>
 </html>
