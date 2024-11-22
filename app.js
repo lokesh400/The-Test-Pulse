@@ -155,8 +155,6 @@
 // // const io = socketIO(Server);
 // // socketHandler(io);
 // // const Server = 
-
-
 const express = require("express");
 require('dotenv').config();
 const app = express();
@@ -188,8 +186,9 @@ const adminrouter = require("./routes/admin.js");
 const testpdfrouter = require("./routes/testpdf.js");
 
 const multer = require('multer');
+const storage = multer.memoryStorage(); // Use memory storage to avoid writing to disk
+const upload = multer({ storage: storage });
 const cloudinary = require('cloudinary').v2;
-const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const { error } = require("console");
 

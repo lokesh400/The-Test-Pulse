@@ -8,8 +8,8 @@ const Question = require('../models/Question');
 const Test = require('../models/Test');
 
 const multer = require('multer');
+const path = require('path');
 const cloudinary = require('cloudinary').v2;
-const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const { error } = require("console");
 
@@ -19,16 +19,36 @@ cloudinary.config({
     api_secret:process.env.api_Secret
 });
 
+// Multer disk storage configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Save files to 'uploads/' folder
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    // Use the original file name
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+// Initialize multer with diskStorage
+const upload = multer({ storage: storage });
+
+// Function to upload files to Cloudinary
 const Upload = {
-    uploadFile: async (filePath) => {
-      try {
-        const result = await cloudinary.uploader.upload(filePath);
-        return result;
-      } catch (error) {
-        throw new Error('Upload failed: ' + error.message);
-      }
-    },
-  };
+  uploadFile: async (filePath) => {
+    try {
+      // Upload the file to Cloudinary
+      const result = await cloudinary.uploader.upload(filePath, {
+        resource_type: "auto", // Auto-detect file type (image, video, etc.)
+      });
+      return result;
+    } catch (error) {
+      throw new Error('Upload failed: ' + error.message);
+    }
+  }
+};
+
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -69,64 +89,43 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
     res.json(chapter);
   })  
   
-
-router.post('/create-ques', upload.single("file"), async (req, res) => {
-  try {
+  router.post('/create-ques', upload.single("file"), async (req, res) => {
+    try {
       const { subject, chapter, topic, correct } = req.body;
-      const result = await Upload.uploadFile(req.file.path);
+      const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
       const imageUrl = result.secure_url;
-
+  
+      // After upload, delete the file from local storage
       fs.unlink(req.file.path, (err) => {
-          if (err) {
-              console.error('Error deleting local file:', err);
-          } else {
-              console.log('Local file deleted successfully');
-          }
+        if (err) {
+          console.error('Error deleting local file:', err);
+        } else {
+          console.log('Local file deleted successfully');
+        }
       });
-
-      const newQuestion = new Question({ 
-          SubjectName: subject,
-          ChapterName: chapter,
-          TopicName: topic,
-          Question: imageUrl,
-          Option1: "Option 1",
-          Option2: "Option 2",
-          Option3: "Option 3",
-          Option4: "Option 4",
-          CorrectOption: correct
+  
+      const newQuestion = new Question({
+        SubjectName: subject,
+        ChapterName: chapter,
+        TopicName: topic,
+        Question: imageUrl,
+        Option1: "Option 1",
+        Option2: "Option 2",
+        Option3: "Option 3",
+        Option4: "Option 4",
+        CorrectOption: correct,
       });
-
+  
       await newQuestion.save();
       res.status(200).json({ message: 'Question created successfully!' });
-  } catch (error) {
-      res.status(500).json({ message: error })
+    } catch (error) {
       console.log(error);
-  }
-});
-
-router.post('/create-ques/text', upload.single("file"), async (req, res) => {
-  try {
-      const { subject, chapter, topic, correct,question } = req.body;
-
-      const newQuestion = new Question({ 
-          SubjectName: subject,
-          ChapterName: chapter,
-          TopicName: topic,
-          Question: question,
-          Option1: "Option 1",
-          Option2: "Option 2",
-          Option3: "Option 3",
-          Option4: "Option 4",
-          CorrectOption: correct
-      });
-
-      await newQuestion.save();
-      res.status(200).json({ message: 'Question created successfully!' });
-  } catch (error) {
-      res.status(500).json({ message: error })
-  }
-});
-
+      res.status(500).json({ message: 'Upload failed: ' + error.message });
+    }
+  });
+  
+  
+  
   
 router.get('/create/information',ensureAuthenticated, (req,res) => {
     res.render('./questionbank/createinfo.ejs')
