@@ -47,10 +47,6 @@ const Upload = {
   }
 };
 
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
-
-
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
@@ -65,7 +61,7 @@ const crypto = require('crypto');
     res.render("./error/accessdenied.ejs");
   }
 
-  const checkPurchasedBatch = (req, res, next) => {
+const checkPurchasedBatch = (req, res, next) => {
     const { id } = req.params;
     if (req.user.purchasedBatches.includes(id)|| req.user.role === 'admin') {
         return next();
@@ -108,6 +104,13 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
      res.status(500).send('Upload failed.');
    }
   });  
+
+  //Route to show all free batches
+router.get('/showfreebatches',ensureAuthenticated, async (req, res) => {
+    const allBatches = await Batch.find({amount:"0"}); // Fetch available batches from database
+    console.log(allBatches);
+    res.render('./batch/freebatch.ejs', { allBatches });
+  });    
    
 // show a particular requested batch
 router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
@@ -132,16 +135,19 @@ router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
   });
 
 //Post route to include a test in batch
-router.post('/create/:id/:testId',ensureAuthenticated,isAdmin, async (req, res) => {
+router.post('/create/:testId/:batchId',ensureAuthenticated,isAdmin, async (req, res) => {
     try {
-      let { id, testId } = req.params; // Extracting id and name from params
-      const newte = await Batch.findById(testId); // Find the batch by title
+      let { testId, batchId } = req.params; // Extracting id and name from params
+      const newte = await Batch.findById(batchId); // Find the batch by title
+      const test = await Test.findById(testId);
+      const name = test.title;
+      const id = [testId,name];
       if (!newte) {
         return res.status(404).json({ message: 'Batch not found' }); // Handle case where batch is not found
       }
       newte.tests.push(id); 
       await newte.save();
-      res.redirect('/showallbatches')
+      res.redirect(`/showbatch/${batchId}`);
     }
       catch (error) {
       res.status(400).json({ error: error.message });
@@ -211,12 +217,10 @@ router.post("/user/complaint/:batchName/:id",async (req,res)=>{
 router.get("/admin/allcomplaints",async (req,res)=>{
   const allComplaints = await Complaint.find({});
   res.render("./admin/complaints.ejs",{allComplaints})
-
 })
 
 //Route to show purchased batch 
 router.get('/show/purchasedbatches',ensureAuthenticated, async (req, res) => {
-
   try{
     var batches = [];
   for (let i = 0; i < req.user.purchasedBatches.length; i++) {
@@ -266,4 +270,24 @@ router.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
   }
 });
 
+//Post route to authorise a student in free batch
+router.post('/free/:batchId', async (req, res) => {
+  const { batchId } = req.params;
+  const email = req.user.email; // Pretty print the user object
+  try {
+      // Fetch current user document
+      const user = await User.find({ email: email });
+      // Add batch ID to purchasedBatches
+      await User.updateOne(
+          { email: email },
+          { $addToSet: { purchasedBatches: batchId } }
+      );
+      req.flash('success_msg', 'Batch authorized successfully!');
+      res.redirect(`/showbatch/${batchId}`);
+  } catch (error) {
+      console.error('Error authorizing student:', error);
+      req.flash('error_msg', 'An error occurred while authorizing the batch.');
+      res.status(500).send('Server Error');
+  }
+});
 module.exports = router;

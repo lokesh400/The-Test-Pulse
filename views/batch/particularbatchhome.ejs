@@ -43,26 +43,32 @@
             </div>
             
             <div class="test-card" id="tests" style="display: block;">
-                <div class="test-card">
+                
                     <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
-                        <% for (let i = 0; i < thisBatch.tests.length; i++) { %>
-                        <p><%= thisBatch.title %></p>
-                        <div class="card-button">
-                            <a href="/student/test/<%= thisBatch.tests[i]%>">
-                                <button class="btn">Attempt Test <%= thisBatch.tests[i] %></button>
-                            </a>   
-                        </div>
-                        <div class="card-button">
-                            <a href="/student/test/<%= thisBatch.tests[i]%>/result">
-                                <button class="btn">Show Result</button>
-                            </a>   
-                        </div>
-                        <br>
-                        <% } %>
+                        
+                        <% thisBatch.tests.forEach(function(test) { %>
+                            <div class="test-card">
+                                <p> <b>Title:</b> <%= test[1]%></p>
+                                <div class="card-button">
+                                    <a href="/student/test/<%= test[0] %>">
+                                        <button class="btn">Attempt Test</button>
+                                    </a>   
+                                </div>
+                                <div class="card-button">
+                                    <a href="/student/test/<%= test[0] %>/result">
+                                        <button class="btn">Show Result</button>
+                                    </a>   
+                                </div>
+                                <br>
+                            </div>
+                          <% }); %>
+                        
+                        
+                        
                     <% } else { %>
                         <p>No tests available.</p>
                     <% } %>
-                </div>
+                
             </div>
         </div>
 
