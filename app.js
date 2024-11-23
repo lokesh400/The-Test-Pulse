@@ -1,7 +1,7 @@
 const express = require("express");
 require('dotenv').config();
 const app = express();
-const port = 8000;
+const port = 666;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -138,6 +138,7 @@ app.get("/", async (req,res)=>{
        res.redirect("/student")
   }
   else{
+    const members = await Team.find();
     res.render("./index.ejs",{members});
   }
 })
