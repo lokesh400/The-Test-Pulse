@@ -138,8 +138,6 @@ app.get("/", async (req,res)=>{
        res.redirect("/student")
   }
   else{
-    const members = await Team.find({})
-    console.log(members)
     res.render("./index.ejs",{members});
   }
 })
