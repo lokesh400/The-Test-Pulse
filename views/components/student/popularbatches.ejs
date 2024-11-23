@@ -9,126 +9,65 @@
    </div>
    
    <div class="unique-card-container">
-    <div class="unique-card">
-     <img alt="Prayas JEE 90 days Crash Course 2025" height="150" src="https://storage.googleapis.com/a1aa/image/Zcp4LKNBX1bQE5aJGUmqJpAJYr0K9msJPWr6aniS5Vuvz16E.jpg" width="300"/>
-     <div class="unique-title">
-      Demo
-     </div>
-     <div class="unique-subtitle">
-      For Dropper Neet Aspirants
-     </div>
-     <div class="unique-details">
-      <div class="unique-icon-text">
-       <i class="fas fa-calendar-alt">
-       </i>
-       <span>
-        Starts on 21 Oct, 2024 | Ends on 30 Jun, 2025
-       </span>
-      </div>
-     </div>
-     <div class="unique-price">
-      ₹2400
-      <del>
-       ₹4500
-      </del>
-     </div>
-     <div class="unique-discount">
-      <i class="fas fa-tag">
-      </i>
-      <span>
-       Discount of 47% applied
-      </span>
-     </div>
-     <div class="unique-buttons">
-      <button class="unique-explore">
-       EXPLORE
-      </button>
-      <button class="unique-buy-now">
-       BUY NOW
-      </button>
-     </div>
-    </div>
 
-    <div class="unique-card">
-     <img alt="Prayas JEE Fastrack 2025" height="150" src="https://storage.googleapis.com/a1aa/image/ZTp0ITfs0HyejUAcCr2aqlr1KiuTdGafY9Qfr7HRiB3t7ctOB.jpg" width="300"/>
-     <div class="unique-title">
-        Dropper Neet Test Series
-     </div>
-     <div class="unique-subtitle">
-        Dropper Neet Test Series
-     </div>
-     <div class="unique-details">
-      <div class="unique-icon-text">
-       <i class="fas fa-calendar-alt">
-       </i>
-       <span>
-        Starts on 23 Sep, 2024 | Ends on 30 Jun, 2025
-       </span>
+      <% allBatches.forEach(batch => { %>
+          <div class="unique-card">
+           <img alt="Prayas JEE 90 days Crash Course 2025" height="150" src="<%=batch.thumbnail%>" width="300"/>
+           <div class="unique-title">
+            <%=batch.title%>
+           </div>
+          
+           <div class="unique-details">
+            <div class="unique-icon-text">
+             <i class="fas fa-calendar-alt">
+             </i>
+             <span>
+              Starts on 21 Oct, 2024 | Ends on 30 Jun, 2025
+             </span>
+            </div>
+           </div>
+           <div class="unique-price">
+            ₹<%=batch.amount%>
+            <del>
+             ₹<%=batch.amount*2%>
+            </del>
+           </div>
+           <div class="unique-discount">
+            <i class="fas fa-tag">
+            </i>
+            <span>
+             Discount of 50% applied
+            </span>
+           </div>
+           <div class="unique-buttons">
+            <button class="unique-explore">
+             EXPLORE
+            </button>
+
+            <%  
+            const idd = batch._id;
+            const purchased = currUser.purchasedBatches.includes(idd);
+             %>
+        
+        <% if (purchased) { %>
+            <button class="unique-buy-now">
+                <a style="text-decoration: none; color: white;" href="/showbatch/<%= batch._id %>">Study</a>
+            </button>
+        <% } else { %>
+            <form action="/free/<%= batch._id %>" method="POST">
+              <button class="unique-buy-now"  style="width: 100px;">
+                  Pay ₹<%= batch.amount %>
+              </button>
+            </form>
+        <% } %>
+        
+                     
       </div>
      </div>
-     <div class="unique-price">
-      ₹2500
-      <del>
-       ₹4200
-      </del>
-     </div>
-     <div class="unique-discount">
-      <i class="fas fa-tag">
-      </i>
-      <span>
-       Discount of 40% applied
-      </span>
-     </div>
-     <div class="unique-buttons">
-      <button class="unique-explore">
-       EXPLORE
-      </button>
-      <button class="unique-buy-now">
-       BUY NOW
-      </button>
-     </div>
-    </div>
+    <% }) %>
+        
+     
+  </div>
 
     
-
-    <div class="unique-card">
-     
-     <img alt="Prayas JEE 3.0 2025" height="150" src="https://storage.googleapis.com/a1aa/image/CmJKblOhoH61N9KZSuLueQ3497IYOgiGfE6vfpGUqBp5duWnA.jpg" width="300"/>
-     <div class="unique-title">
-      Demo Batch
-     </div>
-     <div class="unique-subtitle">
-      For JEE 2025
-     </div>
-     <div class="unique-details">
-      <div class="unique-icon-text">
-       <i class="fas fa-calendar-alt">
-       </i>
-       <span>
-        Starts on 29 Jul, 2024 | Ends on 30 Jun, 2025
-       </span>
-      </div>
-     </div>
-     <div class="unique-price">
-      ₹2500
-      <del>
-       ₹4500
-      </del>
-     </div>
-     <div class="unique-discount">
-      <i class="fas fa-tag">
-      </i>
-      <span>
-       Discount of 44% applied
-      </span>
-     </div>
-     <div class="unique-buttons">
-      <button class="unique-explore">
-       EXPLORE
-      </button>
-      <button class="unique-buy-now">
-       BUY NOW
-      </button>
-     </div>
-    </div>
    </div>

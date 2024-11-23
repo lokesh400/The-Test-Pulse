@@ -29,9 +29,10 @@ router.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
     res.render("./admin/admin-index.ejs")
   })
   
-router.get("/student", ensureAuthenticated,(req,res)=>{
+router.get("/student",ensureAuthenticated,async (req,res)=>{
     req.flash('success_msg', 'Login Successfull');
-    res.render("./student.ejs")
+    const allBatches = await Batch.find({});
+    res.render("./student.ejs",{allBatches})
   })
   
 router.get("/terms-and-conditions",(req,res)=>{
