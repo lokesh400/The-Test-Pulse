@@ -21,12 +21,12 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const {name,email, password ,confirmpassword,otp} = req.body;
+    const {name,email, password ,confirmpassword,otp,contactNumber} = req.body;
     const role = "student";
     const username = email;
     let user = await Otp.findOne({ email });
     if(password==confirmpassword&&otp==user.otp){
-        const newUser = new User({name,role, email, username });
+        const newUser = new User({name,role, email, username,contactNumber });
     try {
         // Attempt to register the new user
         const registeredUser = await User.register(newUser, password);
@@ -60,7 +60,6 @@ router.post('/signup', async (req, res) => {
                 }
             })
         }
-
         // Redirect to login page after successful registration
         res.redirect('/user/login');
     } catch (error) {
@@ -89,12 +88,10 @@ router.post("/login", async (req, res, next) => {
             req.flash('error_msg', 'Something went wrong. Please try again.');
             return res.redirect("/user/login"); // Redirect back to login if there was an error
         }
-
         if (!user) {
             req.flash('error_msg', info.message || 'Invalid credentials. Please check your username and password.');
             return res.redirect("/user/login"); // Invalid login credentials
         }
-
         // If login is successful, log in the user
         req.login(user, async (err) => {
             if (err) {
@@ -102,7 +99,6 @@ router.post("/login", async (req, res, next) => {
                 req.flash('error_msg', 'Login failed. Please try again.');
                 return res.redirect("/user/login");
             }
-
             // Flash a success message and redirect based on user role
             req.flash('success_msg', 'You have successfully logged in!');
             if (user.role === 'admin') {

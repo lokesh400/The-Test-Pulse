@@ -108,7 +108,6 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
   //Route to show all free batches
 router.get('/showfreebatches',ensureAuthenticated, async (req, res) => {
     const allBatches = await Batch.find({amount:"0"}); // Fetch available batches from database
-    console.log(allBatches);
     res.render('./batch/freebatch.ejs', { allBatches });
   });    
    
