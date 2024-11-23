@@ -43,9 +43,7 @@
             </div>
             
             <div class="test-card" id="tests" style="display: block;">
-                
                     <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
-                        
                         <% thisBatch.tests.forEach(function(test) { %>
                             <div class="test-card">
                                 <p><b>Title:</b> <%= test[1]%></p>
@@ -60,16 +58,19 @@
                                         <button class="btn">Show Result</button>
                                     </a>   
                                 </div>
+                                <% if(currUser.role === 'admin'){%>
+                                    <div class="card-button">
+                                        <a href="/student/test/<%= test[0] %>/analysis">
+                                            <button class="btn">Analysis</button>
+                                        </a>   
+                                    </div>
+                                    <%}%>
                                 <br>
                             </div>
                           <% }); %>
-                        
-                        
-                        
                     <% } else { %>
                         <p>No tests available.</p>
                     <% } %>
-                
             </div>
         </div>
 

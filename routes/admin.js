@@ -3,6 +3,7 @@ const router =  express.Router();
 const User = require('../models/User');
 const Test = require('../models/Test');
 const Batch = require('../models/Batch');
+const StudentTest = require('../models/StudentTest');
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -87,6 +88,18 @@ router.get("/user/complaint",(req,res)=>{
     res.render("./complaints/student-window.ejs")
   })
   
+//Admin route to see analysis of a test 
+router.get('/student/test/:testId/analysis', async (req, res) => {
+  try {
+    const Id = req.params.testId;
+    const StudentResult = await StudentTest.find({ testId:Id }).populate('studentId', 'name').populate('testId','title').sort({ score: -1 });
+    res.render('./admin/studentsreport.ejs', { StudentResult });
+  } catch (error) {
+    console.error("Error fetching student results:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
 
 
 module.exports = router;
