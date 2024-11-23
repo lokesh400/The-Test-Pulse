@@ -2,6 +2,7 @@ const express = require("express");
 const router =  express.Router();
 const User = require('../models/User');
 const Test = require('../models/Test');
+const Question = require('../models/Question');
 const Batch = require('../models/Batch');
 const StudentTest = require('../models/StudentTest');
 
@@ -26,9 +27,30 @@ router.get('/admin/allusers',async (req, res) => {
       res.render('./admin/all-users.ejs',{users});
   });
 
-router.get("/admin", ensureAuthenticated,isAdmin,(req,res)=>{
-    res.render("./admin/admin-index.ejs")
-  })
+  router.get("/admin", ensureAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const Users = await User.find();
+      const Members = await User.find({ role: "admin" });
+      const Questions = await Question.find();
+      const Tests = await Test.find();
+      let totalPurchasedBatches = 0;
+      for (let i = 0; i < Users.length; i++) {
+        totalPurchasedBatches += Users[i].purchasedBatches.length;
+      }
+      const details = {
+        users: Users.length,               
+        questions: Questions.length,      
+        tests: Tests.length,               
+        members: Members,                  
+        totalPurchasedBatches: totalPurchasedBatches,
+      };
+      res.render("./admin/admin-index.ejs", { details });
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).send("Server Error");
+    }
+  });
+  
   
 router.get("/student",ensureAuthenticated,async (req,res)=>{
     req.flash('success_msg', 'Login Successfull');

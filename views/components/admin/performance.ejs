@@ -1,6 +1,6 @@
 <section style="display: flex; gap: 20px;">
           
-    <div class="performance" style=" width: 50%;">
+    <div class="performance" style=" width: 50%; height: 300px; overflow: auto;">
       <div class="title">
        <i class="fas fa-users">
        </i>
@@ -9,86 +9,30 @@
        </h3>
       </div>
       <div class="card">
-       <div class="member">
-        <div class="member-info">
-         <img alt="Profile picture of Shirley Hoe" height="40" src="https://storage.googleapis.com/a1aa/image/V8PNxNUjk1InDtHEGA9eik4FFU4111gE42hAidAXlTWSn75JA.jpg" width="40"/>
-         <div>
-          <p class="name">
-           Shirley Hoe
-          </p>
-          <p class="role">
-           Sales executive , NY
-          </p>
-         </div>
-        </div>
-        <div class="member-status">
-         <p>
-          $78.001
-         </p>
-         <i class="fas fa-arrow-down" style="color: red;">
-         </i>
-        </div>
-       </div>
-       <div class="member">
-        <div class="member-info">
-         <img alt="Profile picture of James Alexander" height="40" src="https://storage.googleapis.com/a1aa/image/eeRylvZQtfGD7IeTxjhmivykQ5O6G0NwMoVLQeaomPDP05e8E.jpg" width="40"/>
-         <div>
-          <p class="name">
-           James Alexander
-          </p>
-          <p class="role">
-           Sales executive , EL
-          </p>
-         </div>
-        </div>
-        <div class="member-status">
-         <p>
-          $89.051
-         </p>
-         <i class="fas fa-arrow-up" style="color: green;">
-         </i>
-        </div>
-       </div>
-       <div class="member">
-        <div class="member-info">
-         <img alt="Profile picture of Shirley Hoe" height="40" src="https://storage.googleapis.com/a1aa/image/V8PNxNUjk1InDtHEGA9eik4FFU4111gE42hAidAXlTWSn75JA.jpg" width="40"/>
-         <div>
-          <p class="name">
-           Shirley Hoe
-          </p>
-          <p class="role">
-           Sales executive , NY
-          </p>
-         </div>
-        </div>
-        <div class="member-status">
-         <p>
-          $89.051
-         </p>
-         <i class="fas fa-arrow-up" style="color: green;">
-         </i>
-        </div>
-       </div>
-       <div class="member">
-        <div class="member-info">
-         <img alt="Profile picture of Nick Xander" height="40" src="https://storage.googleapis.com/a1aa/image/fOJJrOm9tOWTAi6mUP6CLQ1vJT32F9ckULHTxbtW8nDTn75JA.jpg" width="40"/>
-         <div>
-          <p class="name">
-           Nick Xander
-          </p>
-          <p class="role">
-           Sales executive , EL
-          </p>
-         </div>
-        </div>
-        <div class="member-status">
-         <p>
-          $89.051
-         </p>
-         <i class="fas fa-arrow-up" style="color: green;">
-         </i>
-        </div>
-       </div>
+
+        <%for(let i=0;i<details.members.length;i++){%>
+            <div class="member">
+                <div class="member-info">
+                 <img alt="Profile picture of Shirley Hoe" height="40" src="https://storage.googleapis.com/a1aa/image/V8PNxNUjk1InDtHEGA9eik4FFU4111gE42hAidAXlTWSn75JA.jpg" width="40"/>
+                 <div>
+                  <p class="name">
+                    <%= details.members[i].name %>
+                  </p>
+                  <p class="role" style="color: red;">
+                    <%= details.members[i].email %>
+                  </p>
+                 </div>
+                </div>
+                <div class="member-status">
+                 <p>
+                    <%= details.members[i].role %>
+                 </p>
+                </div>
+               </div>
+        <%}%>
+
+       
+
       </div>
     </div>
      
