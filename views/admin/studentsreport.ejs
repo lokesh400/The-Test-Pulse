@@ -4,61 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Report</title>
-  <link rel="stylesheet" href="/styles.css"> <!-- Include your styles here -->
+  <link rel="stylesheet" href="/styles/sidebar3.css"> 
+  <link rel="stylesheet" href="/styles/studentreport.css"> 
+  <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
 </head>
-<style>
-    body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 20px;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  text-align: left;
-  padding: 8px;
-}
-
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-</style>
 <body>
 
-    <h1>Results for Test: <%= StudentResult.length > 0 ? StudentResult[0].testId.title : 'Test Not Found' %></h1>
-  <table border="1" cellpadding="10" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Student Name</th>
-        <th>Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% StudentResult.forEach((student, index) => { %>
-        <tr>
-          <td><%= index + 1 %></td> <!-- Display rank based on sorted order -->
-          <td><%= student.studentId.name %></td> <!-- Populate student name from 'studentId' -->
-          <td><%= student.score %></td> <!-- Display score -->
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <main>
 
+        <div id="header-cpm">
+            <%- include('../components/admin-sidebar.ejs') %>
+        </div>
+
+            <div class="container2">
+                <h1>Results for Test: <%= StudentResult.length > 0 ? StudentResult[0].testId.title : 'Test Not Found' %></h1>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Student Name</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% StudentResult.forEach((student, index) => { %>
+                      <tr>
+                        <td><%= index + 1 %></td> <!-- Display rank based on sorted order -->
+                        <td><%= student.studentId.name %></td> <!-- Populate student name from 'studentId' -->
+                        <td><%= student.score %></td> <!-- Display score -->
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+                <div class="footer">
+                  <p>&copy; <%= new Date().getFullYear() %> TheTestPulse. All rights reserved.</p>
+                </div>
+              </div>
+        </div>
+
+    </main>
+  
 </body>
 </html>
