@@ -1,0 +1,104 @@
+<div class="container7">
+    <div class="header7">
+     <div class="icons">
+        <img alt="App logo" height="40px" src="/images/logo.png" width="40px"/>
+      <h1 class="app-name-card">The Test Pulse</h1>
+      <a href="/user/info">
+        <i class="fas fa-user">
+        </i>
+      </a>
+     </div>
+     <div class="search-bar7">
+      <input placeholder="Search..." type="text"/>
+     </div>
+     <div class="mydocs7">
+      <h2>
+       <%=currUser.name%>
+      </h2>
+      <p>
+        <%=currUser.email%>
+      </p>
+      <div class="progress-bar">
+       <div>
+       </div>
+      </div>
+      <p class="storage-info">
+        <%= new Date().toLocaleString() %>
+      </p>
+     </div>
+    </div>
+
+    <div class="content7">
+     <div class="item" onclick="window.location.href='/show/purchasedbatches'">
+        <i class="fas fa-book" style="font-size: 30px; padding-top: 10px;">
+        </i>
+      <p>
+       My
+      </p>
+      <p>
+       Batches
+      </p>
+     </div>
+     <div class="item" onclick="window.location.href='/showfreebatches'">
+        <i class="fas fa-book" style="font-size: 30px; padding-top: 10px;">
+        </i>
+      <p>
+       Free
+      </p>
+      <p>
+       Batches
+      </p>
+     </div>
+     <div class="item" style="font-size: 30px; padding-top: 15px;" onclick="window.location.href='/showallbatches'">
+        <i class="fas fa-store">
+        </i>
+      <p>
+       Store
+      </p>
+      <p>
+      (Purchase)
+      </p>
+     </div>
+     <div class="item">
+        <i class="fas fa-laptop" style="font-size: 30px; padding-top: 10px;">
+        </i>
+      <p>
+       Test
+      </p>
+      <p>
+       Series
+      </p>
+     </div>
+     <div class="item">
+        <i class="fas fa-check-circle icon" style="font-size: 30px; padding-top: 10px;">
+        </i>
+      <p>
+       Free
+      </p>
+      <p>
+       Library
+      </p>
+     </div>
+     <div class="item" onclick="window.location.href='/user/support'">
+    <i class="fas fa-user" style="font-size: 30px; padding-top: 10px;">
+     </i>
+      <p>
+       Contact
+      </p>
+      <p>
+       Us
+      </p>
+     </div>
+    </div>
+
+    <div class="footer7">
+     <i class="fas fa-home" style="color: white;">
+     </i>
+     <i class="fas fa-sign-out-alt" style="color: white;" onclick="window.location.href='/user/logout'">
+     </i>
+     <div id="footer-circle7" >
+        <img alt="App logo" height="60px" src="/images/logo.png" width="60px"/>
+     </div>
+    </div>
+
+</div>

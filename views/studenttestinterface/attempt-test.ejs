@@ -320,8 +320,9 @@
       if (index + 1 < <%= test.questions.length %>) {
         showQuestion(index + 1);
       } else {
-        alert('This was the last question! The test will be submitted.');
-        document.getElementById('testForm').submit();
+        // alert('This was the last question! The test will be submitted.');
+        // document.getElementById('testForm').submit();
+        showQuestion(0);
       }
     }
   

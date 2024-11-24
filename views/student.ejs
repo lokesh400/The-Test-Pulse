@@ -6,11 +6,14 @@
     <title>Student Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="/css/student.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/styles/quickaccess.css">
     <link rel="stylesheet" href="/styles/popularbatches.css">
     <link rel="stylesheet" href="/styles/studentsidebar.css">
     <link rel="stylesheet" href="/styles/flash.css">
+    <link rel="stylesheet" href="/styles/student-mobile.css">
     <link href="/styles/loader.css" rel="stylesheet" />
     <script src="/js/loader.js"></script>
 </head>
@@ -28,7 +31,6 @@
     
 
     <div class="container">
-
         <!-- Sidebar -->
         <div class="sidebar">
            <%- include("./components/student/sidebar.ejs") %>
@@ -68,13 +70,14 @@
     <!-- Footer Navigation for Mobile -->
     <div class="header-container" >
         <%- include("./components/student/student-header.ejs") %>
-      </div>
-
-    <div class="footer-nav" >
-      <%- include("./components/student/footer.ejs") %>
     </div>
 
+    <div id="mobile-view">
+        <%- include("./components/student/mobile.ejs") %>
+      </div>
 
+ 
+<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js"></script>
 <script>
     // Auto-hide toast notifications after a specified time
     setTimeout(() => {

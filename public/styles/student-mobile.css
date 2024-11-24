@@ -211,8 +211,127 @@ body {
 #mobile-view{
     display: none;
 }
+.container7 {
+    width: 100%;
+    height:100vh;
+    margin: 0 auto;
+    /* border-radius: 20px; */
+    /* overflow: hidden; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.header7 {
+    background-color: #322c52;
+    padding: 20px;
+    position: relative;
+    border-bottom-left-radius: 110%;
+    border-bottom-right-radius: 50px;
+}
+.header7 .icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header7 .icons i {
+    color: white;
+    font-size: 20px;
+}
+.search-bar7 {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+.search-bar7 input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+.mydocs7 {
+    background-color: #3b3b98;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+}
+.mydocs7 h2 {
+    margin: 0;
+    font-size: 24px;
+}
+.mydocs7 p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+.mydocs7 .progress-bar {
+    background-color: #4b4b8a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.mydocs7 .progress-bar div {
+    width: 60%;
+    height: 10px;
+    background-color: #6a6aff;
+}
+.mydocs7 .storage-info {
+    margin-top: 10px;
+    font-size: 12px;
+}
+.content7 {
+    background-color: #ffffff;
+    padding: 20px;
+    border-top-right-radius: 110%;
+    margin-top: -20px;
+}
+.content7 .item {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    margin: 10px 1%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.193);
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 30px;
+}
+.content7 .item img {
+    width: 50px;
+    height: 50px;
+}
+.content7 .item p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+.footer7 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  /* Optional: for vertical alignment of items */
+  position: fixed;
+  padding: 20px;
+  box-sizing: border-box;
+  /* border-radius: 20px; */
+  background-color: #b4bbe5;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 0 10px;
+  }
 
-
+.footer7 i {
+    font-size: 24px;
+    color: #b0b0b0;
+}
+#footer-circle7{
+  height: 60px;
+  width: 60px;
+  background-color: #b4bbe5;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px;
+} 
 /* Responsive Design for Smaller Screens */
 @media (max-width: 600px) {
     .container {
@@ -262,4 +381,8 @@ body {
         width: 100%;
         background-color: #b4bbe5;;
     }
+    .main-content {
+        display: none;
+    }
 }
+
