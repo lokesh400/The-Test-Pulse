@@ -3,7 +3,14 @@ const mongoose = require('mongoose');
 const QuestionSchema = new mongoose.Schema({
   questionText: String,
   options: [String],
-  correctAnswer: Number,
+  correctAnswer: {
+    type: mongoose.Schema.Types.Mixed, // It can be a number for numerical or string for MCQs (index)
+    required: true
+  },
+  questionType: {
+    type: String,
+    required: true
+  }
    // Store the index (0-3) of the correct option
 });
 

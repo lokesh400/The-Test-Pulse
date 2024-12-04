@@ -9,7 +9,15 @@ const QuestionSchema = new mongoose.Schema({
     Option2 : String,
     Option3 : String,
     Option4: String,
-    CorrectOption:Number
+    CorrectOption: {
+        type: mongoose.Schema.Types.Mixed, // It can be a number for numerical or string for MCQs (index)
+        required: true
+      },
+    questionType: {
+        type: String,
+        enum: ['mcq', 'numerical'],
+        required: true
+      }
 });
 
 const Question = mongoose.model('Question', QuestionSchema);

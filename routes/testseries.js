@@ -81,7 +81,6 @@ router.post('/secondlastfinalsubmit', async (req, res) => {
    try{
     const selectedOptions = req.body.options; // options will be an array
     let data =[];
-    
     for(let i=0;i<selectedOptions.length;i++){
        let ques = await Question.findById(selectedOptions[i]); 
        let data2 = data.push(ques)
@@ -101,7 +100,9 @@ router.post('/final', async (req, res) => {
     questionText: q.questionText,
     options: q.options,
     correctAnswer: q.correctAnswer,
+    questionType: q.questionType,
   }));
+  console.log(formattedQuestions);
   const newTest = new Test({ title, questions: formattedQuestions ,time, type});
   await newTest.save();
   const tests = await Test.find({});

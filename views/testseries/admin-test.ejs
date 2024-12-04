@@ -32,6 +32,7 @@
         <div class="card-body">
           <h6 class="card-title"> <%= test.class %> || <%= test.type %> || <%= test.questions.length*4 %> Marks </h6>
           <a href="/admin/test/<%= test._id %>" class="btn btn-primary">Print</a>
+          <a href="/student/test/<%= test._id %>" class="btn btn-primary">Attempt</a>
           <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Delete 
           </button>

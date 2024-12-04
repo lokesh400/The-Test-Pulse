@@ -233,22 +233,15 @@
     <form id="testForm" action="/student/test/<%= test._id %>" method="POST">
       <% test.questions.forEach((question, index) => { %>
         <div class="question-block" id="question-<%= index %>">
-          <h3>Question <%= index + 1 %>:</h3>
+          <h3>Question <%= index + 1 %>:</h3> 
           <img id="ques-img" src="<%= question.questionText %>" alt="">
-          <input type="hidden" name="questionType[<%= index %>]" value="<%= question.questionType %>"> <!-- Add this line -->
           <div>
-            <% if (question.questionType === 'mcq') { %>
-              <% question.options.forEach((option, optionIndex) => { %>
-                <div class="radio-input">
-                  <input type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>">
-                  <label><%= option %></label>
-                </div>
-              <% }) %>
-            <% } else if (question.questionType === 'numerical') { %>
-              <div class="numerical-input">
-                <input type="number" name="answers[<%= index %>]" placeholder="Enter number" />
+            <% question.options.forEach((option, optionIndex) => { %>
+              <div class="radio-input">
+                <input type="radio" name="answers[<%= index %>]" value="<%= optionIndex %>">
+                <label><%= option %></label>
               </div>
-            <% } %>
+            <% }) %>
           </div>
           <footer class="footer">
             <button type="button" class="btn save-next" onclick="saveAndNext(<%= index %>)">Save & Next</button>
@@ -258,7 +251,6 @@
         </div>
       <% }) %>
     </form>
-    
   </div>
 
   <script>
@@ -297,40 +289,42 @@
     function hideAllQuestions() {
       document.querySelectorAll('.question-block').forEach(question => question.classList.remove('active'));
     }
-
-  function saveAndNext(index) {
-  const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
-  const numericalInput = document.querySelector(`input[name="answers[${index}]"]`);
-  const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-
-  if (selectedOption) {
-    attemptedCount++;
-    notAttemptedCount--;
-    sidebarButton.classList.remove('skipped');
-    sidebarButton.classList.add('answered');
-  } else if (numericalInput && numericalInput.value !== "") {
-    attemptedCount++;
-    notAttemptedCount--;
-    sidebarButton.classList.remove('skipped');
-    sidebarButton.classList.add('answered');
-  } else {
-    if (!sidebarButton.classList.contains('skipped')) {
-      skippedCount++;
-      notAttemptedCount--;
+  
+    function saveAndNext(index) {
+      const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
+      const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+  
+      // If an option is selected
+      if (selectedOption) {
+           attemptedCount++;
+           notAttemptedCount--;
+        if (!sidebarButton.classList.contains('answered')) {
+            skippedCount ++;
+            notAttemptedCount--;
+        }
+        sidebarButton.classList.remove('skipped');
+        sidebarButton.classList.add('answered');
+        updateCounters();
+      } else {
+        // No option selected, treat as skipped
+        if (!sidebarButton.classList.contains('skipped')) {
+          skippedCount++;
+          notAttemptedCount--;
+        }
+        sidebarButton.classList.remove('answered');
+        sidebarButton.classList.add('skipped');
+        updateCounters();
+      }
+  
+      // Move to the next question or submit if this was the last question
+      if (index + 1 < <%= test.questions.length %>) {
+        showQuestion(index + 1);
+      } else {
+        // alert('This was the last question! The test will be submitted.');
+        // document.getElementById('testForm').submit();
+        showQuestion(0);
+      }
     }
-    sidebarButton.classList.remove('answered');
-    sidebarButton.classList.add('skipped');
-  }
-
-  updateCounters();
-
-  if (index + 1 < <%= test.questions.length %>) {
-    showQuestion(index + 1);
-  } else {
-    showQuestion(0);
-  }
-}
-
   
     function skipQuestion(index) {
       const sidebarButton = document.getElementById(`sidebar-button-${index}`);

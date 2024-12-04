@@ -91,7 +91,7 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
   
   router.post('/create-ques', upload.single("file"), async (req, res) => {
     try {
-      const { subject, chapter, topic, correct } = req.body;
+      const { subject, chapter, topic, correct,questionType } = req.body;
       const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
       const imageUrl = result.secure_url;
   
@@ -114,6 +114,7 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
         Option3: "Option 3",
         Option4: "Option 4",
         CorrectOption: correct,
+        questionType:questionType
       });
   
       await newQuestion.save();

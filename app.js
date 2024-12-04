@@ -15,6 +15,7 @@ const Test = require('./models/Test');
 const User = require('./models/User');
 const Batch = require('./models/Batch');
 const Team = require('./models/Team');
+const Question = require('./models/Question');
 
 const blogsrouter = require("./routes/blogs.js");
 const userrouter = require("./routes/user.js");
@@ -142,5 +143,9 @@ app.get("/", async (req,res)=>{
     res.render("./index.ejs",{members});
   }
 })
+
+
+  
+
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

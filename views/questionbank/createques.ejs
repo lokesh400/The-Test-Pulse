@@ -196,6 +196,13 @@ button.submit-btn:hover {
           <!-- Topics will be dynamically loaded -->
       </select>
 
+      <label for="topic">Type:</label>
+      <select id="topic" name="questionType" required>
+          <option value="mcq">MCQ</option>
+          <option value="numerical">Numerical</option>
+          <!-- Topics will be dynamically loaded -->
+      </select>
+
       <div class="drop-area" id="drop-area">
         <span>Drag & Drop your image here, or click to select</span>
         <input type="file" name="file" id="file-input" required />

@@ -206,16 +206,15 @@
                         <div class="question-block">
                             <h3>Question <%= i + 1 %></h3>
                             <input class="readonly-input" type="text" name="questions[<%= i %>][questionText]" value="<%= data[i].Question %>" readonly required><br>
-
                             <div id="option-container">
                                 <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option1 %>" readonly required>
                                 <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option2 %>" readonly required>
                                 <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option3 %>" readonly required>
                                 <input class="readonly-input" type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option4 %>" readonly required><br>
                             </div>
-
                             <label for="correct-ans">Correct Option (0-3):</label>
                             <input id="correct-ans" type="number" name="questions[<%= i %>][correctAnswer]" value="<%= data[i].CorrectOption %>" readonly required><br>
+                            <input id="correct-ans" name="questions[<%= i %>][questionType]" value="<%= data[i]. questionType %>" readonly required><br>
                         </div>
                     <% } %>
                 </div>
