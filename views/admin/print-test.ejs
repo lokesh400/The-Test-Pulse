@@ -44,13 +44,15 @@
 
     #question {
       width: 45%;
-      text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
-    #question img {
+    #question-img {
       max-width: 100%;
       height: auto;
-      z-index: 5;
+      z-index: 1;
+      margin-left: 10px;
     }
 
     #question-number {
@@ -94,13 +96,55 @@
         visibility: hidden;
     }
 
+    
+    /* Logo overlay styles */
+    #logo-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      pointer-events: none; /* Prevent the overlay from blocking interaction */
+    }
+
+    #logo-overlay img {
+      opacity: 0.2;
+      max-width: 400px; /* Adjust the size of the logo */
+      z-index: 1000; /* Ensure it stays in the background */
+    }
+    #option-container {
+    margin-left: 25px;    
+    display: flex;             /* Enable flexbox */
+    flex-wrap: wrap;           /* Allow items to wrap onto new lines */
+    gap: 20px;                 /* Space between the items */
+    }
+
+    .question-item {
+    flex-basis: calc(10% - 20px);  /* Each item takes up roughly 10% of the container's width, accounting for gaps */
+    display: flex;             /* Align question and answer horizontally */
+    justify-content: space-between;
+    align-items: center;      /* Center items vertically */
+    }
+
+    .question-text {
+    font-weight: bold;
+    }
+
+    .answer-text {
+    font-size: 1rem;
+    color: #333;
+    }
+
     /* Print-specific styles */
     @media print {
       /* Hide the print button when printing */
       #button-container {
         display: none;
       }
-
       /* Prevent page breaks in unwanted places */
       #question-container {
         page-break-inside: avoid;
@@ -138,46 +182,6 @@
       }
     }
 
-    /* Logo overlay styles */
-    #logo-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      pointer-events: none; /* Prevent the overlay from blocking interaction */
-    }
-
-    #logo-overlay img {
-      opacity: 0.2;
-      max-width: 400px; /* Adjust the size of the logo */
-      z-index: -1; /* Ensure it stays in the background */
-    }
-    #option-container {
-    margin-left: 25px;    
-    display: flex;             /* Enable flexbox */
-    flex-wrap: wrap;           /* Allow items to wrap onto new lines */
-    gap: 20px;                 /* Space between the items */
-    }
-
-    .question-item {
-    flex-basis: calc(10% - 20px);  /* Each item takes up roughly 10% of the container's width, accounting for gaps */
-    display: flex;             /* Align question and answer horizontally */
-    justify-content: space-between;
-    align-items: center;      /* Center items vertically */
-    }
-
-    .question-text {
-    font-weight: bold;
-    }
-
-    .answer-text {
-    font-size: 1rem;
-    color: #333;
-    }
 
   </style>
 </head>
@@ -249,15 +253,15 @@
 
   </div>
 
-  <div id="vertical-line">
-
-  </div>
+  <!-- <div id="vertical-line"></div> -->
 
   <div id="question-container">
     <% test.questions.forEach(function(question, index) { %>
         <div id="question">
-            <p><b>Question <%= index + 1 %></b></p>
-            <img src="<%= question.questionText %>" alt="Question Image">
+            <b style="margin-left: -8px;position: absolute;top: 0;left: -8px; font-size: 0.8rem;"><%= index + 1 %>)</b>
+           <div>
+            <img id="question-img" src="<%= question.questionText %>" alt="Question Image">
+           </div>
         </div>
     <% }); %>
   </div>

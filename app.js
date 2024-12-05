@@ -44,7 +44,9 @@ cloudinary.config({
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.mongo_url);
+mongoose.connect(process.env.mongo_url)
+.then(() => console.log('MongoDB connected successfully!'))
+.catch(err => console.log('Error connecting to MongoDB: ', err));;
 
 // Middleware
 app.use(bodyParser.json());
