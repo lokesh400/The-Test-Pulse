@@ -169,6 +169,14 @@ router.post('/create/topic', async(req,res) => {
     }
   })
   
+// Admin route to update a question's answer
+router.get('/admin/questionbank/update', async(req,res) => {
+  try{
+   res.render('./questionbank/edit-question.ejs');
+ }catch(error){
+   res.send(error)
+ }
+})  
 
 
 module.exports = router;
