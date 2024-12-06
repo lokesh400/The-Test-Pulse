@@ -5,45 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Test</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7fc;
-            color: #333;
+        /* Reset basic styles */
+        body, h2, form {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        h2 {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 24px;
-            color: #007BFF;
+        /* Body styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
         }
 
+        /* Container for the form */
         #main-container {
             max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 50px auto;
+            padding: 30px;
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        #subject-selection label {
-            font-weight: bold;
+        /* Title */
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        /* Form label styles */
+        label {
+            font-size: 16px;
+            font-weight: 500;
             margin-bottom: 8px;
             display: block;
+            color: #555;
         }
 
+        /* Dropdown select styles */
         select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin: 8px 0 20px;
             border-radius: 5px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             font-size: 16px;
-            background-color: #f9f9f9;
-            box-sizing: border-box;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
         }
 
         select:focus {
@@ -52,86 +65,96 @@
             background-color: #fff;
         }
 
-        #questions-container {
-            margin-top: 20px;
-        }
-
-        .question-block {
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .question-block img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        .question-block label {
-            font-size: 16px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        input[type="input"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-            background-color: #f9f9f9;
-        }
-
-        input[type="input"]:readonly {
-            background-color: #eee;
-        }
-
+        /* Button styles */
         button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
             background-color: #007BFF;
             color: #fff;
             border: none;
-            padding: 10px 20px;
             border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
-            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
+        /* Question Block Styles */
+        .question-block {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-block img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .question-block label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .question-block input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fafafa;
+        }
+
+        .question-block input:readonly {
+            background-color: #f0f0f0;
+        }
+
+        /* Selected Questions Section */
         #selected-questions {
             margin-top: 20px;
+            padding-top: 20px;
             border-top: 2px solid #007BFF;
-            padding-top: 10px;
-        }
-
-        .selected-question {
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .hidden {
             display: none;
         }
 
-        /* Responsive design */
+        #selected-questions h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .selected-question {
+            padding: 12px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             #main-container {
-                padding: 15px;
                 width: 90%;
+                padding: 20px;
             }
 
-            select, input[type="input"], button {
+            h2 {
+                font-size: 24px;
+            }
+
+            select, button {
                 font-size: 14px;
+                padding: 10px;
             }
         }
     </style>
@@ -162,11 +185,11 @@
                 <!-- Image-based questions will be loaded here -->
             </div>
 
-            <button type="button" id="addQuestionsBtn" class="hidden">Add Questions</button>
-            <button type="submit" class="hidden">Submit Test</button>
+            <button type="button" id="addQuestionsBtn" style="display: none;">Add Questions</button>
+            <button type="submit" style="display: none;">Submit Test</button>
         </form>
 
-        <div id="selected-questions" class="hidden">
+        <div id="selected-questions">
             <h3>Selected Questions</h3>
             <!-- Selected questions will be displayed here -->
         </div>
@@ -231,7 +254,6 @@
             data.forEach((question) => {
                 const questionBlock = document.createElement('div');
                 questionBlock.className = 'question-block';
-                const isChecked = selectedQuestions[question._id] ? 'checked' : '';
                 questionBlock.innerHTML = `
                     <img src="${question.Question}" alt="Question Image">
                     <label>
@@ -242,8 +264,8 @@
                 container.appendChild(questionBlock);
             });
 
-            document.getElementById('addQuestionsBtn').classList.remove('hidden');
-            document.getElementById('selected-questions').classList.remove('hidden');
+            document.getElementById('addQuestionsBtn').style.display = 'block';
+            document.getElementById('selected-questions').style.display = 'block';
         }
 
         // Store selected questions in hidden inputs when "Add Questions" button is clicked
