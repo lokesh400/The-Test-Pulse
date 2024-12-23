@@ -102,7 +102,6 @@ router.post('/final', async (req, res) => {
     correctAnswer: q.correctAnswer,
     questionType: q.questionType,
   }));
-  console.log(formattedQuestions);
   const newTest = new Test({ title, questions: formattedQuestions ,time, type});
   await newTest.save();
   const tests = await Test.find({});

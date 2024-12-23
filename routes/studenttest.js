@@ -152,16 +152,21 @@ router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
             console.error(error);
         }
     });
-    res.render('./studenttestinterface/test-result.ejs', {
-                test,
-                savedAnswers,
-                totalMarks,
-                obtainedMarks, // Pass obtained marks to the template
-                totalQuestions,
-                correctCount,
-                incorrectCount,
-                skippedCount
-            });
+    if(!studentTest){
+        res.send("Please Attempt The Test")
+    }
+    else{
+        res.render('./studenttestinterface/test-result.ejs', {
+            test,
+            savedAnswers,
+            totalMarks,
+            obtainedMarks,
+            totalQuestions,
+            correctCount,
+            incorrectCount,
+            skippedCount
+        });
+    }
 });
 
 module.exports = router;
