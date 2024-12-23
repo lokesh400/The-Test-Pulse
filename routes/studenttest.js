@@ -20,50 +20,12 @@ router.get('/student/tests',ensureAuthenticated, async (req, res) => {
 
 
 //Route to render test choden by studet
-router.get('/student/test/:id', async (req, res) => {
+router.get('/student/test/:id',ensureAuthenticated, async (req, res) => {
   const test = await Test.findById(req.params.id);
   res.render('./studenttestinterface/attempt-test.ejs', { test });
 });
 
-//Route to submit student response
-// router.post('/student/test/:testId', async (req, res) => {
-//     const testId = req.params.testId;
-//     const studentId = req.user._id; // Assumes you have a session with the student's ID
-//     const answers = req.body.answers || {};
-//     const test = await Test.findById(testId);
-//     let score = 0;
-//     const results = [];
-  
-//     if (!test || !test.questions) {
-//         return res.status(400).send('Test not found.');
-//     }
-
-//     const totalQuestions = test.questions.length; // Total number of questions
-//     const totalMarks = totalQuestions * 4; // Total marks possible
-
-//     test.questions.forEach((question, index) => {
-//         const userAnswer = answers[index];
-//         const isCorrect = userAnswer == question.correctAnswer;
-
-//         if (userAnswer !== undefined) {
-//             score += isCorrect ? 4 : -1; // Adjust score
-//         }
-//         // Save answer result for each question
-//         results.push({
-//             questionId: question._id,
-//             selectedOption: userAnswer,
-//             isCorrect,
-//         });
-//     });
-//     // Save student test attempt with score and answer results
-//     await StudentTest.findOneAndUpdate(
-//         { studentId, testId },
-//         { score, totalMarks, answers: results }, // Save both score and totalMarks
-//         { upsert: true } // Create a new document if one doesn’t exist
-//     );
-//     res.redirect(`/student/test/${testId}/result`);
-// });
-router.post('/student/test/:testId', async (req, res) => {
+router.post('/student/test/:testId', ensureAuthenticated, async (req, res) => {
     const testId = req.params.testId;
     const studentId = req.user._id; // Assumes you have a session with the student's ID
     const answers = req.body.answers || {};
@@ -109,7 +71,7 @@ router.post('/student/test/:testId', async (req, res) => {
   
 
 //Route to render result
-router.get('/student/test/:id/result', async (req, res) => {
+router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
     const testId = req.params.id;
     const studentId = req.user._id; // assuming the user session contains the student ID
 
