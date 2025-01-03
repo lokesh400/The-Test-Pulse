@@ -113,7 +113,7 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
         Option2: "Option 2",
         Option3: "Option 3",
         Option4: "Option 4",
-        CorrectOption: correct,
+        CorrectOption: correct-1,
         questionType:questionType
       });
   
