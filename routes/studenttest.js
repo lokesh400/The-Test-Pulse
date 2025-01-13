@@ -21,8 +21,16 @@ router.get('/student/tests',ensureAuthenticated, async (req, res) => {
 
 //Route to render test choden by studet
 router.get('/student/test/:id',ensureAuthenticated, async (req, res) => {
-  const test = await Test.findById(req.params.id);
-  res.render('./studenttestinterface/attempt-test.ejs', { test });
+    const testId = req.params.id;
+    const studentId = req.user._id
+    const studentTest = await StudentTest.findOne({ studentId, testId });
+    if(studentTest && req.user.role === 'Student'){
+        res.send("Test Already Attempted")
+    }
+   else {
+    const test = await Test.findById(req.params.id);
+    res.render('./studenttestinterface/attempt-test.ejs', { test });
+  }
 });
 
 router.post('/student/test/:testId', ensureAuthenticated, async (req, res) => {
