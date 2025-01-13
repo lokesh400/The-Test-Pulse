@@ -69,32 +69,28 @@ router.get("/privacy-policy",(req,res)=>{
  
 // ADMIN ROUTE TO DELETE A TEST  
 router.delete('/admin/delete/test/:id', async (req, res) => {
-    const testId = req.params.id; // Get the test ID from the request parameters
-    try {
-        // First, delete the test from the Test collection
-        const result = await Test.findByIdAndDelete(testId);
+  const testId = req.params.id; // Get the test ID from the request parameters
+  try {
+    const result = await Test.findByIdAndDelete(testId);
         if (!result) {
             return res.status(404).json({ error: 'Test not found.' });
         }
-  
-        // Then, remove it from all batches that contain it in the `tests` array
-        const updateResult = await Batch.updateMany(
-            { tests: testId }, // Find batches containing the test ID
-            { $pull: { tests: testId } } // Remove the test ID from the tests array
-        );
-  
-        // Optionally, you can check how many batches were modified
-        if (updateResult.modifiedCount > 0) {
-            return res.status(200).json({ message: 'Test deleted successfully from all batches!' });
-        } else {
-            return res.status(200).json({ message: 'Test deleted successfully, but not found in any batches.' });
-        }
-    } catch (error) {
-        console.log('Error deleting test:', error);
-        return res.status(500).json({ error });
-    }
-  });
-  
+      // Find all batches containing the test with the matching ID and remove that test from the tests array
+      const updateResult = await Batch.updateMany(
+          { "tests.id": testId }, // Find batches containing a test with the matching testId
+          { $pull: { tests: { id: testId } } } // Remove the test with the matching ID from the tests array
+      );
+      if (updateResult.modifiedCount > 0) {
+          return res.status(200).json({ message: 'Test deleted successfully from all batches!' });
+      } else {
+          return res.status(200).json({ message: 'Test deleted successfully, but no batches contained this test.' });
+      }
+  } catch (error) {
+      console.log('Error deleting test:', error);
+      return res.status(500).json({ error: error.message });
+  }
+});
+
   // Admin Route - List all tests
 router.get('/admin/tests', async (req, res) => {
     const tests = await Test.find({}); // Fetch all tests from the database
