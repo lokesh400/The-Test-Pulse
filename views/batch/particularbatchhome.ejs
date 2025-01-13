@@ -46,21 +46,21 @@
                     <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
                         <% thisBatch.tests.forEach(function(test) { %>
                             <div class="test-card">
-                                <p><b>Title:</b> <%= test[1]%></p>
+                                <p><b>Title:</b> <%= test.title %></p>
                                 <br>
                                 <div class="card-button">
-                                    <a href="/student/test/<%= test[0] %>">
+                                    <a href="/student/test/<%= test.id %>">
                                         <button class="btn">Attempt Test</button>
                                     </a>   
                                 </div>
                                 <div class="card-button">
-                                    <a href="/student/test/<%= test[0] %>/result">
+                                    <a href="/student/test/<%= test.id %>/result">
                                         <button class="btn">Show Result</button>
                                     </a>   
                                 </div>
                                 <% if(currUser.role === 'admin'){%>
                                     <div class="card-button">
-                                        <a href="/student/test/<%= test[0] %>/analysis">
+                                        <a href="/student/test/<%= test.id %>/analysis">
                                             <button class="btn">Analysis</button>
                                         </a>   
                                     </div>

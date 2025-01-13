@@ -140,11 +140,14 @@ router.post('/create/:testId/:batchId',ensureAuthenticated,isAdmin, async (req, 
       const newte = await Batch.findById(batchId); // Find the batch by title
       const test = await Test.findById(testId);
       const name = test.title;
-      const id = [testId,name];
+      const details = {
+         title:name,
+         id:testId
+      };
       if (!newte) {
         return res.status(404).json({ message: 'Batch not found' }); // Handle case where batch is not found
       }
-      newte.tests.push(id); 
+      newte.tests.push(details); 
       await newte.save();
       res.redirect(`/showbatch/${batchId}`);
     }

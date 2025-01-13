@@ -94,8 +94,6 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
       const { subject, chapter, topic, correct,questionType } = req.body;
       const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
       const imageUrl = result.secure_url;
-  
-      // After upload, delete the file from local storage
       fs.unlink(req.file.path, (err) => {
         if (err) {
           console.error('Error deleting local file:', err);
@@ -103,7 +101,12 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
           console.log('Local file deleted successfully');
         }
       });
-  
+      var answer;
+      if(questionType=='numerical'){
+        answer = correct;
+      } else {
+        answer = correct-1;
+      }
       const newQuestion = new Question({
         SubjectName: subject,
         ChapterName: chapter,
@@ -113,7 +116,7 @@ router.get('/api/questions/:name',ensureAuthenticated, async (req,res) => {
         Option2: "Option 2",
         Option3: "Option 3",
         Option4: "Option 4",
-        CorrectOption: correct-1,
+        CorrectOption: answer,
         questionType:questionType
       });
   
