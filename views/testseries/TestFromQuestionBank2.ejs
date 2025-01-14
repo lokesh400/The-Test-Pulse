@@ -43,7 +43,7 @@
             color: #555;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"],select {
             padding: 12px;
             font-size: 1.1em;
             border: 1px solid #ccc;
@@ -188,7 +188,7 @@
 
                 <div style="display: flex;">
                     <div>
-                        <label for="title">Test Title:</label>
+                <label for="title">Test Title:</label>
                 <input type="text" name="title" required>
 
                 <label for="time">Time (in minutes):</label>
@@ -196,6 +196,13 @@
 
                 <label for="type2">Type:</label>
                 <input type="text" name="type2" required>
+
+                <label for="testMode">Test Mode:</label>
+                <select id="testMode" name="testMode" required>
+                    <option value="Real">Real</option>
+                    <option value="Practice">Practice</option>
+                </select>
+
                     </div>
                     <button type="submit">Create Test</button>
                 </div>

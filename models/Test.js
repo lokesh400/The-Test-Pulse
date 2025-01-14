@@ -19,7 +19,8 @@ const TestSchema = new mongoose.Schema({
   title: String,
   questions: [QuestionSchema],
   time:Number,
-  type:String
+  type:String,
+  testMode:String
 });
 
 const Test = mongoose.model('Test', TestSchema);

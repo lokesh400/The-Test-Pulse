@@ -24,8 +24,11 @@ router.get('/student/test/:id',ensureAuthenticated, async (req, res) => {
     const testId = req.params.id;
     const studentId = req.user._id
     const studentTest = await StudentTest.findOne({ studentId, testId });
-    if(studentTest && req.user.role === 'Student'){
-        res.send("Test Already Attempted")
+    const test = await Test.findById(testId);
+    const Type = test.testMode;
+
+    if(studentTest && req.user.role === 'student' && Type === 'Real'){
+        res.render("./studenttestinterface/already-attempted.ejs");
     }
    else {
     const test = await Test.findById(req.params.id);
@@ -52,7 +55,7 @@ router.post('/student/test/:testId', ensureAuthenticated, async (req, res) => {
     test.questions.forEach((question, index) => {
         const userAnswer = answers[index];
         const isCorrect = userAnswer == question.correctAnswer;
-        console.log(userAnswer,question.correctAnswer)
+        // console.log(userAnswer,question.correctAnswer)
         if (userAnswer !== undefined) {
             score += isCorrect ? 4 : -1; // Adjust score
         }
