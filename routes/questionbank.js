@@ -179,7 +179,22 @@ router.get('/admin/questionbank/update', async(req,res) => {
  }catch(error){
    res.send(error)
  }
-})  
+})
+
+router.post('/admin/questionbank/update/:id', async(req,res) => {
+  try{
+   const correctOption = req.body.correctOption; 
+   const {id} = req.params; 
+   const updatedQuestion = await Question.findByIdAndUpdate(
+    id,
+    { CorrectOption: correctOption-1 },
+    { new: true, runValidators: true }
+);
+console.log(question,updatedQuestion);
+ }catch(error){
+   res.send(error)
+ }
+})
 
 
 module.exports = router;

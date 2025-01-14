@@ -232,8 +232,13 @@
                     <img src="${question.Question}" alt="Question Image">
                     <label>
                         Correct Option:
-                        <input type="input" name="questionIds" value="${question.CorrectOption}" readonly>
+                        <input type="input" name="questionIds" value="${question.CorrectOption+1}" readonly>
                     </label>
+                    <form action="/admin/questionbank/update/${question._id}" method="POST">
+                          <label for="name">Updated Answer</label>
+                          <input id="name" name="correctOption" required><br><br>
+                          <button type="submit">Submit</button>
+                    </form>
                 `;
                 container.appendChild(questionBlock);
             });
