@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Question</title>
@@ -18,6 +18,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow-y: auto;
 }
 
 /* Link Styling */
@@ -30,6 +31,7 @@ body {
     background-color: #f39c12;
     transition: background-color 0.3s ease;
     margin-bottom: 20px;
+    margin-top: 100px;
 }
 
 .create-chapter-link:hover {
@@ -43,7 +45,7 @@ form {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
+    /* max-width: 600px; */
 }
 
 /* Heading */
@@ -124,7 +126,7 @@ button.submit-btn:hover {
     color: white;
 }
        
-.drop-area {
+        .drop-area {
             width: 100%;
             height: 50px;
             border: 2px dashed #ccc;
@@ -260,7 +262,6 @@ button.submit-btn:hover {
           }
       }
       fetchSubjects();
-
         // AJAX form submission
         document.getElementById("testForm").addEventListener("submit", async function (event) {
         event.preventDefault();  // Prevent the form from submitting normally

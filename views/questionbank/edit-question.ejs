@@ -115,6 +115,11 @@
             background-color: #f0f0f0;
         }
 
+        #ques-blk-div{
+            display: flex;
+            gap: 40px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             #main-container {
@@ -159,14 +164,10 @@
                 <!-- Image-based questions will be loaded here -->
             </div>
 
-            <button type="button" id="addQuestionsBtn" style="display: none;">Add Questions</button>
-            <button type="submit" style="display: none;">Submit Test</button>
+            <button type="button" id="addQuestionsBtn" style="display: none;"></button>
         </form>
 
-        <div id="selected-questions">
-            <h3>Selected Questions</h3>
-            <!-- Selected questions will be displayed here -->
-        </div>
+
     </div>
 
     <script>
@@ -229,16 +230,20 @@
                 const questionBlock = document.createElement('div');
                 questionBlock.className = 'question-block';
                 questionBlock.innerHTML = `
+                    <div id="ques-blk-div">
+                    <div>
                     <img src="${question.Question}" alt="Question Image">
                     <label>
                         Correct Option:
                         <input type="input" name="questionIds" value="${question.CorrectOption+1}" readonly>
                     </label>
+                    </div>
                     <form action="/admin/questionbank/update/${question._id}" method="POST">
                           <label for="name">Updated Answer</label>
                           <input id="name" name="correctOption" required><br><br>
                           <button type="submit">Submit</button>
                     </form>
+                    </div>
                 `;
                 container.appendChild(questionBlock);
             });
