@@ -70,7 +70,7 @@
 
     /* Correct / Incorrect Indicators */
     .correct-answer {
-      background-color: #e7f9f1;
+      background-color: #28a745;
       border-left: 4px solid #28a745;
     }
 
@@ -85,7 +85,7 @@
     }
 
     .correct {
-      color: #28a745;
+      color: black;
     }
 
     .incorrect {
@@ -108,27 +108,37 @@
 
   <% test.questions.forEach((question, index) => {
       const savedAnswer = savedAnswers.find(ans => ans.questionId.toString() === question._id.toString());
-      const selectedOption = savedAnswer ? savedAnswer.selectedOption : null;
-      const isCorrect = savedAnswer && savedAnswer.isCorrect;
+      const selectedOption = savedAnswer.selectedOption
+      const isCorrect = savedAnswer && savedAnswer.isCorrect === "yes";
+      const skipped = savedAnswer.isCorrect === "not";
   %>
     <div class="question-result">
       <h3>Question <%= index + 1 %>: <img src="<%= question.questionText %>" alt=""></h3>
+
       
+      <% if (question.questionType === "numerical") { %> 
+        <% if (savedAnswer.selectedOption != -1) { %> 
+           <h3>Your Answer  <%= savedAnswer.selectedOption %> </h3>
+         <% } %> 
+      <% } else{%>
+
       <% question.options.forEach((option, optionIndex) => { %>
         <div class="option
-          <% if (optionIndex === question.correctAnswer) { %>correct-answer<% } 
+          <% if (optionIndex === selectedOption && isCorrect) { %>correct-answer<% } 
              else if (optionIndex === selectedOption && !isCorrect) { %>incorrect-answer<% } 
-             else if (selectedOption === null) { %>skipped-answer<% } %>">
-          
+             else if ( selectedOption === -1 ) { %>skipped-answer<% } %>">
           <span><%= option %></span>
-          
           <% if (optionIndex === selectedOption) { %>
-            <span class="<%= isCorrect ? 'correct' : 'incorrect' %>">
-              (Your answer: <%= isCorrect ? 'Correct' : 'Incorrect' %>)
+            <span class="<%= isCorrect ? skipped : 'incorrect' %>">
+              (Your answer: <%= isCorrect ? skipped : 'Incorrect' %>)
             </span>
           <% } %>
         </div>
       <% }) %>
+      <% } %>
+        <div>
+          <p style="background-color: yellow; padding: 2px; width: fit-content;">correct-answer <% if (question.questionType === "numerical"){%> <%= parseInt(question.correctAnswer, 10) %> <% } else {%> <%= parseInt(question.correctAnswer, 10) + 1 %> <%}%>  </p>
+        </div>
     </div>
   <% }) %>
 </body>

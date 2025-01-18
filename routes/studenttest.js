@@ -36,46 +36,76 @@ router.get('/student/test/:id',ensureAuthenticated, async (req, res) => {
   }
 });
 
+
 router.post('/student/test/:testId', ensureAuthenticated, async (req, res) => {
-    const testId = req.params.testId;
-    const studentId = req.user._id; // Assumes you have a session with the student's ID
-    const answers = req.body.answers || {};
-    const questionTypes = req.body.questionType || {}; // Get the question types
-    const test = await Test.findById(testId);
-    let score = 0;
-    const results = [];
-  
-    if (!test || !test.questions) {
-        return res.status(400).send('Test not found.');
-    }
 
-    const totalQuestions = test.questions.length; // Total number of questions
-    const totalMarks = totalQuestions * 4; // Total marks possible
+const testId = req.params.testId;
+const studentId = req.user._id; 
+let score = 0;
+const answers = [];
+const solution = req.body.solution || {};
+const keys = Object.keys(solution);
+const test = await Test.findById(testId);
+if (!test || !test.questions) {
+    return res.status(400).send('Test not found.');
+}
 
-    test.questions.forEach((question, index) => {
-        const userAnswer = answers[index];
-        const isCorrect = userAnswer == question.correctAnswer;
-        // console.log(userAnswer,question.correctAnswer)
-        if (userAnswer !== undefined) {
-            score += isCorrect ? 4 : -1; // Adjust score
+const totalQuestions = test.questions.length; // Total number of questions
+const totalMarks = totalQuestions * 4; // Total marks possible
+Object.entries(solution).forEach(function([key, value]) {
+    const question = test.questions.find(q => q._id.toString() === key);
+    if (question) {
+        if (value === question.correctAnswer) {
+            score += 4; // Assuming each question is worth 4 points
+            answers.push({
+                questionId: key,
+                selectedOption: value,
+                isCorrect: "yes"
+            });
+        } 
+        else if (value === "-1") {
+            score += 0;
+            answers.push({
+                questionId: key,
+                selectedOption: value,
+                isCorrect: "not"
+            });
+        } 
+        else {
+            score -= 1;
+            answers.push({
+                questionId: key,
+                selectedOption: value,
+                isCorrect: "no"
+            });
         }
-        // Add question type to results
-        const questionType = questionTypes[index] || 'unknown'; // Default to 'unknown' if not present
-        // Save answer result for each question
-        results.push({
-            questionId: question._id,
-            selectedOption: userAnswer,
-            isCorrect,
-            questionType,  // Store the questionType
-        });
-    });
+    }
+});
+const questionIds = answers.map(answer => answer.questionId);
 
-    // Save student test attempt with score and answer results
-    await StudentTest.findOneAndUpdate(
-        { studentId, testId },
-        { score, totalMarks, answers: results }, // Save both score and totalMarks
-        { upsert: true } // Create a new document if one doesn’t exist
-    );
+const filteredQuestions = test.questions
+      .filter(question => !questionIds.includes(question._id.toString()))
+      .map(question => question._id.toString());
+
+for(let i=0;i<filteredQuestions.length;i++){
+    answers.push({
+        questionId: filteredQuestions[i],
+        selectedOption: -1,
+        isCorrect: "not"
+    });
+}
+
+const alreadyTest = await StudentTest.findOne({ studentId, testId });
+if(alreadyTest){
+    await StudentTest.deleteOne({ _id: alreadyTest._id });
+}
+    const studentTest = new StudentTest({
+        studentId: studentId,  // Student's ObjectId
+        testId: testId,        // Test's ObjectId
+        score: score,          // Score obtained by the student
+        answers: answers       // Array of answers (questions and selected options)
+    });
+await studentTest.save();
     res.redirect(`/student/test/${testId}/result`);
 });
 
@@ -91,7 +121,7 @@ router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
 
     // Fetch previously saved answers for this test by the student
     const studentTest = await StudentTest.findOne({ studentId, testId });
-    const savedAnswers = studentTest ? studentTest.answers : [];
+    const savedAnswers = studentTest.answers;
 
     // Calculate total marks and counts
     const totalQuestions = test.questions.length;
@@ -100,12 +130,12 @@ router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
     let skippedCount = 0;
 
     savedAnswers.forEach(answer => {
-        if (answer.selectedOption === null) {
+        if (answer.isCorrect === "not") {
             skippedCount++; // Count it as skipped if there's no answer selected
-        } else if (answer.isCorrect) {
+        } else if (answer.isCorrect === "yes") {
             correctCount++; // Count it as correct if the answer is correct
-        } else {
-            incorrectCount++; // Otherwise, count it as incorrect
+        } else if (answer.isCorrect === "no") {
+            incorrectCount++; // Count it as correct if the answer is correct
         }
     });
 

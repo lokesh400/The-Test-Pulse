@@ -218,6 +218,75 @@ body {
                   }      
   }
 
+  #clickToStartDiv{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    position: fixed;
+    padding: 20px;
+    bottom: 0;
+    right: 20px;
+  }
+  #clickToStart{
+  background-color: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+  }
+  #heading-div-main{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    margin: auto;
+  }
+  .radio-group {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+        }
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        .radio-group input[type="radio"] + span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 2px solid #6c63ff;
+            border-radius: 50%;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        .radio-group input[type="radio"]:checked + span {
+            background-color: #6c63ff;
+        }
+        .radio-group input[type="radio"]:checked + span::after {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
   @media (max-width:700px){
       img{
           width: 100%;

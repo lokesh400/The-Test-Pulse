@@ -10,7 +10,7 @@ const studentTestSchema = new mongoose.Schema({
     {
       questionId: { type: mongoose.Schema.Types.ObjectId, required: true },
       selectedOption: { type: Number },
-      isCorrect: { type: Boolean, required: true },
+      isCorrect: String,
     }
   ],
 });

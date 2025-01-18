@@ -6,78 +6,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="/styles/studentTestInterface.css">
 </head>
-
-<style>
-  #clickToStartDiv{
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-    position: fixed;
-    padding: 20px;
-    bottom: 0;
-    right: 20px;
-  }
-  #clickToStart{
-  background-color: #6c63ff;
-  color: #fff;
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-  }
-  #heading-div-main{
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    margin: auto;
-  }
-  .radio-group {
-            display: flex;
-            flex-direction: column;
-            margin: 20px 0;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #555;
-            cursor: pointer;
-        }
-        .radio-group input[type="radio"] {
-            display: none;
-        }
-        .radio-group input[type="radio"] + span {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border: 2px solid #6c63ff;
-            border-radius: 50%;
-            position: relative;
-            transition: background-color 0.3s ease;
-        }
-        .radio-group input[type="radio"]:checked + span {
-            background-color: #6c63ff;
-        }
-        .radio-group input[type="radio"]:checked + span::after {
-            content: '';
-            display: block;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-</style>
-
 <body>
 
   <div id="clickToStartDiv">
@@ -120,7 +48,8 @@
 
     <form id="testForm" action="/student/test/<%= test._id %>" method="POST">
       <% test.questions.forEach((question, index) => { %>
-        <div class="question-block" id="question-<%= index %>">
+        <div class="question-block" id="question-<%= index %>" data-value="<%= question._id %>">
+          <div id="questiontype-<%= index %>"  style="display: none;" data-value="<%= question.questionType %>" ></div>
           <h3>Question <%= index + 1 %>:</h3>
           <img id="ques-img" src="<%= question.questionText %>" alt="">
           <input type="hidden" name="questionType[<%= index %>]" value="<%= question.questionType %>"> <!-- Add this line -->
@@ -143,7 +72,6 @@
           </div>
           <footer class="footer">
             <button type="button" class="btn save-next" onclick="saveAndNext(<%= index %>)">Save & Next</button>
-            <button type="button" class="btn skip" onclick="skipQuestion(<%= index %>)">Skip</button>
             <button type="button" class="btn clear" onclick="clearSelection(<%= index %>)">Clear Selection</button>
           </footer>
         </div>
@@ -153,6 +81,14 @@
   </div>
 
   <script>
+
+
+    //  const inputField = document.getElementById('numerical-ipt');
+    //  inputField.addEventListener('input', (event) => {  
+    //  inputField.value = event.target.placeholder;
+    // });
+
+
     let totalTime = <%= test.time %> * 60;
     let timerInterval;
     let attemptedCount = 0;
@@ -188,18 +124,46 @@
     function hideAllQuestions() {
       document.querySelectorAll('.question-block').forEach(question => question.classList.remove('active'));
     }
+  
+var solution = {};  // Initialize the solution object
+  
+function saveAndNext(index) {
+  var selectedOption;
+  const question = document.getElementById(`question-${index}`);
+  const dataValue = question.dataset.value;
+  const questiontype = document.getElementById(`questiontype-${index}`);
+  if (questiontype.dataset.value === "numerical"){
+    const option = document.querySelector(`input[name="answers[${index}]"]`);
+    selectedOption = option.value
+  }
+  else{
+    const Option = document.querySelector(`input[name="answers[${index}]"]:checked`);
+    selectedOption = Option.value
+  }
 
-  function saveAndNext(index) {
-  const selectedOption = document.querySelector(`input[name="answers[${index}]"]:checked`);
-  const numericalInput = document.querySelector(`input[name="answers[${index}]"]`);
+
+  
+  if (selectedOption) {
+    solution[dataValue] = selectedOption;  // Update solution object
+  }
+  else {
+    solution[dataValue] = "-1";  // Store null if no option is selected
+    const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+      if (!sidebarButton.classList.contains('skipped')) {
+        skippedCount++;
+        notAttemptedCount--;
+      }
+      sidebarButton.classList.remove('answered');
+      sidebarButton.classList.add('skipped');
+    showQuestion(index + 1);
+    updateCounters();
+    
+    
+  }
+
   const sidebarButton = document.getElementById(`sidebar-button-${index}`);
 
   if (selectedOption) {
-    attemptedCount++;
-    notAttemptedCount--;
-    sidebarButton.classList.remove('skipped');
-    sidebarButton.classList.add('answered');
-  } else if (numericalInput && numericalInput.value !== "") {
     attemptedCount++;
     notAttemptedCount--;
     sidebarButton.classList.remove('skipped');
@@ -236,8 +200,7 @@
       if (index + 1 < <%= test.questions.length %>) {
         showQuestion(index + 1);
       } else {
-        alert('This was the last question! The test will be submitted.');
-        document.getElementById('testForm').submit();
+        showQuestion(0);
       }
     }
   
@@ -258,11 +221,21 @@
   
     function submitTest() {
       const unansweredQuestions = <%= test.questions.length %> - attemptedCount - skippedCount;
-    //   if (unansweredQuestions > 0) {
-    //     alert(`Please answer all questions before submitting. You have ${unansweredQuestions} unanswered questions.`);
-    //   } else {
-        document.getElementById('testForm').submit();
-    //   }
+      var form = document.getElementById('testForm');
+  
+
+  for (var key in solution) {
+    if (solution.hasOwnProperty(key)) {
+      var hiddenField = document.createElement("input");
+      hiddenField.type = "hidden";
+      hiddenField.name = "solution[" + key + "]"; // This will send solution data as an array
+      hiddenField.value = solution[key];
+
+      // Append the hidden field to the form
+      form.appendChild(hiddenField);
+    }
+  }
+    form.submit();   
     }
   
     document.getElementById("clickToStart").addEventListener("click", function() {
