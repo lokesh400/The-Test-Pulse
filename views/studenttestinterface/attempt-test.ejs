@@ -125,50 +125,34 @@
       document.querySelectorAll('.question-block').forEach(question => question.classList.remove('active'));
     }
   
-var solution = {};  // Initialize the solution object
-  
+    var solution = {};  // Initialize the solution object
+
 function saveAndNext(index) {
-  var selectedOption;
   const question = document.getElementById(`question-${index}`);
   const dataValue = question.dataset.value;
   const questiontype = document.getElementById(`questiontype-${index}`);
-  if (questiontype.dataset.value === "numerical"){
+  let selectedOption;
+
+  if (questiontype.dataset.value === "numerical") {
     const option = document.querySelector(`input[name="answers[${index}]"]`);
-    selectedOption = option.value
-  }
-  else{
-    const Option = document.querySelector(`input[name="answers[${index}]"]:checked`);
-    selectedOption = Option.value
-  }
-
-
-  
-  if (selectedOption) {
-    solution[dataValue] = selectedOption;  // Update solution object
-  }
-  else {
-    solution[dataValue] = "-1";  // Store null if no option is selected
-    const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-      if (!sidebarButton.classList.contains('skipped')) {
-        skippedCount++;
-        notAttemptedCount--;
-      }
-      sidebarButton.classList.remove('answered');
-      sidebarButton.classList.add('skipped');
-    showQuestion(index + 1);
-    updateCounters();
-    
-    
+    selectedOption = option ? option.value : null;
+  } else {
+    const option = document.querySelector(`input[name="answers[${index}]"]:checked`);
+    selectedOption = option ? option.value : null;
   }
 
   const sidebarButton = document.getElementById(`sidebar-button-${index}`);
 
   if (selectedOption) {
+    // Update solution and mark question as answered
+    solution[dataValue] = selectedOption;
     attemptedCount++;
     notAttemptedCount--;
     sidebarButton.classList.remove('skipped');
     sidebarButton.classList.add('answered');
   } else {
+    // Mark question as skipped and move to next
+    solution[dataValue] = "-1";
     if (!sidebarButton.classList.contains('skipped')) {
       skippedCount++;
       notAttemptedCount--;
@@ -177,14 +161,17 @@ function saveAndNext(index) {
     sidebarButton.classList.add('skipped');
   }
 
+  // Update counters
   updateCounters();
 
+  // Navigate to the next question or loop back to the first
   if (index + 1 < <%= test.questions.length %>) {
     showQuestion(index + 1);
   } else {
-    showQuestion(0);
+    showQuestion(0);  // Loop back to the first question
   }
 }
+
 
   
     function skipQuestion(index) {
