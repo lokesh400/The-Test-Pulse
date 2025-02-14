@@ -113,16 +113,14 @@ await studentTest.save();
 
 //Route to render result
 router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
+   try{
     const testId = req.params.id;
     const studentId = req.user._id; // assuming the user session contains the student ID
-
     // Fetch test data
     const test = await Test.findById(testId).populate('questions');
-
     // Fetch previously saved answers for this test by the student
     const studentTest = await StudentTest.findOne({ studentId, testId });
     const savedAnswers = studentTest.answers;
-
     // Calculate total marks and counts
     const totalQuestions = test.questions.length;
     let correctCount = 0;
@@ -208,6 +206,10 @@ router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
             skippedCount
         });
     }
+   } catch(error){
+    console.log(error)
+    res.send(error)
+   }
 });
 
 module.exports = router;
