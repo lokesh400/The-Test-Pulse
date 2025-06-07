@@ -1,7 +1,7 @@
 const express = require("express");
 require('dotenv').config();
 const app = express();
-const port = 666;
+const port = 4000;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -132,6 +132,15 @@ app.use("/",paymentrouter);
 app.use("/",newrouter);
 app.use("/",adminrouter);
 app.use("/",testpdfrouter);
+
+
+const authRoutes = require("./routes/mobile/auth.js");
+const mobbatchRoutes = require("./routes/mobile/batch.js");
+const mobtestRoutes = require("./routes/mobile/test.js");
+// Routes
+app.use("/auth", authRoutes);
+app.use("/api/batches", mobbatchRoutes);
+app.use("/api/tests", mobtestRoutes);
 
 app.get("/", async (req,res)=>{
   if ( req.isAuthenticated() && req.user.role === 'admin') {
