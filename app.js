@@ -134,7 +134,7 @@ app.use("/",adminrouter);
 app.use("/",testpdfrouter);
 
 app.get("/", async (req,res)=>{
-  if ( req.isAuthenticated() && req.user.role === 'admin') {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
        res.redirect("/admin")
   }
   if (req.isAuthenticated() && req.user.role === 'student') {
