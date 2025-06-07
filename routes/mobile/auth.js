@@ -5,6 +5,7 @@ const User = require("../../models/User");
 const router = express.Router()
 
 router.post("/register", async (req, res) => {
+  console.log("signup hitted")
   const { username, password, role } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: "Username and password required" });
@@ -21,8 +22,12 @@ router.post("/register", async (req, res) => {
 
 // Login user
 router.post("/login", (req, res, next) => {
+console.log("login hitted")
   passport.authenticate("local", (err, user, info) => {
-    if (err) return next(err);
+    if (err) {
+      console.log(err):
+      return next(err);
+    }
     if (!user) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
@@ -38,6 +43,7 @@ router.post("/login", (req, res, next) => {
 router.get("/me", (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Not authenticated" });
+    console.log("Auth Check Route Hitted")
   }
   res.json({ username: req.user.username, role: req.user.role });
 });
