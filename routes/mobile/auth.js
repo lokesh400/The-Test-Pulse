@@ -24,10 +24,9 @@ router.post("/register", async (req, res) => {
 router.post("/login", (req, res, next) => {
 console.log("login hitted")
   passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.log(err):
-      return next(err);
-    }
+    
+    if (err) return next(err);
+    
     if (!user) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
