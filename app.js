@@ -13,6 +13,10 @@ const localStrategy = require("passport-local");
 
 const cors = require("cors");
 app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 const Test = require('./models/Test');
 const User = require('./models/User');
