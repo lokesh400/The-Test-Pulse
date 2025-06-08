@@ -168,8 +168,18 @@ app.get('/api/test', (req,res)=>{
 
 app.get('/api/user', async (req,res) => {
   const user = await User.findById(req.user.id);
-  console.log(user)
   res.json(user);
 })
+
+app.get('/api/batches/trending', async (req, res) => {
+  try {
+    console.log("hitted")
+    const featured = await Batch.find().sort({ createdAt: -1 }).limit(10);
+    console.log("featured")
+    res.json(featured);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
