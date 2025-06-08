@@ -8,7 +8,7 @@ const studentTestSchema = new mongoose.Schema({
   score: { type: Number, required: true },
   answers: [
     {
-      questionId: { type: mongoose.Schema.Types.ObjectId, required: true },
+      questionId: { type: mongoose.Schema.Types.ObjectId, required: true,ref: 'Question' },
       selectedOption: { type: Number },
       isCorrect: String,
     }

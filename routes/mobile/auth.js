@@ -6,12 +6,13 @@ const router = express.Router()
 
 router.post("/register", async (req, res) => {
   console.log("signup hitted")
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
+  const email = username;
   if (!username || !password) {
     return res.status(400).json({ error: "Username and password required" });
   }
   try {
-    const user = new User({ username, role });
+    const user = new User({ email,username, role:"Student" });
     await User.register(user, password); // passport-local-mongoose method
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {

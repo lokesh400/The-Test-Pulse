@@ -166,8 +166,10 @@ app.get('/api/test', (req,res)=>{
   res.json({message:"backend connected succesfully"})
 })
 
-
-  
-
+app.get('/api/user', async (req,res) => {
+  const user = await User.findById(req.user.id);
+  console.log(user)
+  res.json(user);
+})
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
