@@ -11,6 +11,9 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 
+const cors = require("cors");
+app.use(cors());
+
 const Test = require('./models/Test');
 const User = require('./models/User');
 const Batch = require('./models/Batch');
