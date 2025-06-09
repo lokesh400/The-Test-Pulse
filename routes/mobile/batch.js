@@ -11,6 +11,17 @@ const router = express.Router()
 //   res.json(batches);
 // });
 
+router.get('/find/trending', async (req, res) => {
+  try {
+    const featured = await Batch.find().sort({ createdAt: -1 }).limit(10);
+    res.json(featured);
+  } catch (err) {
+    console.error("Error fetching trending batches:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 router.get("/:id", async (req, res) => {
   const batch = await Batch.findById(req.params.id);
   res.json(batch);

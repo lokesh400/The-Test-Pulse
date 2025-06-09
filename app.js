@@ -173,11 +173,11 @@ app.get('/api/user', async (req,res) => {
 
 app.get('/api/batches/trending', async (req, res) => {
   try {
-    console.log("hitted")
+    console.log("Fetching trending batches");
     const featured = await Batch.find().sort({ createdAt: -1 }).limit(10);
-    console.log("featured")
     res.json(featured);
   } catch (err) {
+    console.error("Error fetching trending batches:", err);
     res.status(500).json({ message: err.message });
   }
 });
