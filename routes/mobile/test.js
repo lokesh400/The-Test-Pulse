@@ -2,7 +2,8 @@ const express = require("express");
 const passport = require("passport");
 const User = require("../../models/User");
 const Batch = require("../../models/Batch");
-const Test = require("../../models/Test")
+const Test = require("../../models/Test");
+const Question = require("../../models/Question");
 const mongoose = require("mongoose")
 const StudentTest = require("../../models/StudentTest")
 
@@ -37,7 +38,8 @@ Object.entries(answer).forEach(function([key, value]) {
             answers.push({
                 questionId: key,
                 selectedOption: value,
-                isCorrect: "yes"
+                isCorrect: "yes",
+                questionUrl:question.questionText
             });
         } 
         else if (value.toString() === "-1") {
@@ -45,7 +47,8 @@ Object.entries(answer).forEach(function([key, value]) {
             answers.push({
                 questionId: key,
                 selectedOption: value,
-                isCorrect: "not"
+                isCorrect: "not",
+                questionUrl:question.questionText
             });
         } 
         else {
@@ -53,7 +56,8 @@ Object.entries(answer).forEach(function([key, value]) {
             answers.push({
                 questionId: key,
                 selectedOption: value,
-                isCorrect: "no"
+                isCorrect: "no",
+                questionUrl:question.questionText
             });
         }
     }
@@ -61,14 +65,19 @@ Object.entries(answer).forEach(function([key, value]) {
 const questionIds = answers.map(answer => answer.questionId);
 
 const filteredQuestions = test.questions
-      .filter(question => !questionIds.includes(question._id.toString()))
-      .map(question => question._id.toString());
+  .filter(question => !questionIds.includes(question._id.toString()))
+  .map(question => ({
+    id: question._id.toString(),
+    ques: question.questionText // or whatever field contains the text
+  }));
+
 
 for(let i=0;i<filteredQuestions.length;i++){
     answers.push({
-        questionId: filteredQuestions[i],
+        questionId: filteredQuestions[i].id,
         selectedOption: -1,
-        isCorrect: "not"
+        isCorrect: "not",
+        questionUrl: filteredQuestions[i].ques
     });
 }
 
@@ -83,7 +92,6 @@ if(alreadyTest){
         answers: answers       // Array of answers (questions and selected options)
     })
 await studentTest.save();
-console.log(score,answer)
    res.status(200).json({ message: "Submission successful" });
 });
 
@@ -92,9 +100,8 @@ router.get('/report/:id', async (req, res) => {
     try{
      const testId = req.params.id;
      const studentId = req.user._id; // assuming the user session contains the student ID
-     // Fetch test data
      const test = await Test.findById(testId).populate('questions');
-     const studentTest = await StudentTest.findOne({ studentId, testId }).populate('answers.questionId');
+     const studentTest = await StudentTest.findOne({ studentId, testId });
         if (!studentTest) {
             return res.status(404).json({ error: 'Test attempt not found' });
         }
@@ -126,7 +133,6 @@ router.get('/report/:id', async (req, res) => {
             testName: test.name, // Include test name if available
             testDescription: test.description // Include other relevant test info
         };
-        console.log(enhancedData)
         res.json(enhancedData);
     } catch (error) {
         console.error('Error in /report/:id:', error);

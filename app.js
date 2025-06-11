@@ -128,6 +128,8 @@ function isAdmin(req, res, next) {
   res.render("./error/accessdenied.ejs");
 }
 
+const resourcerouter = require("./routes/resource.js");
+
 app.use("/blogs",blogsrouter);
 app.use("/user",userrouter);
 app.use("/user",otprouter);
@@ -139,6 +141,7 @@ app.use("/",paymentrouter);
 app.use("/",newrouter);
 app.use("/",adminrouter);
 app.use("/",testpdfrouter);
+app.use("/",resourcerouter);
 
 
 const authRoutes = require("./routes/mobile/auth.js");
@@ -171,15 +174,34 @@ app.get('/api/user', async (req,res) => {
   res.json(user);
 })
 
-app.get('/api/batches/trending', async (req, res) => {
+const axios = require('axios');
+
+app.get('/send/sms', async(req,res)=>{
+  async function sendSMS(phone, message) {
   try {
-    console.log("Fetching trending batches");
-    const featured = await Batch.find().sort({ createdAt: -1 }).limit(10);
-    res.json(featured);
+    const res = await axios.post('https://www.fast2sms.com/dev/bulkV2', {
+      route: 'q', // for promotional use 'p', for transactional 'q'
+      message: message,
+      language: 'english',
+      flash: 0,
+      numbers: phone, // comma-separated if multiple
+    }, {
+      headers: {
+        'authorization': `${process.env.SMS}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('SMS sent:', res.data);
   } catch (err) {
-    console.error("Error fetching trending batches:", err);
-    res.status(500).json({ message: err.message });
+    console.error('Failed to send SMS:', err.response?.data || err.message);
   }
-});
+}
+ await sendSMS('9315796489', 'Hello, your class starts in 10 minutes!');
+
+ res.send("sent")
+
+})
+
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

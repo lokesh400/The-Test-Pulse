@@ -33,6 +33,7 @@
                 <a href="/batch/<%= thisBatch._id %>/authorize-students"><button class="button">authorize</button></a>
                 <button class="button" id="toggleButton">Add Announcement</button>
                 <button class="button"><a href="/update-batch/<%=thisBatch._id%>" style="color: white;">Update</a></button>
+                <button class="button"><a href="/upload/this/<%=thisBatch._id%>" style="color: white;">Add Content</a></button>
             <% } %>
             <button class="button"><a href="/complaint/batch/<%=thisBatch.title%>/<%=thisBatch._id%>" style="color: white;">Complaint</a></button>
         </div>

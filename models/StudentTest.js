@@ -11,6 +11,7 @@ const studentTestSchema = new mongoose.Schema({
       questionId: { type: mongoose.Schema.Types.ObjectId, required: true,ref: 'Question' },
       selectedOption: { type: Number },
       isCorrect: String,
+      questionUrl:String
     }
   ],
 });

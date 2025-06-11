@@ -3,6 +3,8 @@ const router =  express.Router();
 const Batch = require('../models/Batch');
 const User = require('../models/User');
 
+const {isLoggedIn, saveRedirectUrl, isAdmin} = require('../middlewares/login')
+
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
@@ -16,14 +18,6 @@ const razorpay = new Razorpay({
       return next();
     }
     res.redirect('/user/login');
-  }
-
-
-  function isAdmin(req, res, next) {
-    if (req.isAuthenticated() && req.user.role === 'admin') {
-      return next();
-    }
-    res.render("./error/accessdenied.ejs");
   }
 
   const checkPurchasedBatch = (req, res, next) => {
@@ -114,5 +108,25 @@ router.post('/verify-payment', ensureAuthenticated, async (req, res) => {
     }
 });  
 
+//mobile route to purchase the batch
+router.get('/purchase/explore/user/:id',async (req, res) => {
+  if (req.user) {
+    req.logout((err) => {
+      if (err) return next(err);
+      res.redirect(`/purchase/explore/${req.params.id}`); 
+    });
+  } else {
+    res.redirect(`/purchase/explore/${req.params.id}`);
+  }
+});
+
+router.get('/purchase/explore/:id', saveRedirectUrl,isLoggedIn, async (req, res) => {
+    const batch = await Batch.findById(req.params.id);
+    res.render('batch/purchasethisBatch.ejs', {
+      batch,
+      email: req.user?.email,
+      keyId: process.env.rzp_key_id,
+    });
+});
 
 module.exports = router;
