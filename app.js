@@ -147,10 +147,12 @@ app.use("/",resourcerouter);
 const authRoutes = require("./routes/mobile/auth.js");
 const mobbatchRoutes = require("./routes/mobile/batch.js");
 const mobtestRoutes = require("./routes/mobile/test.js");
+
 // Routes
 app.use("/auth", authRoutes);
 app.use("/api/batches", mobbatchRoutes);
 app.use("/api/tests", mobtestRoutes);
+app.use("/api", require("./routes/mobile/quesOfTheDay"));
 
 app.get("/", async (req,res)=>{
   if ( req.isAuthenticated() && req.user.role === 'admin') {

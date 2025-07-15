@@ -12,7 +12,7 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ error: "Username and password required" });
   }
   try {
-    const user = new User({ email,username, role:"Student" });
+    const user = new User({ email,username, role:"student" });
     await User.register(user, password); // passport-local-mongoose method
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -23,7 +23,6 @@ router.post("/register", async (req, res) => {
 
 // Login user
 router.post("/login", (req, res, next) => {
-console.log("login hitted")
   passport.authenticate("local", (err, user, info) => {
     
     if (err) return next(err);

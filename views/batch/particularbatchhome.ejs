@@ -34,6 +34,7 @@
                 <button class="button" id="toggleButton">Add Announcement</button>
                 <button class="button"><a href="/update-batch/<%=thisBatch._id%>" style="color: white;">Update</a></button>
                 <button class="button"><a href="/upload/this/<%=thisBatch._id%>" style="color: white;">Add Content</a></button>
+                <button class="button"><a href="/api/ques/of/day/<%=thisBatch._id%>" style="color: white;">Ques Of Day</a></button>
             <% } %>
             <button class="button"><a href="/complaint/batch/<%=thisBatch.title%>/<%=thisBatch._id%>" style="color: white;">Complaint</a></button>
         </div>
@@ -65,7 +66,7 @@
                                             <button class="btn">Analysis</button>
                                         </a>   
                                     </div>
-                                    <%}%>
+                                <%}%>
                                 <br>
                             </div>
                           <% }); %>
