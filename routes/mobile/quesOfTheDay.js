@@ -111,7 +111,7 @@ router.post('/create/ques/of/the/day', upload.single("file"), async (req, res) =
       console.log(error);
       res.status(500).json({ message: 'Upload failed: ' + error.message });
     }
-  });
+  })
 
 router.get("/questions/today/all", async (req, res) => {
   const  studentId  = req.user.id;
