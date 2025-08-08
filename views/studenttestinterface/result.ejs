@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Result</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Test
+            Result</h1>
+
+        <div class="text-center mb-6">
+            <p class="text-xl font-semibold">Total Marks: <span
+                    class="text-blue-600">
+                    <%= totalMarks %>
+                </span></p>
+            <p class="text-xl font-semibold">Obtained Marks: <span
+                    class="text-green-600">
+                    <%= obtainedMarks %>
+                </span></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <% Object.keys(sections).forEach((section) => { %>
+            <div class="bg-gray-50 p-4 rounded-lg shadow">
+                <h2 class="text-xl font-bold text-center mb-4 text-indigo-600">
+                    <%= section %>
+                </h2>
+                <ul class="space-y-2 text-gray-700">
+                    <li><strong>Total Questions:</strong>
+                        <%= sections[section].total %>
+                    </li>
+                    <li><strong>Correct:</strong> <span class="text-green-600">
+                            <%= sections[section].correct %>
+                        </span></li>
+                    <li><strong>Incorrect:</strong> <span class="text-red-600">
+                            <%= sections[section].incorrect %>
+                        </span></li>
+                    <li><strong>Skipped:</strong> <span class="text-yellow-600">
+                            <%= sections[section].skipped %>
+                        </span></li>
+                    <li><strong>Correct Marks:</strong> +
+                        <%= sections[section].positive %>
+                    </li>
+                    <li><strong>Negative Marks:</strong> -
+                        <%= sections[section].negative %>
+                    </li>
+                </ul>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -112,105 +112,78 @@ await studentTest.save();
   
 
 //Route to render result
-router.get('/student/test/:id/result',ensureAuthenticated, async (req, res) => {
-   try{
+router.get('/student/test/:id/result', ensureAuthenticated, async (req, res) => {
+  try {
     const testId = req.params.id;
-    const studentId = req.user._id; // assuming the user session contains the student ID
-    // Fetch test data
-    const test = await Test.findById(testId).populate('questions');
-    // Fetch previously saved answers for this test by the student
-    const studentTest = await StudentTest.findOne({ studentId, testId });
-    const savedAnswers = studentTest.answers;
-    // Calculate total marks and counts
-    const totalQuestions = test.questions.length;
-    let correctCount = 0;
-    let incorrectCount = 0;
-    let skippedCount = 0;
+    const studentId = req.user._id;
 
-    savedAnswers.forEach(answer => {
-        if (answer.isCorrect === "not") {
-            skippedCount++; // Count it as skipped if there's no answer selected
-        } else if (answer.isCorrect === "yes") {
-            correctCount++; // Count it as correct if the answer is correct
-        } else if (answer.isCorrect === "no") {
-            incorrectCount++; // Count it as correct if the answer is correct
-        }
+    // Fetch the test and student answers
+    const test = await Test.findById(testId);
+    const studentTest = await StudentTest.findOne({ studentId, testId });
+
+    if (!studentTest) {
+      return res.send("Please Attempt The Test");
+    }
+
+    const savedAnswers = studentTest.answers;
+    const totalQuestions = test.questions.length;
+
+    // Determine section ranges
+    const physicsEnd = Math.floor(totalQuestions / 3);
+    const chemistryEnd = Math.floor((2 * totalQuestions) / 3);
+
+    // Map question IDs to their section
+    const questionSectionMap = {};
+    test.questions.forEach((q, index) => {
+      const qId = q._id.toString();
+      if (index < physicsEnd) {
+        questionSectionMap[qId] = 'Physics';
+      } else if (index < chemistryEnd) {
+        questionSectionMap[qId] = 'Chemistry';
+      } else {
+        questionSectionMap[qId] = 'Mathematics';
+      }
     });
 
-    const totalMarks = totalQuestions * 4; // Assuming each question is worth 4 marks
-    const obtainedMarks = studentTest ? studentTest.score : 0; // Fetch the obtained score
+    // Initialize section stats
+    const sections = {
+      Physics: { total: 0, correct: 0, incorrect: 0, skipped: 0, positive: 0, negative: 0 },
+      Chemistry: { total: 0, correct: 0, incorrect: 0, skipped: 0, positive: 0, negative: 0 },
+      Mathematics: { total: 0, correct: 0, incorrect: 0, skipped: 0, positive: 0, negative: 0 }
+    };
 
-    // Render the result page to get the HTML content
-    // const htmlContent = await new Promise((resolve, reject) => {
-    //     res.render('./studenttestinterface/test-result.ejs', {
-    //         test,
-    //         savedAnswers,
-    //         totalMarks,
-    //         obtainedMarks, // Pass obtained marks to the template
-    //         totalQuestions,
-    //         correctCount,
-    //         incorrectCount,
-    //         skippedCount,
-    //     }, (err, html) => {
-    //         if (err) reject(err);
-    //         else resolve(html);
-    //     });
-    // });
+    // Process each answer
+    savedAnswers.forEach(answer => {
+      const section = questionSectionMap[answer.questionId] || 'Unknown';
+      if (!sections[section]) return; // Ignore if section not mapped
 
-    // Create a PDF from the HTML content
-    // pdf.create(htmlContent).toBuffer(async (err, buffer) => {
-    //     if (err) return res.status(500).send('Error creating PDF.');
+      sections[section].total++;
 
-    //     // Send the PDF via email
-    //     try {
-    //         const transporter = nodemailer.createTransport({
-    //             service:'gmail',
-    //             host:'smtp.gmail.com',
-    //             secure:false,
-    //             port:587,
-    //             auth:{
-    //                  user:"lokeshbadgujjar401@gmail.com",
-    //                  pass:process.env.mailpass
-    //         }
-    //         });
+      if (answer.isCorrect === 'yes') {
+        sections[section].correct++;
+        sections[section].positive += 4;
+      } else if (answer.isCorrect === 'no') {
+        sections[section].incorrect++;
+        sections[section].negative += 1;
+      } else {
+        sections[section].skipped++;
+      }
+    });
 
-    //         const mailOptions = {
-    //             from: 'your-email@gmail.com',
-    //             to: req.user.email, // The student's email
-    //             subject: 'Your Test Results',
-    //             text: 'Please find attached your test results.',
-    //             attachments: [{
-    //                 filename: 'test-results.pdf',
-    //                 content: buffer,
-    //                 contentType: 'application/pdf'
-    //             }],
-    //         };
+    const totalMarks = totalQuestions * 4;
+    const obtainedMarks = studentTest.score;
 
-    //         await transporter.sendMail(mailOptions);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // });
-    if(!studentTest){
-        res.send("Please Attempt The Test")
-    }
-    else{
-        res.json(studentTest)
-        // res.render('./studenttestinterface/test-result.ejs', {
-        //     test,
-        //     savedAnswers,
-        //     totalMarks,
-        //     obtainedMarks,
-        //     totalQuestions,
-        //     correctCount,
-        //     incorrectCount,
-        //     skippedCount
-        // });
-    }
-   } catch(error){
-    console.log(error)
-    res.send(error)
-   }
+    res.render('studenttestinterface/result.ejs', {
+      totalMarks,
+      obtainedMarks,
+      sections
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
 });
+
 
 module.exports = router;
