@@ -11,7 +11,6 @@ const QuestionSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-   // Store the index (0-3) of the correct option
 });
 
 // Test Schema

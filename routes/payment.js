@@ -1,132 +1,187 @@
 const express = require("express");
-const router =  express.Router();
+const router = express.Router();
 const Batch = require('../models/Batch');
 const User = require('../models/User');
 
-const {isLoggedIn, saveRedirectUrl, isAdmin} = require('../middlewares/login')
+const { isLoggedIn, saveRedirectUrl, isAdmin } = require('../middlewares/login');
 
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
+// Razorpay instance
 const razorpay = new Razorpay({
   key_id: process.env.rzp_key_id,
   key_secret: process.env.rzp_key_secret,
-})
+});
 
-  function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/user/login');
+// Check authentication
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  return res.redirect('/user/login');
+}
+
+// Check if user purchased batch
+const checkPurchasedBatch = (req, res, next) => {
+  const { id } = req.params;
+
+  if (!req.user) {
+    return res.status(401).send("Please login first");
   }
 
-  const checkPurchasedBatch = (req, res, next) => {
-    const { id } = req.params;
-    if (req.user.purchasedBatches.includes(id)|| req.user.role === 'admin') {
-        return next();
-    } else {
-        return res.status(403).send('Access denied: You have not purchased this batch.');
-    }
+  if (req.user.role === 'admin' || req.user.purchasedBatches.includes(id)) {
+    return next();
+  }
+
+  return res.status(403).send('Access denied: Batch not purchased.');
 };
 
-//Route to show all batches
+// ======================
+// SHOW ALL BATCHES
+// ======================
 router.get('/showallbatches', ensureAuthenticated, async (req, res) => {
   try {
-      const allBatches = await Batch.find({});
-      const filteredBatches = allBatches.filter(batch => batch.amount > 0);
-      const email = req.user.email;
-      res.render('./batch/showallbatches.ejs', {
-          keyId: process.env.rzp_key_id,
-          allBatches: filteredBatches,
-          email
-      });
+    const allBatches = await Batch.find({});
+    const filteredBatches = allBatches.filter(batch => batch.amount > 0);
+
+    res.render('./batch/showallbatches.ejs', {
+      keyId: process.env.rzp_key_id,
+      allBatches: filteredBatches,
+      email: req.user.email
+    });
+
   } catch (err) {
-      console.error("Error fetching batches: ", err);
-      res.status(500).send('Server error');
+    console.error("Error fetching batches:", err.message);
+    res.status(500).send('Server error');
   }
 });
 
-
-  // Create Razorpay order on server-side
+// ======================
+// CREATE ORDER
+// ======================
 router.post('/create-order', ensureAuthenticated, async (req, res) => {
+  try {
     const { batchId, email } = req.body;
-  
-    // Fetch the selected batch from the database
+
     const batch = await Batch.findById(batchId);
-    
-    // Check if the batch exists
+
     if (!batch) {
-        return res.status(404).json({ error: 'Batch not found' });
+      return res.status(404).json({ error: 'Batch not found' });
     }
-  
+
     const options = {
-        amount: batch.amount * 100, // Convert amount to paise (e.g., 500 INR = 50000 paise)
-        currency: 'INR',
-        receipt: `receipt_${Math.floor(Math.random() * 1000000)}`,
+      amount: batch.amount * 100,
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`
     };
-  
-    try {
-        const order = await razorpay.orders.create(options);
-        res.json({ orderId: order.id, amount: order.amount, batchId, email });
-    } catch (error) {
-        console.error('Error creating Razorpay order:', error);
-        res.status(500).send(error);
-    }
-  });
 
-// Verify payment and enroll student in batch
+    const order = await razorpay.orders.create(options);
+
+    res.json({
+      success: true,
+      orderId: order.id,
+      amount: order.amount,
+      batchId,
+      email
+    });
+
+  } catch (error) {
+    console.error("Order creation failed:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create order"
+    });
+  }
+});
+
+// ======================
+// VERIFY PAYMENT
+// ======================
 router.post('/verify-payment', ensureAuthenticated, async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, batchId, email } = req.body;
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      batchId,
+      email
+    } = req.body;
 
-    // Verify the payment signature
-    const generated_signature = crypto.createHmac('sha256',process.env.rzp_key_secret )
-        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-        .digest('hex');
-
-    const isValidPayment = generated_signature === razorpay_signature;
-
-    if (isValidPayment) {
-        try {
-            // Find the student by email or however you identify them in your system
-            const user = await User.find({ email: email });
-            // Check if the student exists
-            if (!user) {
-                return res.status(404).json({ success: false, message: "Student not found" });
-            }
-            // Enroll student in the batch (database logic here)
-            await User.updateOne(
-              { email: email },
-              { $addToSet: { purchasedBatches: batchId } }
-          );
-            res.status(200).json({ success: true, message: "Enrollment successful" });
-        } catch (error) {
-            console.error("Error enrolling student:", error);
-            res.status(500).json({ success: false, message: "Enrollment failed, please try again later." });
-        }
-    } else {
-        res.status(400).json({ success: false, message: "Invalid payment signature" });
+    // Security check: required fields
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Incomplete data" });
     }
-});  
+    const generated_signature = crypto
+      .createHmac("sha256", process.env.rzp_key_secret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
 
-//mobile route to purchase the batch
-router.get('/purchase/explore/user/:id',async (req, res) => {
+    if (generated_signature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Payment signature mismatch"
+      });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+    await User.updateOne(
+      { email },
+      { $addToSet: { purchasedBatches: batchId } }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Payment verified & enrollment successful"
+    });
+
+  } catch (error) {
+    console.error("Payment verification error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Payment verification failed"
+    });
+  }
+});
+
+// ======================
+// MOBILE ROUTE PURCHASE
+// ======================
+router.get('/purchase/explore/user/:id', saveRedirectUrl, isLoggedIn, async (req, res) => {
   if (req.user) {
-    req.logout((err) => {
+    req.logout(err => {
       if (err) return next(err);
-      res.redirect(`/purchase/explore/${req.params.id}`); 
+      return res.redirect(`/purchase/explore/${req.params.id}`);
     });
   } else {
     res.redirect(`/purchase/explore/${req.params.id}`);
   }
 });
 
-router.get('/purchase/explore/:id', saveRedirectUrl,isLoggedIn, async (req, res) => {
+// ======================
+// PURCHASE PAGE ROUTE
+// ======================
+router.get('/purchase/explore/:id', saveRedirectUrl, isLoggedIn, async (req, res) => {
+  try {
     const batch = await Batch.findById(req.params.id);
+
+    if (!batch) {
+      return res.status(404).send("Batch not found");
+    }
+
     res.render('batch/purchasethisBatch.ejs', {
       batch,
       email: req.user?.email,
-      keyId: process.env.rzp_key_id,
+      keyId: process.env.rzp_key_id
     });
+
+  } catch (error) {
+    console.error("Batch fetch failed:", error.message);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;

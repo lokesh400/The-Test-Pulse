@@ -167,43 +167,9 @@ app.get("/", async (req,res)=>{
   }
 })
 
-app.get('/api/test', (req,res)=>{
-  res.json({message:"backend connected succesfully"})
-})
-
 app.get('/api/user', async (req,res) => {
   const user = await User.findById(req.user.id);
   res.json(user);
 })
-
-const axios = require('axios');
-
-app.get('/send/sms', async(req,res)=>{
-  async function sendSMS(phone, message) {
-  try {
-    const res = await axios.post('https://www.fast2sms.com/dev/bulkV2', {
-      route: 'q', // for promotional use 'p', for transactional 'q'
-      message: message,
-      language: 'english',
-      flash: 0,
-      numbers: phone, // comma-separated if multiple
-    }, {
-      headers: {
-        'authorization': `${process.env.SMS}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    console.log('SMS sent:', res.data);
-  } catch (err) {
-    console.error('Failed to send SMS:', err.response?.data || err.message);
-  }
-}
- await sendSMS('9315796489', 'Hello, your class starts in 10 minutes!');
-
- res.send("sent")
-
-})
-
 
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

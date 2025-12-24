@@ -10,90 +10,134 @@ const StudentTest = require("../../models/StudentTest")
 const router = express.Router()
 
 router.get("/:id", async (req, res) => {
-  const test = await Test.findById(req.params.id);
-  res.json(test);
-});
-
-router.post('/:testId/submit', async (req, res) => {
-
-const testId = req.params.testId;
-const studentId = req.user._id; 
-let score = 0;
-const answers = [];
-const {answer} = req.body || {};
-const solution = answer;
-const keys = Object.keys(solution);
-const test = await Test.findById(testId);
-if (!test || !test.questions) {
-    return res.status(400).send('Test not found.');
-}
-
-const totalQuestions = test.questions.length; // Total number of questions
-const totalMarks = totalQuestions * 4; // Total marks possible
-Object.entries(answer).forEach(function([key, value]) {
-    const question = test.questions.find(q => q._id.toString() === key);
-    if (question) {
-        if (value.toString() === question.correctAnswer) {
-            score += 4; // Assuming each question is worth 4 points
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "yes",
-                questionUrl:question.questionText
-            });
-        } 
-        else if (value.toString() === "-1") {
-            score += 0;
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "not",
-                questionUrl:question.questionText
-            });
-        } 
-        else {
-            score -= 1;
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "no",
-                questionUrl:question.questionText
-            });
-        }
+  const testId = req.params.id;
+      const studentId = req.user._id
+      const studentTest = await StudentTest.findOne({ studentId, testId });
+      const test = await Test.findById(testId);
+      const Type = test.testMode;
+      if(studentTest && req.user.role === 'student' && Type === 'Real'){
+          res.json({message:"Test Already Taken"});
+      }
+     else {
+      const test = await Test.findById(req.params.id);
+      res.json(test);
     }
 });
-const questionIds = answers.map(answer => answer.questionId);
 
-const filteredQuestions = test.questions
-  .filter(question => !questionIds.includes(question._id.toString()))
-  .map(question => ({
-    id: question._id.toString(),
-    ques: question.questionText // or whatever field contains the text
-  }));
+router.post("/:testId/submit", async (req, res) => {
+  try {
+    const { testId } = req.params;
+    const studentId = req.user._id;
+    const { answer = {} } = req.body;
 
+    const test = await Test.findById(testId);
 
-for(let i=0;i<filteredQuestions.length;i++){
-    answers.push({
-        questionId: filteredQuestions[i].id,
+    if (!test || !test.questions) {
+      return res.status(404).json({ error: "Test not found" });
+    }
+
+    let score = 0;
+    let correct = 0;
+    let incorrect = 0;
+    let skipped = 0;
+
+    const answers = [];
+
+    // evaluate submitted answers
+    for (const [questionId, selectedOption] of Object.entries(answer)) {
+      const q = test.questions.find(q => q._id.toString() === questionId);
+      if (!q) continue;
+      const cloudUrl = q.Question || null;
+      const correctAnswer = q.correctAnswer;
+      const isSkipped = selectedOption.toString() === "-1";
+      if (isSkipped) {
+        skipped++;
+        answers.push({
+          questionId,
+          selectedOption,
+          isCorrect: "not",
+          correctAnswer,
+          questionUrl: cloudUrl
+        });
+      } 
+      else if (selectedOption.toString() === correctAnswer.toString()) {
+        correct++;
+        score += 4;
+        answers.push({
+          questionId,
+          selectedOption,
+          isCorrect: "yes",
+          correctAnswer,
+          questionUrl: cloudUrl
+        });
+      } 
+      else {
+        incorrect++;
+        score -= 1;
+        answers.push({
+          questionId,
+          selectedOption,
+          isCorrect: "no",
+          correctAnswer,
+          questionUrl: cloudUrl
+        });
+      }
+    }
+    // detect unanswered questions
+    const submittedIds = Object.keys(answer);
+    const unanswered = test.questions.filter(
+      q => !submittedIds.includes(q._id.toString())
+    );
+
+    unanswered.forEach(q => {
+      skipped++;
+      answers.push({
+        questionId: q._id.toString(),
         selectedOption: -1,
         isCorrect: "not",
-        questionUrl: filteredQuestions[i].ques
+        correctAnswer: q.correctAnswer,
+        questionUrl: q.imageUrl || null
+      });
     });
-}
 
-const alreadyTest = await StudentTest.findOne({ studentId, testId });
-if(alreadyTest){
-    await StudentTest.deleteOne({ _id: alreadyTest._id });
-}
+    // prevent duplicate attempts
+    await StudentTest.findOneAndDelete({ studentId, testId });
+
+    const totalQuestions = test.questions.length;
+    const totalMarks = totalQuestions * 4;
+
     const studentTest = new StudentTest({
-        studentId: studentId,  // Student's ObjectId
-        testId: testId,        // Test's ObjectId
-        score: score,          // Score obtained by the student
-        answers: answers       // Array of answers (questions and selected options)
-    })
-await studentTest.save();
-   res.status(200).json({ message: "Submission successful" });
+      studentId,
+      testId,
+      answers,
+      score,
+      correct,
+      incorrect,
+      skipped,
+      totalMarks
+    });
+
+    // console.log(studentTest)
+
+    await studentTest.save();
+
+
+
+    res.status(200).json({
+      message: "Submission successful",
+      score,
+      correct,
+      incorrect,
+      skipped,
+      totalMarks
+    });
+
+  } catch (error) {
+    console.error("Submit error:", error);
+    res.status(500).json({ error: "Server failure" });
+  }
 });
+
 
 // to render student result
 router.get('/report/:id', async (req, res) => {
@@ -101,12 +145,21 @@ router.get('/report/:id', async (req, res) => {
      const testId = req.params.id;
      const studentId = req.user._id; // assuming the user session contains the student ID
      const test = await Test.findById(testId).populate('questions');
-     const studentTest = await StudentTest.findOne({ studentId, testId });
+     var studentTest = await StudentTest.findOne({ studentId, testId });
+
         if (!studentTest) {
             return res.status(404).json({ error: 'Test attempt not found' });
         }
 
-        // Calculate scores
+        for (let i = 0; i < studentTest.answers.length; i++) {
+            const que = await Question.findById("6790558af83a021203013c48");
+            console.log(que)
+            if (que) {
+                studentTest.answers[i].questionUrl = que.Question;
+            }
+        }  
+
+        // console.log(studentTest)
         const totalQuestions = test.questions.length;
         let correctCount = 0;
         let incorrectCount = 0;

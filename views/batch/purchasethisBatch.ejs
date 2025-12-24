@@ -26,7 +26,7 @@
         <div class="main-content">
         
             <div class="enrolled-courses">
-               <h1>All Batches</h1>
+               <h1>Purchase This Batch</h1>
               <div class="unique-container">
 
               <div class="unique-card-container">
@@ -67,7 +67,7 @@
                   <%  
                   const idd = batch._id;
                   const purchased = currUser.purchasedBatches.includes(idd);
-              %>
+                   %>
               
               <% if (purchased || currUser.role === 'admin') { %>
                   <!-- Show Study button if purchased or admin -->
@@ -75,11 +75,20 @@
                       <a style="text-decoration: none; color: white;" href="/showbatch/<%= batch._id %>">Study</a>
                   </button>
               <% } else { %>
-                  <!-- Show Pay button if not purchased and not admin -->
+
+                <% if(batch.amount === 0) { %>
+                  <form action="/free/<%= batch._id %>" method="POST">
+                    <button class="unique-buy-now" style="width: 100px;">
+                        Enroll For Free
+                    </button>
+                  </form>
+                <% } else { %>
+
                   <button class="pay-button unique-buy-now" 
                           onclick="initiatePayment('<%= batch._id %>', '<%= batch.amount * 100 %>', '<%= email %>')">
                       Pay ₹<%= batch.amount %>
                   </button>
+              <% } %>
               <% } %>
               
                            

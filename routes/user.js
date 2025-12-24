@@ -29,10 +29,7 @@ router.post('/signup', async (req, res) => {
     if(password==confirmpassword&&otp==user.otp){
         const newUser = new User({name,role, email, username,contactNumber });
     try {
-        // Attempt to register the new user
         const registeredUser = await User.register(newUser, password);
-        //sendimg greeting mail
-
         const transporter = nodemailer.createTransport({
             service:'gmail',
             host:'smtp.gmail.com',
@@ -43,7 +40,6 @@ router.post('/signup', async (req, res) => {
              pass:process.env.mailpass
             }
            });
-        
            try{
               const mailOptions = await transporter.sendMail({
                 from:"lokeshbadgujjar401@gmail.com",
@@ -61,11 +57,9 @@ router.post('/signup', async (req, res) => {
                 }
             })
         }
-        // Redirect to login page after successful registration
         res.redirect('/user/login');
     } catch (error) {
         console.error(error);
-        // Render signup page with an error message
         req.flash('error_msg', error.message);
         res.render("./users/signup.ejs");
     }

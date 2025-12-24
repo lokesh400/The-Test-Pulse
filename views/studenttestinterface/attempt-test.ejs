@@ -1,286 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Attempt Test</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="/styles/studentTestInterface.css">
+<meta charset="UTF-8">
+<title>NTA CBT Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#f2f2f2}
+
+/* HEADER */
+.header{
+  height:60px;background:#0b3c6d;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px
+}
+.timer{
+  background:#fff;color:#0b3c6d;
+  padding:6px 14px;border-radius:4px;font-weight:bold
+}
+
+/* STATUS */
+.status-bar{
+  display:flex;flex-wrap:wrap;gap:12px;
+  background:#fff;padding:8px 12px;
+  border-bottom:1px solid #ccc;
+  font-size:13px;font-weight:bold
+}
+
+/* LAYOUT */
+.wrapper{display:flex;height:calc(100vh - 108px)}
+.left{flex:1;background:#fff;padding:12px;overflow:auto}
+.right{
+  width:360px;background:#f9f9f9;border-left:2px solid #ccc;
+  padding:10px;overflow:auto
+}
+
+/* QUESTION */
+.question-title{font-weight:bold;margin-bottom:10px}
+.question-img{max-width:100%;border:1px solid #ccc;padding:10px}
+
+/* OPTIONS */
+.option{
+  border:1px solid #999;padding:12px;margin:8px 0;
+  cursor:pointer;border-radius:4px
+}
+.option.selected{
+  background:#e6f0ff;border:2px solid #2b6cb0
+}
+
+/* BUTTONS */
+.button-bar{
+  margin-top:15px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px
+}
+.btn{
+  padding:10px 14px;
+  border:none;font-weight:bold;
+  cursor:pointer;border-radius:4px
+}
+.save{background:#4caf50;color:#fff}
+.clear{background:#fff;border:1px solid #999}
+.save-review{background:#f0ad4e;color:#fff}
+.review-next{background:#337ab7;color:#fff}
+
+/* SECTION */
+.section-tabs{display:flex;gap:5px;margin-bottom:10px}
+.section-tabs button{
+  flex:1;padding:8px;font-weight:bold;border:none;
+  cursor:pointer;background:#ddd;border-radius:4px
+}
+.section-tabs button.active{background:#0b3c6d;color:#fff}
+
+/* LEGEND */
+.legend div{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:6px;font-size:13px;font-weight:bold
+}
+.box{width:22px;height:22px;border-radius:4px}
+.nv{background:#ddd}
+.na{background:#e74c3c}
+.a{background:#2ecc71}
+.r{background:#8e44ad}
+.ra{background:#8e44ad;position:relative}
+.ra::after{
+  content:"";width:7px;height:7px;
+  background:#2ecc71;border-radius:50%;
+  position:absolute;bottom:2px;right:2px
+}
+
+/* PALETTE */
+.palette{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px
+}
+.palette button{
+  padding:8px;border:none;font-weight:bold;
+  cursor:pointer;color:#fff;border-radius:4px
+}
+.palette .nv{color:#000}
+
+/* SUBMIT */
+.submit{
+  width:100%;margin-top:12px;
+  background:#4caf50;color:#fff;
+  border:none;padding:12px;
+  font-size:16px;border-radius:4px
+}
+
+/* ---------------- MOBILE ---------------- */
+@media(max-width:768px){
+
+  .wrapper{
+    flex-direction:column;
+    height:auto
+  }
+
+  .right{
+    width:100%;
+    border-left:none;
+    border-top:2px solid #ccc
+  }
+
+  .palette{
+    grid-template-columns:repeat(10,1fr);
+    overflow-x:auto
+  }
+
+  .palette button{
+    min-width:38px
+  }
+
+  .button-bar{
+    flex-direction:column
+  }
+
+  .btn{
+    width:100%
+  }
+
+  .option{
+    font-size:15px
+  }
+
+  .status-bar{
+    font-size:12px
+  }
+}
+
+/* VERY SMALL */
+@media(max-width:480px){
+  .timer{font-size:14px}
+  .question-title{font-size:14px}
+}
+</style>
 </head>
+
 <body>
 
-  <div id="clickToStartDiv">
-    <section id="heading-div-main">
-      <h3><%= test.title %></h3>
-    </section>
-    <button id="clickToStart">Start Test</button>
-  </div>
-  
+<div class="header">
+  <div><%= test.title %></div>
+  <div class="timer" id="timer">00:00:00</div>
+</div>
 
-  <div class="sidebar" id="side" style="display: none; overflow-y: auto;">
-    <div class="hamburger" id="toggleSidebarMain" onclick="toggleSidebar()">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
-    </div>
-    <h5 id="timeRemaining"><%= test.duration %></h5>
-    <div id="counters">
-      <p>Attempted: <span id="attemptedCount">0</span></p>
-      <p>Skipped: <span id="skippedCount">0</span></p>
-      <p>Not Attempted: <span id="notAttemptedCount"><%= test.questions.length %></span></p>
-    </div>
-    <div id="questionList">
-      <% test.questions.forEach((question, index) => { %>
-        <button type="button" class="sidebar-button" id="sidebar-button-<%= index %>" onclick="showQuestion(<%= index %>)"><%= index + 1 %></button>
-      <% }) %>
-    </div>
-  </div>
+<div class="status-bar">
+  <div>Attempted: <span id="attemptedCnt">0</span></div>
+  <div>Not Answered: <span id="skippedCnt">0</span></div>
+  <div>Marked: <span id="reviewCnt">0</span></div>
+  <div>Not Visited: <span id="notVisitedCnt"><%= test.questions.length %></span></div>
+</div>
 
-  <div class="content" id="testContent">
-    <div class="title">
-      <h3><%= test.title %></h3>
-      <button class="btn submit" type="button" onclick="submitTest()">Submit</button>
-      <div class="hamburger" id="toggleSidebarMain" onclick="toggleSidebar()">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
-    </div>
-    </div>
+<div class="wrapper">
 
-    <form id="testForm" action="/student/test/<%= test._id %>" method="POST">
-      <% test.questions.forEach((question, index) => { %>
-        <div class="question-block" id="question-<%= index %>" data-value="<%= question._id %>">
-          <div id="questiontype-<%= index %>"  style="display: none;" data-value="<%= question.questionType %>" ></div>
-          <h3>Question <%= index + 1 %>:</h3>
-          <img id="ques-img" src="<%= question.questionText %>" alt="">
-          <input type="hidden" name="questionType[<%= index %>]" value="<%= question.questionType %>"> <!-- Add this line -->
-          <div>
-            <% if (question.questionType === 'mcq') { %>
-              <% question.options.forEach((option, optionIndex) => { %>
-                <div class="radio-input">
-                  <input type="radio" id="option1" name="answers[<%= index %>]" value="<%= optionIndex %>">
-                  <div class="radio-option" data-value="<%= optionIndex %>">
-                    <label for="option1"><%= option %></label>
-                  </div>
-                </div>
-                
-              <% }) %>
-            <% } else if (question.questionType === 'numerical') { %>
-              <div class="numerical-input">
-                <input id="numerical-ipt" type="number" name="answers[<%= index %>]" placeholder="Enter number" />
-              </div>
-            <% } %>
-          </div>
-          <footer class="footer">
-            <button type="button" class="btn save-next" onclick="saveAndNext(<%= index %>)">Save & Next</button>
-            <button type="button" class="btn clear" onclick="clearSelection(<%= index %>)">Clear Selection</button>
-          </footer>
-        </div>
-      <% }) %>
-    </form>
-    
+<div class="left">
+<form id="testForm" method="POST" action="/student/test/<%= test._id %>">
+
+<%
+const total = test.questions.length;
+const oneThird = Math.ceil(total/3);
+const twoThird = Math.ceil(2*total/3);
+%>
+
+<% test.questions.forEach((q,i)=>{ 
+  const section = i < oneThird ? 'Physics' : i < twoThird ? 'Chemistry' : 'Mathematics';
+%>
+
+<div class="question"
+     id="q-<%= i %>"
+     data-qid="<%= q._id %>"
+     data-section="<%= section %>"
+     style="display:none">
+
+  <div class="question-title">
+    Question <%= i+1 %>
   </div>
 
-  <script>
+  <img class="question-img" src="<%= q.questionText %>">
 
+  <% q.options.forEach((op,j)=>{ %>
+    <div class="option" onclick="selectOpt(<%= i %>,<%= j %>)"><%= op %></div>
+  <% }) %>
 
-    //  const inputField = document.getElementById('numerical-ipt');
-    //  inputField.addEventListener('input', (event) => {  
-    //  inputField.value = event.target.placeholder;
-    // });
+  <input type="hidden" id="ans-<%= i %>">
 
+  <div class="button-bar">
+    <button type="button" class="btn save" onclick="saveNext(<%= i %>)">Save & Next</button>
+    <button type="button" class="btn clear" onclick="clearAns(<%= i %>)">Clear</button>
+    <button type="button" class="btn save-review" onclick="saveReview(<%= i %>)">Save & Mark</button>
+    <button type="button" class="btn review-next" onclick="reviewNext(<%= i %>)">Mark & Next</button>
+  </div>
 
-    let totalTime = <%= test.time %> * 60;
-    let timerInterval;
-    let attemptedCount = 0;
-    let skippedCount = 0;
-    let notAttemptedCount = <%= test.questions.length %>;
-  
-    function updateCounters() {
-      document.getElementById('attemptedCount').textContent = attemptedCount;
-      document.getElementById('skippedCount').textContent = skippedCount;
-      document.getElementById('notAttemptedCount').textContent = notAttemptedCount;
-    }
-  
-    function startTimer() {
-      timerInterval = setInterval(() => {
-        if (totalTime <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('testForm').submit();
-          alert('Time is up! Your test has been submitted.');
-        } else {
-          totalTime--;
-          const minutes = Math.floor(totalTime / 60);
-          const seconds = totalTime % 60;
-          document.getElementById('timeRemaining').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-      }, 1000);
-    }
-  
-    function showQuestion(index) {
-      hideAllQuestions();
-      document.getElementById(`question-${index}`).classList.add('active');
-    }
-  
-    function hideAllQuestions() {
-      document.querySelectorAll('.question-block').forEach(question => question.classList.remove('active'));
-    }
-  
-    var solution = {};  // Initialize the solution object
+</div>
+<% }) %>
 
-function saveAndNext(index) {
-  const question = document.getElementById(`question-${index}`);
-  const dataValue = question.dataset.value;
-  const questiontype = document.getElementById(`questiontype-${index}`);
-  let selectedOption;
+</form>
+</div>
 
-  if (questiontype.dataset.value === "numerical") {
-    const option = document.querySelector(`input[name="answers[${index}]"]`);
-    selectedOption = option ? option.value : null;
-  } else {
-    const option = document.querySelector(`input[name="answers[${index}]"]:checked`);
-    selectedOption = option ? option.value : null;
-  }
+<div class="right">
 
-  const sidebarButton = document.getElementById(`sidebar-button-${index}`);
+<div class="section-tabs">
+  <button onclick="switchSection('Physics',this)">Physics</button>
+  <button onclick="switchSection('Chemistry',this)">Chemistry</button>
+  <button onclick="switchSection('Mathematics',this)">Maths</button>
+</div>
 
-  if (selectedOption) {
-    // Update solution and mark question as answered
-    solution[dataValue] = selectedOption;
-    attemptedCount++;
-    notAttemptedCount--;
-    sidebarButton.classList.remove('skipped');
-    sidebarButton.classList.add('answered');
-  } else {
-    // Mark question as skipped and move to next
-    solution[dataValue] = "-1";
-    if (!sidebarButton.classList.contains('skipped')) {
-      skippedCount++;
-      notAttemptedCount--;
-    }
-    sidebarButton.classList.remove('answered');
-    sidebarButton.classList.add('skipped');
-  }
+<div class="legend">
+  <div><div class="box nv"></div> Not Visited</div>
+  <div><div class="box na"></div> Not Answered</div>
+  <div><div class="box a"></div> Answered</div>
+  <div><div class="box r"></div> Marked</div>
+  <div><div class="box ra"></div> Ans + Marked</div>
+</div>
 
-  // Update counters
-  updateCounters();
+<div class="palette">
+<% test.questions.forEach((q,i)=>{ 
+  const sec = i < oneThird ? 'Physics' : i < twoThird ? 'Chemistry' : 'Mathematics';
+%>
+<button id="p-<%= i %>" class="nv" data-section="<%= sec %>"
+        onclick="showQ(<%= i %>)"><%= i+1 %></button>
+<% }) %>
+</div>
 
-  // Navigate to the next question or loop back to the first
-  if (index + 1 < <%= test.questions.length %>) {
-    showQuestion(index + 1);
-  } else {
-    showQuestion(0);  // Loop back to the first question
-  }
+<button class="submit" onclick="submitTest()">SUBMIT</button>
+</div>
+</div>
+
+<script>
+const totalQ = <%= test.questions.length %>;
+let cur=0;
+let time=<%= test.time %>*60;
+let state=Array(totalQ).fill("nv");
+let solution={};
+
+/* ⏱ Accurate Time Tracking */
+let questionTime={};
+let currentQIndex=null;
+let currentQStart=null;
+
+/* Timer */
+setInterval(()=>{
+  if(time<=0) submitTest();
+  const h=String(Math.floor(time/3600)).padStart(2,'0');
+  const m=String(Math.floor((time%3600)/60)).padStart(2,'0');
+  const s=String(time%60).padStart(2,'0');
+  timer.innerText=`${h}:${m}:${s}`;
+  time--;
+},1000);
+
+/* Counts */
+function updateCounts(){
+  attemptedCnt.innerText=state.filter(x=>x==="a").length;
+  skippedCnt.innerText=state.filter(x=>x==="na").length;
+  reviewCnt.innerText=state.filter(x=>x==="r"||x==="ra").length;
+  notVisitedCnt.innerText=state.filter(x=>x==="nv").length;
 }
 
-
-  
-    function skipQuestion(index) {
-      const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-      if (!sidebarButton.classList.contains('skipped')) {
-        skippedCount++;
-        notAttemptedCount--;
-      }
-      sidebarButton.classList.remove('answered');
-      sidebarButton.classList.add('skipped');
-      updateCounters();
-  
-      if (index + 1 < <%= test.questions.length %>) {
-        showQuestion(index + 1);
-      } else {
-        showQuestion(0);
-      }
-    }
-  
-    function clearSelection(index) {
-      document.querySelectorAll(`input[name="answers[${index}]"]`).forEach(radio => (radio.checked = false));
-      const sidebarButton = document.getElementById(`sidebar-button-${index}`);
-      if (sidebarButton.classList.contains('answered')) {
-        attemptedCount--;
-        notAttemptedCount++;
-      } else if (sidebarButton.classList.contains('skipped')) {
-        skippedCount--;
-        notAttemptedCount++;
-      }
-      sidebarButton.classList.remove('answered');
-      sidebarButton.classList.remove('skipped');
-      updateCounters();
-    }
-  
-    function submitTest() {
-      const unansweredQuestions = <%= test.questions.length %> - attemptedCount - skippedCount;
-      var form = document.getElementById('testForm');
-  
-
-  for (var key in solution) {
-    if (solution.hasOwnProperty(key)) {
-      var hiddenField = document.createElement("input");
-      hiddenField.type = "hidden";
-      hiddenField.name = "solution[" + key + "]"; // This will send solution data as an array
-      hiddenField.value = solution[key];
-
-      // Append the hidden field to the form
-      form.appendChild(hiddenField);
-    }
+/* Show Question + Time */
+function showQ(i){
+  if(currentQIndex!==null){
+    const spent=Math.floor((Date.now()-currentQStart)/1000);
+    questionTime[currentQIndex]=(questionTime[currentQIndex]||0)+spent;
   }
-    form.submit();   
-    }
-  
-    document.getElementById("clickToStart").addEventListener("click", function() {
-      enterFullscreen();
-      startTimer();
-      document.getElementById("clickToStartDiv").style.display = "none";
-      document.getElementById("testContent").style.display = "block";
-      document.getElementById("side").style.display = "block";
-    });
-
-
-    function toggleSidebar() {
-    const sidebar = document.getElementById("side");
-    sidebar.classList.toggle("open"); // Toggle the open class
+  document.querySelectorAll(".question").forEach(q=>q.style.display="none");
+  document.getElementById("q-"+i).style.display="block";
+  currentQIndex=i;
+  currentQStart=Date.now();
+  if(state[i]==="nv") state[i]="na";
+  updateUI();
 }
 
-function closeSidebar() {
-    const sidebar = document.getElementById("side");
-    sidebar.classList.remove("open"); // Remove the open class
+function selectOpt(i,j){
+  document.querySelectorAll(`#q-${i} .option`).forEach(o=>o.classList.remove("selected"));
+  document.querySelectorAll(`#q-${i} .option`)[j].classList.add("selected");
+  document.getElementById("ans-"+i).value=j;
 }
 
-    function enterFullscreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) elem.requestFullscreen();
-      else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
-      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-      else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-    }
-  
-    document.addEventListener("fullscreenchange", function() {
-      if (!document.fullscreenElement) {
-        document.getElementById('testForm').submit();
-      }
-    });
+function saveNext(i){
+  const v=ans(i);
+  state[i]=v!==""?"a":"na";
+  solution[i]=v!==""?v:-1;
+  nextQ();
+}
 
-    // JavaScript to toggle radio button selection when clicking on the option div
-document.querySelectorAll('.radio-option').forEach(function(option) {
-  option.addEventListener('click', function() {
-    const radioInput = this.previousElementSibling; // Get the corresponding radio input
-    radioInput.checked = true; // Check the radio input when the option div is clicked
-    // Update the appearance of other options
-    document.querySelectorAll('.radio-input input[type="radio"]').forEach(function(input) {
-      const optionDiv = input.nextElementSibling; // Get the associated option div
-      if (input !== radioInput) {
-        optionDiv.style.backgroundColor = ''; // Reset the background color for unselected options
-        optionDiv.style.borderColor = '#ccc'; // Reset border color
-      }
-    });
-    // Change the selected option style
-    this.style.backgroundColor = '#f0f8ff';
-    this.style.borderColor = '#007bff';
+function saveReview(i){
+  const v=ans(i);
+  state[i]=v!==""?"ra":"r";
+  solution[i]=v!==""?v:-1;
+  nextQ();
+}
+
+function reviewNext(i){
+  state[i]="r";
+  solution[i]=-1;
+  nextQ();
+}
+
+function clearAns(i){
+  document.getElementById("ans-"+i).value="";
+  state[i]="na";
+  updateUI();
+}
+
+function nextQ(){ if(cur+1<totalQ) showQ(++cur); }
+function ans(i){ return document.getElementById("ans-"+i).value; }
+
+function switchSection(sec,btn){
+  document.querySelectorAll(".section-tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".palette button").forEach(b=>{
+    b.style.display=b.dataset.section===sec?"block":"none";
   });
-});
+  const q=[...document.querySelectorAll(".question")]
+          .find(x=>x.dataset.section===sec);
+  if(q) showQ(Number(q.id.split("-")[1]));
+}
 
-  
-    showQuestion(0);
-  </script>
-  
-     
+function updateUI(){
+  state.forEach((s,i)=>document.getElementById("p-"+i).className=s);
+  updateCounts();
+}
+
+/* Submit */
+function submitTest(){
+  if(currentQIndex!==null){
+    const spent=Math.floor((Date.now()-currentQStart)/1000);
+    questionTime[currentQIndex]=(questionTime[currentQIndex]||0)+spent;
+  }
+  const form=document.getElementById("testForm");
+  Object.entries(solution).forEach(([i,v])=>{
+    const qDiv=document.getElementById("q-"+i);
+    const qid=qDiv.dataset.qid;
+
+    const a=document.createElement("input");
+    a.type="hidden";a.name=`solution[${qid}]`;a.value=v;
+    form.appendChild(a);
+
+    const t=document.createElement("input");
+    t.type="hidden";t.name=`timeSpent[${qid}]`;t.value=questionTime[i]||0;
+    form.appendChild(t);
+  });
+  form.submit();
+}
+
+/* Init Physics */
+(function(){
+  const btn=document.querySelector(".section-tabs button");
+  switchSection("Physics",btn);
+})();
+</script>
+
 </body>
 </html>

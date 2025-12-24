@@ -11,6 +11,8 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const { error } = require("console");
 
+const {saveRedirectUrl} = require('../middlewares/login');
+
 cloudinary.config({
     cloud_name:process.env.cloud_name, 
     api_key:process.env.api_key, 
@@ -71,12 +73,12 @@ const checkPurchasedBatch = (req, res, next) => {
 };
 
   //ADMIN ROUTE TO CREATE NEW BATCH
-router.get('/admin/createnewbatch', ensureAuthenticated,isAdmin,async (req, res) => {
+router.get('/admin/createnewbatch',saveRedirectUrl, ensureAuthenticated,isAdmin,async (req, res) => {
       res.render('./batch/createbatchindex.ejs');
   });
 
 // Post request of above route
-router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("file"), async (req, res) => {
+router.post('/admin/create/batch',saveRedirectUrl,ensureAuthenticated,isAdmin, upload.single("file"), async (req, res) => {
     try {
      const {name,grade,tag,description,amount} = req.body;
      const result = await Upload.uploadFile(req.file.path);
@@ -106,13 +108,13 @@ router.post('/admin/create/batch',ensureAuthenticated,isAdmin, upload.single("fi
   });  
 
   //Route to show all free batches
-router.get('/showfreebatches',ensureAuthenticated, async (req, res) => {
+router.get('/showfreebatches',saveRedirectUrl, ensureAuthenticated, async (req, res) => {
     const allBatches = await Batch.find({amount:"0"}); // Fetch available batches from database
     res.render('./batch/freebatch.ejs', { allBatches });
   });    
    
 // show a particular requested batch
-router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
+router.get('/showbatch/:id',saveRedirectUrl, ensureAuthenticated, checkPurchasedBatch, async (req, res) => {
   const { id } = req.params;
   try {
       const thisBatch = await Batch.findById(id);
@@ -127,14 +129,14 @@ router.get('/showbatch/:id', ensureAuthenticated, checkPurchasedBatch, async (re
 });
 
 // Route to include tests in a batch
-router.get('/update-batch/:id',ensureAuthenticated, async (req, res) => {
+router.get('/update-batch/:id',saveRedirectUrl,ensureAuthenticated, async (req, res) => {
     const {id} = req.params;
     const tests = await Test.find();
     res.render('./batch/createbatch.ejs',{ tests,id });
   });
 
 //Post route to include a test in batch
-router.post('/create/:testId/:batchId',ensureAuthenticated,isAdmin, async (req, res) => {
+router.post('/create/:testId/:batchId',saveRedirectUrl,ensureAuthenticated,isAdmin, async (req, res) => {
     try {
       let { testId, batchId } = req.params; // Extracting id and name from params
       const newte = await Batch.findById(batchId); // Find the batch by title
@@ -157,7 +159,7 @@ router.post('/create/:testId/:batchId',ensureAuthenticated,isAdmin, async (req, 
   });
 
 //ROUTE TO FETCH ANNOUNCEMENTS
-router.get('/batch/:id/announcements',ensureAuthenticated, async (req, res) => {
+router.get('/batch/:id/announcements' ,saveRedirectUrl,ensureAuthenticated, async (req, res) => {
   try {
       const id = req.params.id; // Access the ID directly
       console.log("Batch id is", id);
@@ -249,6 +251,7 @@ router.get('/batch/:batchId/authorize-students', async (req, res) => {
       res.status(500).send('Server Error');
   }
 });
+
 // Post Route to authorize a student
 router.post('/batch/:batchId/authorize/:studentEmail', async (req, res) => {
   const { batchId,studentEmail } = req.params;

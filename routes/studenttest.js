@@ -36,81 +36,6 @@ router.get('/student/test/:id',ensureAuthenticated, async (req, res) => {
   }
 });
 
-
-router.post('/student/test/:testId', ensureAuthenticated, async (req, res) => {
-
-const testId = req.params.testId;
-const studentId = req.user._id; 
-let score = 0;
-const answers = [];
-const solution = req.body.solution || {};
-const keys = Object.keys(solution);
-const test = await Test.findById(testId);
-if (!test || !test.questions) {
-    return res.status(400).send('Test not found.');
-}
-
-const totalQuestions = test.questions.length; // Total number of questions
-const totalMarks = totalQuestions * 4; // Total marks possible
-Object.entries(solution).forEach(function([key, value]) {
-    const question = test.questions.find(q => q._id.toString() === key);
-    if (question) {
-        if (value === question.correctAnswer) {
-            score += 4; // Assuming each question is worth 4 points
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "yes"
-            });
-        } 
-        else if (value === "-1") {
-            score += 0;
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "not"
-            });
-        } 
-        else {
-            score -= 1;
-            answers.push({
-                questionId: key,
-                selectedOption: value,
-                isCorrect: "no"
-            });
-        }
-    }
-});
-const questionIds = answers.map(answer => answer.questionId);
-
-const filteredQuestions = test.questions
-      .filter(question => !questionIds.includes(question._id.toString()))
-      .map(question => question._id.toString());
-
-for(let i=0;i<filteredQuestions.length;i++){
-    answers.push({
-        questionId: filteredQuestions[i],
-        selectedOption: -1,
-        isCorrect: "not"
-    });
-}
-
-const alreadyTest = await StudentTest.findOne({ studentId, testId });
-if(alreadyTest){
-    await StudentTest.deleteOne({ _id: alreadyTest._id });
-}
-    const studentTest = new StudentTest({
-        studentId: studentId,  // Student's ObjectId
-        testId: testId,        // Test's ObjectId
-        score: score,          // Score obtained by the student
-        answers: answers       // Array of answers (questions and selected options)
-    });
-await studentTest.save();
-    res.redirect(`/student/test/${testId}/result`);
-});
-
-  
-
 //Route to render result
 router.get('/student/test/:id/result', ensureAuthenticated, async (req, res) => {
   try {
@@ -120,6 +45,12 @@ router.get('/student/test/:id/result', ensureAuthenticated, async (req, res) => 
     // Fetch the test and student answers
     const test = await Test.findById(testId);
     const studentTest = await StudentTest.findOne({ studentId, testId });
+
+    res.render("studenttestinterface/result", {
+    test,
+    studentTest
+    });
+
 
     if (!studentTest) {
       return res.send("Please Attempt The Test");
@@ -184,6 +115,164 @@ router.get('/student/test/:id/result', ensureAuthenticated, async (req, res) => 
     res.status(500).send("Server Error");
   }
 });
+
+
+// router.post(
+//   "/student/test/:testId",
+//   ensureAuthenticated,
+//   async (req, res) => {
+//     try {
+//       const { testId } = req.params;
+//       const studentId = req.user._id;
+//       console.log(req.body);
+
+//       const test = await Test.findById(testId).lean();
+//       if (!test || !test.questions?.length) {
+//         return res.status(404).send("Test not found");
+//       }
+
+//       const solution = req.body.solution || {};
+//       let score = 0;
+//       const answers = [];
+
+//       // Map questions for fast lookup
+//       const questionMap = new Map(
+//         test.questions.map(q => [q._id.toString(), q])
+//       );
+
+//       // Evaluate submitted answers
+//       for (const [questionId, selectedOption] of Object.entries(solution)) {
+//         const question = questionMap.get(questionId);
+//         if (!question) continue;
+
+//         let isCorrect = "not";
+
+//         if (selectedOption === "-1") {
+//           // Not attempted
+//           isCorrect = "not";
+//         } else if (Number(selectedOption) === Number(question.correctAnswer)) {
+//           score += 4;
+//           isCorrect = "yes";
+//         } else {
+//           score -= 1;
+//           isCorrect = "no";
+//         }
+
+//         answers.push({
+//           questionId,
+//           selectedOption: Number(selectedOption),
+//           isCorrect,
+//           questionUrl: question.questionText
+//         });
+
+//         // Remove handled question
+//         questionMap.delete(questionId);
+//       }
+
+//       // Remaining questions → not attempted
+//       for (const [qid, q] of questionMap.entries()) {
+//         answers.push({
+//           questionId: qid,
+//           selectedOption: -1,
+//           isCorrect: "not",
+//           questionUrl: q.questionText
+//         });
+//       }
+
+//       // Remove previous attempt if exists
+//       await StudentTest.findOneAndDelete({ studentId, testId });
+
+//       // Save fresh attempt
+//       await StudentTest.create({
+//         studentId,
+//         testId,
+//         score,
+//         answers
+//       });
+
+//       return res.redirect(`/student/test/${testId}/result`);
+//     } catch (err) {
+//       console.error("TEST SUBMIT ERROR:", err);
+//       return res.status(500).send("Internal Server Error");
+//     }
+//   }
+// );
+
+router.post(
+  "/student/test/:testId",
+  ensureAuthenticated,
+  async (req, res) => {
+    try {
+      const { testId } = req.params;
+      const studentId = req.user._id;
+
+      const test = await Test.findById(testId).lean();
+      if (!test || !test.questions || test.questions.length === 0) {
+        return res.status(404).send("Test not found");
+      }
+
+      const solution = req.body.solution || {};
+      const timeSpentMap = req.body.timeSpent || {};
+
+      let score = 0;
+      const answers = [];
+
+      // Map questions for O(1) lookup
+      const questionMap = new Map(
+        test.questions.map(q => [q._id.toString(), q])
+      );
+
+      for (const [questionId, question] of questionMap.entries()) {
+        const rawOption = solution[questionId];
+        const rawTime = timeSpentMap[questionId];
+
+        // ✅ HARD SANITIZATION (NO NaN POSSIBLE)
+        const selectedOption = Number.isInteger(Number(rawOption))
+          ? Number(rawOption)
+          : -1;
+
+        const timeSpent = Number.isFinite(Number(rawTime))
+          ? Number(rawTime)
+          : 0;
+
+        let isCorrect = "not";
+
+        if (selectedOption === -1) {
+          isCorrect = "not";
+        } else if (selectedOption === question.correctAnswer) {
+          score += 4;
+          isCorrect = "yes";
+        } else {
+          score -= 1;
+          isCorrect = "no";
+        }
+
+        answers.push({
+          questionId,
+          selectedOption,
+          isCorrect,
+          timeSpent
+        });
+      }
+
+      // Remove previous attempt if exists
+      await StudentTest.findOneAndDelete({ studentId, testId });
+
+      // Save new attempt
+      await StudentTest.create({
+        studentId,
+        testId,
+        score,
+        answers
+      });
+
+      return res.redirect(`/student/test/${testId}/result`);
+    } catch (err) {
+      console.error("TEST SUBMIT ERROR:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 
 module.exports = router;

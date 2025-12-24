@@ -1,8 +1,9 @@
 const express = require("express");
 const passport = require("passport");
 const User = require("../../models/User");
-const Batch = require("../../models/Batch")
-const Resource = require("../../models/Resource")
+const Batch = require("../../models/Batch");
+const Resource = require("../../models/Resource");
+const {isLoggedIn, saveRedirectUrl, isAdmin} = require('../../middlewares/login');
 
 const router = express.Router()
 
@@ -33,9 +34,12 @@ router.get("/:id", async (req, res) => {
 });
 
 // Get all batches
-router.get('/', async (req, res) => {
+router.get("/",isLoggedIn, async (req, res) => {
   try {
-    const batches = await Batch.find().sort({ createdAt: -1 });
+    const purchased = req.user.purchasedBatches || [];
+    const batches = await Batch.find({
+      _id: { $nin: purchased }
+    }).sort({ createdAt: -1 });
     res.json(batches);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -52,9 +56,8 @@ router.get('/my/purchased', async (req, res) => {
       console.log("no batch")
       res.status(201).json({message:"Not Subscribed to any batches"}) // Push the found batch into the array
     }
-        batches.push(batch); // Push the found batch into the array
+      batches.push(batch);
   }
-    console.log(batches)
    res.json(batches)
   }catch(error){
     console.log(error)

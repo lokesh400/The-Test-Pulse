@@ -1,19 +1,51 @@
-const mongoose = require('mongoose');
-const User = require('./User.js');
-const Test = require('./Test.js');
+const mongoose = require("mongoose");
 
-const studentTestSchema = new mongoose.Schema({
-  studentId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-  testId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Test' },
-  score: { type: Number, required: true },
-  answers: [
-    {
-      questionId: { type: mongoose.Schema.Types.ObjectId, required: true,ref: 'Question' },
-      selectedOption: { type: Number },
-      isCorrect: String,
-      questionUrl:String
+const answerSchema = new mongoose.Schema(
+  {
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Question",
+      required: true
+    },
+    selectedOption: {
+      type: Number,
+      default: -1   // -1 = not attempted
+    },
+    isCorrect: {
+      type: String,
+      enum: ["yes", "no", "not"],
+      required: true
+    },
+    timeSpent: {
+      type: Number,   // seconds
+      default: 0,
+      min: 0
     }
-  ],
-});
+  },
+  { _id: false }
+);
 
-module.exports = mongoose.model('StudentTest', studentTestSchema);
+const studentTestSchema = new mongoose.Schema(
+  {
+    studentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
+    },
+    testId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Test",
+      required: true,
+      index: true
+    },
+    score: {
+      type: Number,
+      required: true
+    },
+    answers: [answerSchema]
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("StudentTest", studentTestSchema);
