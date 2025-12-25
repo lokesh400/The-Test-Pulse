@@ -1,148 +1,236 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <title> The Test Pulse </title>
-  <link rel="shortcut icon" href="images/favicon.png" type="">
-  <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <link href="./css/font-awesome.min.css" rel="stylesheet" />
-  <link href="./css/style.css" rel="stylesheet"/>
-  <link href="/styles/loader.css" rel="stylesheet" />
-  <link href="/styles/starting-animation.css" rel="stylesheet" />
-  <link href="/styles/our-team.css" rel="stylesheet" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9967030840996133"
-  crossorigin="anonymous">
-  </script>
-  <meta name="fast2sms" content="4DUmNCVaCuZDZCNDKPx0u1zPLW3NOQGl">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Test Pulse | Smart Test & Practice Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-  <div class="loading-overlay">
-    <%- include('./components/starting-animation.ejs') %>
+<body class="bg-[#f8fafc] text-gray-900">
+
+<!-- NAVBAR -->
+<header class="sticky top-0 bg-white/80 backdrop-blur border-b z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold text-indigo-600">The Test Pulse</h1>
+    <nav class="hidden md:flex gap-8 text-sm text-gray-600 font-medium">
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#tests">Test Series</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#trust">Why Us</a>
+    </nav>
+    <a href="/user/login" class="px-5 py-2 text-sm border rounded-lg">Login</a>
   </div>
- 
-  <div class="hero_area">
+</header>
 
-    <div class="hero_bg_box">
-      <div class="bg_img_box">
-        <img src="./images/hero-bg.png" alt="">
+<!-- HERO -->
+<section class="bg-gradient-to-b from-indigo-50 to-white">
+  <div class="max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-20 items-center">
+
+    <div>
+      <span class="inline-block text-sm font-medium text-indigo-600 mb-4">
+        Online • Offline • Daily Practice
+      </span>
+
+      <h1 class="text-5xl font-semibold leading-tight mb-8">
+        Prepare smarter.<br>
+        <span class="text-gray-400">Perform with confidence.</span>
+      </h1>
+
+      <p class="text-lg text-gray-600 max-w-xl mb-10">
+        <b>The Test Pulse</b> is a complete preparation platform for competitive exams.
+        From real exam-level tests to daily practice and detailed analytics —
+        everything works together to help students improve steadily and confidently.
+      </p>
+
+      <div class="flex gap-4">
+        <a href="/register" class="px-8 py-4 bg-indigo-600 text-white rounded-lg font-medium">
+          Start Preparation
+        </a>
+        <a href="#about" class="px-8 py-4 border rounded-lg">
+          See How It Works
+        </a>
+      </div>
+
+      <div class="mt-12 flex gap-10 text-sm text-gray-500">
+        <span>✔ Exam-aligned</span>
+        <span>✔ Discipline-focused</span>
+        <span>✔ Result-oriented</span>
       </div>
     </div>
 
-    <!-- header section strats -->
-    <header class="header_section">
-      <%- include("./components/header.ejs") %>
-    </header>
-    <!-- end header section -->
+    <!-- HERO CARD -->
+    <div class="bg-white rounded-3xl shadow-xl p-10">
+      <h3 class="text-lg font-medium mb-6">After every test, you clearly know:</h3>
+      <ul class="space-y-4 text-gray-600 text-sm">
+        <li>• Where you lost marks</li>
+        <li>• Which topics need improvement</li>
+        <li>• How your rank is moving</li>
+        <li>• What to practice next</li>
+      </ul>
+    </div>
 
-    <!-- slider section -->
-    <section class="slider_section ">
-      <%- include("./components/slider.ejs") %>
-    </section>
-    <!-- end slider section -->
   </div>
+</section>
 
+<!-- ABOUT -->
+<section id="about" class="py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <h2 class="text-4xl font-semibold mb-6">
+      Not just tests. A preparation system.
+    </h2>
+    <p class="text-gray-600 max-w-3xl mx-auto">
+      Many students attempt tests without knowing how to improve.
+      The Test Pulse bridges this gap by combining
+      testing, practice, and analytics into one structured flow.
+    </p>
+  </div>
+</section>
 
-  <!-- service section -->
-  <section class="service_section layout_padding">
-    <%- include("./components/services.ejs") %>
-  </section>
-  <!-- end service section -->
+<!-- FEATURES -->
+<section id="features" class="py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-semibold text-center mb-20">
+      Everything required for serious preparation
+    </h2>
 
-
-  <!-- about section -->
-  <section class="about_section layout_padding">
-    <div class="container  ">
-      <div class="heading_container heading_center">
-        <h2>
-          About <span>Us</span>
-        </h2>
-        <p>
-          At The Test Pulse, we are driven by the belief that testing is more than just a measure of knowledge—it’s a powerful tool to inspire learning, gauge understanding, and drive improvement. Our platform empowers educators, students, and institutions by providing cutting-edge tools for creating, managing, and analyzing tests and assessments.
+    <div class="grid md:grid-cols-3 gap-12">
+      <div class="bg-white p-8 rounded-2xl shadow">
+        <h4 class="font-medium mb-3">Real Exam Interface</h4>
+        <p class="text-sm text-gray-600">
+          NTA-style interface with timer, question palette,
+          mark-for-review and smooth navigation.
         </p>
       </div>
-      <div class="row">
-        <div class="col-md-6 ">
-          <!-- <div class="img-box-1">
-            <img src="images/logo.png" alt="">
-          </div> -->
-        </div>
-        <div class="col-md-6">
-          <div class="detail-box">
-            <h3>
-              Why Choose The Test Pulse ?
-            </h3>
-            <p>
 
-            <b>Accuracy:</b> Every test, question, and report is crafted to provide reliable insights.
-            <br>
-            <b>Efficiency:</b> Our platform streamlines test creation and evaluation, saving time and enhancing productivity.
-            <br>
-            <b>Growth-Oriented:</b> We focus on data-driven insights that help both students and educators identify strengths and areas for improvement.
-            </p>
-          </div>
-        </div>
+      <div class="bg-white p-8 rounded-2xl shadow">
+        <h4 class="font-medium mb-3">Daily DPP Practice</h4>
+        <p class="text-sm text-gray-600">
+          Topic-wise daily problems that strengthen concepts
+          and build exam discipline.
+        </p>
+      </div>
+
+      <div class="bg-white p-8 rounded-2xl shadow">
+        <h4 class="font-medium mb-3">Accurate Evaluation</h4>
+        <p class="text-sm text-gray-600">
+          Transparent checking, standardized marking
+          and reliable ranking system.
+        </p>
       </div>
     </div>
-  </section>
-  <!-- end about section -->
+  </div>
+</section>
 
+<!-- TEST SERIES -->
+<section id="tests" class="bg-gray-50 py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-semibold text-center mb-20">
+      Online & Offline Test Series
+    </h2>
 
-  <!-- why section -->
-  <section class="why_section layout_padding">
-    <%- include("./components/whyus.ejs") %>
-  </section>
-  <!-- end why section -->
+    <div class="grid md:grid-cols-2 gap-16">
+      <div>
+        <h3 class="text-xl font-medium mb-4">Online Test Series</h3>
+        <p class="text-gray-600 text-sm mb-6">
+          Attempt tests anytime with instant results and detailed analysis.
+        </p>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <li>• Chapter, part & full syllabus tests</li>
+          <li>• Rank & percentile</li>
+          <li>• Detailed performance reports</li>
+        </ul>
+      </div>
 
-
-  <!-- team section -->
-  <section class="team_section layout_padding">
-    <%- include("./components/ourteam.ejs") %>
-  </section>
-  <!-- end team section -->
-
-  <section class="client_section layout_padding">
-  
-  </section>
-
-
-  <!-- info section -->
-  <section class="info_section layout_padding2">
-    <%- include("./components/info.ejs") %>
-  </section>
-  <!-- end info section -->
-
-  <!-- footer section -->
-  <section class="footer_section">
-    <div class="container">
-      <p>
-        &copy; <span id="displayYear"></span> All Rights Reserved By The Test Pulse.
-      </p>
+      <div>
+        <h3 class="text-xl font-medium mb-4">Offline Test Series</h3>
+        <p class="text-gray-600 text-sm mb-6">
+          Classroom-based tests with real exam environment and OMR sheets.
+        </p>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <li>• Pen-paper based exams</li>
+          <li>• Exam hall discipline</li>
+          <li>• Online result & analytics</li>
+        </ul>
+      </div>
     </div>
-  </section>
-  <!-- footer section -->
+  </div>
+</section>
 
- 
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="js/bootstrap.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-  <script> 
-  document.addEventListener('DOMContentLoaded', () => {
-  const loadingOverlay = document.querySelector('.loading-overlay');  
-  setTimeout(() => {
-    loadingOverlay.style.display = 'none';
-  }, 5000);
-});
-  </script>
- 
+<!-- ANALYTICS -->
+<section id="analytics" class="py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-semibold mb-6">
+      Analytics that guide improvement
+    </h2>
+
+    <p class="text-gray-600 max-w-3xl mb-20">
+      Our analytics don’t overwhelm students.
+      They clearly answer one question:
+      <b>What should I improve next?</b>
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-16">
+      <div>
+        <h4 class="font-medium mb-3">Rank & percentile tracking</h4>
+        <p class="text-sm text-gray-600">
+          Understand your standing among real competitors.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-medium mb-3">Accuracy & time analysis</h4>
+        <p class="text-sm text-gray-600">
+          Improve both correctness and speed.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-medium mb-3">Progress over time</h4>
+        <p class="text-sm text-gray-600">
+          Track consistent improvement across weeks.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section id="trust" class="py-28 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <h2 class="text-4xl font-semibold mb-6">
+      Built with exam reality in mind
+    </h2>
+    <p class="text-gray-600 max-w-3xl mx-auto mb-16">
+      The Test Pulse is designed by educators who understand
+      competitive exams, student psychology and disciplined preparation.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-10 text-sm text-gray-600">
+      <div>✔ Transparent evaluation</div>
+      <div>✔ Exam-oriented design</div>
+      <div>✔ Parent-friendly reports</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-indigo-600 text-white py-24 text-center">
+  <h2 class="text-4xl font-semibold mb-6">
+    Start your preparation with clarity
+  </h2>
+  <p class="mb-10 text-indigo-100">
+    Measure your preparation. Improve consistently. Perform confidently.
+  </p>
+  <a href="/register" class="px-10 py-4 bg-white text-indigo-600 rounded-lg font-medium">
+    Join The Test Pulse
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-14 text-sm text-gray-500 border-t text-center">
+  © 2025 The Test Pulse • support@testpulse.in
+</footer>
+
 </body>
-
 </html>
