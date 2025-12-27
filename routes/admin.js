@@ -56,7 +56,7 @@ router.get("/student",ensureAuthenticated,async (req,res)=>{
     req.flash('success_msg', 'Login Successfull');
     const allBatches = await Batch.find({});
     res.render("./student.ejs",{allBatches})
-  })
+})
   
 router.get("/terms-and-conditions",(req,res)=>{
     res.render("./users/terms-and-conditions.ejs")

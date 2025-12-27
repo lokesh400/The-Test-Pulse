@@ -6,31 +6,30 @@
 //     next();
 // };
 
-// module.exports.saveRedirectUrl = (req, res, next) => {
-//     if (req.session.redirectUrl) {
-//         res.locals.RedirectUrl = req.session.redirectUrl;
-//     }
-//     next();
-// };
-
-module.exports.isLoggedIn = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        console.log('User not authenticated. Saving redirect URL:', req.originalUrl);
-        req.session.redirectUrl = req.originalUrl; // Save original URL
-        return res.redirect("/user/login");
-    }
-    next();
-};
-
-
 module.exports.saveRedirectUrl = (req, res, next) => {
     if (req.session.redirectUrl) {
-        console.log('Moving redirect URL from session to locals:', req.session.redirectUrl);
         res.locals.RedirectUrl = req.session.redirectUrl;
-        delete req.session.redirectUrl; // Clear session value
     }
     next();
 };
+
+module.exports.isLoggedIn = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    req.session.redirectUrl = req.originalUrl;
+    return res.redirect("/user/login");
+  }
+  next();
+};
+
+
+
+// module.exports.saveRedirectUrl = (req, res, next) => {
+//      if (!req.isAuthenticated()) {
+//          req.session.redirectUrl = req.originalUrl;
+//          return res.redirect("/user/login");
+//   }
+//   next();
+// };
 
 module.exports.ensureAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
